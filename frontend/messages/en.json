@@ -1,0 +1,1373 @@
+{
+  "meta": {
+    "title": "{appName} — jobs backed by verified skills",
+    "description": "A job board where every application is backed by a two-stage interview: a practical task and a spoken conversation with an AI interviewer."
+  },
+  "common": {
+    "skipToContent": "Skip to main content",
+    "retry": "Try again",
+    "backHome": "Back to the home page",
+    "example": "Example",
+    "optional": "(optional)",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "units": {
+      "kb": "{value} KB",
+      "mb": "{value} MB"
+    }
+  },
+  "nav": {
+    "label": "Main sections",
+    "home": "{appName} home",
+    "signIn": "Sign in",
+    "postVacancy": "Post a job",
+    "accountMenu": "Account menu: {name}",
+    "signOut": "Sign out",
+    "bottomLabel": "Quick sections",
+    "roles": {
+      "candidate": "Candidate",
+      "hr": "Employer (HR)",
+      "admin": "Administrator"
+    },
+    "menu": {
+      "resumes": "My resumes",
+      "applications": "My applications",
+      "saved": "Saved",
+      "results": "My results",
+      "settings": "Settings",
+      "myVacancies": "My jobs",
+      "candidates": "Candidates",
+      "company": "Company",
+      "team": "Team",
+      "search": "Search",
+      "profile": "Profile"
+    }
+  },
+  "locale": {
+    "label": "Interface language",
+    "names": {
+      "uz": "O'zbekcha",
+      "ru": "Русский",
+      "en": "English"
+    }
+  },
+  "theme": {
+    "toggle": "Switch between light and dark theme"
+  },
+  "home": {
+    "hero": {
+      "title": "Get hired on proven skill, not on a résumé",
+      "lead": "Every application here is backed by a two-stage interview: a practical task, then a spoken conversation with an AI interviewer. Employers see real results instead of polished résumés, and you learn exactly what to improve.",
+      "scopeNote": "IT roles for now: development, QA, data analytics, DevOps."
+    },
+    "sample": {
+      "caption": "What an employer sees",
+      "role": "Backend developer, Python",
+      "applicant": "Candidate application",
+      "stage1": "Practical task",
+      "stage2": "Oral interview",
+      "suspicion": "Suspicion level",
+      "suspicionLow": "Low",
+      "replay": "How the code was written is recorded",
+      "replayHint": "The employer can replay every edit.",
+      "decision": "AI prepares scores and explanations; HR makes the decision."
+    },
+    "steps": {
+      "title": "How the interview works",
+      "lead": "Four steps in one window. The rules are stated up front and you accept them before anything starts.",
+      "rules": {
+        "title": "Rules",
+        "body": "Before you begin, you read and accept the rules: pasting code from outside is blocked, and long inactivity ends the interview."
+      },
+      "stage1": {
+        "title": "Stage 1: practical task",
+        "body": "You write code in the platform's editor and run the visible tests. Hidden tests and a code review decide the result."
+      },
+      "stage2": {
+        "title": "Stage 2: oral interview",
+        "body": "An AI interviewer asks questions by voice, mostly about the code you just wrote. Explaining your own code is easy."
+      },
+      "results": {
+        "title": "Results",
+        "body": "You get a percentage score and explanations for both stages. The employer sees a ranked shortlist with the evidence."
+      }
+    },
+    "principle": "AI scores and explains why. A person makes the final hiring decision.",
+    "audience": {
+      "candidates": {
+        "title": "For candidates",
+        "body": "Skills you verify once stay on your profile and count towards future applications. Even a rejection comes with a reason: you see what was missing.",
+        "cta": "Browse vacancies"
+      },
+      "employers": {
+        "title": "For employers",
+        "body": "Post a vacancy, write the questions and tasks yourself or draft them with AI. Instead of hundreds of résumés, get a ranked list of verified candidates with a replay of how the code was written.",
+        "cta": "Post a vacancy"
+      }
+    }
+  },
+  "footer": {
+    "tagline": "A job board where skills are verified.",
+    "status": "System status"
+  },
+  "status": {
+    "metaTitle": "System status",
+    "title": "System status",
+    "lead": "Checks whether the web app can reach the API server.",
+    "api": "API server",
+    "checking": "Checking…",
+    "ok": "Operational",
+    "degraded": "Partially operational",
+    "unavailable": "Unavailable",
+    "version": "Version",
+    "environment": "Environment",
+    "dependencies": "Dependencies",
+    "checkNames": {
+      "database": "Database",
+      "redis": "Redis"
+    },
+    "checkOk": "operational",
+    "checkFailed": "not responding",
+    "lastChecked": "Last checked: {time}",
+    "refresh": "Check again",
+    "unavailableTitle": "Could not reach the API server",
+    "requestId": "Request ID: {id}"
+  },
+  "errors": {
+    "unknown": "Something unexpected happened. Please try again in a moment.",
+    "network": "Could not reach the network. Check your internet connection and try again.",
+    "upstream_unavailable": "The server is not responding right now. Make sure it is running and try again.",
+    "not_found": "The requested data was not found.",
+    "internal_error": "The server ran into an error. Please try again.",
+    "validation_error": "Some fields aren't filled in correctly. Check them and submit again.",
+    "invalid_credentials": "Wrong email or password.",
+    "rate_limited": "Too many attempts. Try again in a few minutes.",
+    "email_taken": "An account with this email already exists. Sign in or reset your password.",
+    "invalid_token": "This link is invalid or has expired. Request a new one.",
+    "weak_password": "This password is too simple. Choose a longer or more complex one.",
+    "invalid_refresh_token": "Your session has ended. Please sign in again.",
+    "unauthorized": "Please sign in first.",
+    "account_disabled": "Your account is disabled. Please contact support.",
+    "permission_denied": "You don't have permission to do this.",
+    "unsupported_file_type": "This file type isn't supported. Choose one of the listed formats.",
+    "file_too_large": "The file is too large. Choose a smaller file.",
+    "empty_file": "The file is empty. Choose another file.",
+    "last_owner": "A company must keep at least one owner.",
+    "already_member": "This person is already on the team.",
+    "invitation_pending": "An invitation has already been sent to this email.",
+    "email_mismatch": "The invitation was sent to a different email. Sign in with that email.",
+    "role_mismatch": "Only an employer (HR) account can accept this invitation.",
+    "invitation_expired": "This invitation has expired. Ask the company owner for a new one.",
+    "invitation_used": "This invitation has already been used.",
+    "already_applied": "You have already applied for this vacancy.",
+    "vacancy_not_open": "This vacancy is no longer accepting applications.",
+    "cannot_withdraw": "This application can no longer be withdrawn.",
+    "invalid_status_transition": "The vacancy status can’t change this way. Refresh the page.",
+    "not_draft": "Only drafts can be deleted. Archive this vacancy instead.",
+    "application_withdrawn": "The candidate has withdrawn the application.",
+    "description_required": "Write a job description to publish.",
+    "email_not_verified": "Confirm your email before applying.",
+    "generation_in_progress": "AI generation is already running for this vacancy. Wait for it to finish.",
+    "queue_unavailable": "The AI queue is unavailable right now. Try again in a moment.",
+    "unknown_items": "One of the selected questions or tasks was not found. Refresh the page and pick again."
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "The page failed to load. Try again or go back to the home page."
+  },
+  "notFound": {
+    "metaTitle": "Page not found",
+    "title": "This page could not be found",
+    "body": "It isn't ready yet or has moved to a different address. Continue from the home page."
+  },
+  "search": {
+    "label": "Job search",
+    "queryLabel": "Profession, job title or company",
+    "placeholder": "Profession, job title or company",
+    "regionLabel": "Region",
+    "anyRegion": "All regions",
+    "submit": "Search",
+    "open": "Open search",
+    "suggestionsLabel": "Suggestions",
+    "kinds": {
+      "vacancy": "Job",
+      "skill": "Skill",
+      "company": "Company"
+    },
+    "chips": {
+      "label": "Quick filters",
+      "remote": "Remote",
+      "noExperience": "No experience",
+      "partTime": "Part-time",
+      "it": "IT",
+      "internship": "Internship"
+    }
+  },
+  "comingSoon": {
+    "body": "This section arrives in the next phase. Meanwhile, you can complete your profile."
+  },
+  "vacancies": {
+    "title": "Jobs",
+    "metaTitleFor": "“{q}” vacancies",
+    "count": "{total, plural, one {{count} vacancy} other {{count} vacancies}}",
+    "countFor": "{total, plural, one {{count} vacancy for “{q}”} other {{count} vacancies for “{q}”}}",
+    "resultsLabel": "Search results",
+    "sort": {
+      "label": "Sort by",
+      "relevance": "Relevance",
+      "date": "Date",
+      "salary_desc": "Salary: high to low",
+      "salary_asc": "Salary: low to high"
+    },
+    "filters": {
+      "title": "Filters",
+      "open": "Filters",
+      "openCount": "Filters ({count})",
+      "region": "Region",
+      "showMore": "{count} more",
+      "showLess": "Show less",
+      "remoteType": "Work format",
+      "employmentType": "Employment type",
+      "experience": "Experience",
+      "salary": "Salary",
+      "salaryFrom": "Minimum salary",
+      "salaryFromPlaceholder": "from",
+      "currency": "Currency",
+      "onlyWithSalary": "Only with salary",
+      "area": "Profession area",
+      "anyArea": "All areas",
+      "skills": "Skills",
+      "skillsHint": "Vacancies that require all selected skills.",
+      "reset": "Reset filters",
+      "resetShort": "Reset",
+      "apply": "{total, plural, one {Show {count} vacancy} other {Show {count} vacancies}}",
+      "applyNoCount": "Show"
+    },
+    "chips": {
+      "label": "Selected filters",
+      "remove": "Remove filter “{label}”",
+      "salaryFrom": "from {amount} {currency}",
+      "onlyWithSalary": "With salary"
+    },
+    "empty": {
+      "title": "Nothing found",
+      "titleFor": "Nothing found for “{q}”",
+      "tipQuery": "Shorten the query or try other words.",
+      "tipFilters": "Remove some filters.",
+      "tipRegion": "Try another region or remote work.",
+      "resetFilters": "Reset filters",
+      "showAll": "All vacancies"
+    },
+    "latest": {
+      "title": "New vacancies",
+      "all": "All vacancies"
+    }
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "newPassword": "New password",
+    "confirmPassword": "Repeat password",
+    "passwordHint": "At least {min} characters.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "login": {
+      "title": "Sign in",
+      "lead": "Enter your email and password.",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "forgot": "Forgot your password?",
+      "noAccount": "No account yet?",
+      "toRegister": "Create one"
+    },
+    "register": {
+      "title": "Create an account",
+      "lead": "It takes a minute. Then you confirm your email.",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "haveAccount": "Already have an account?",
+      "toLogin": "Sign in",
+      "role": {
+        "legend": "How will you use the platform?",
+        "candidate": {
+          "title": "I'm looking for a job",
+          "hint": "Upload a resume, apply to jobs and take the interview."
+        },
+        "hr": {
+          "title": "I'm hiring",
+          "hint": "Create a company, post jobs and review verified candidates."
+        }
+      }
+    },
+    "verify": {
+      "title": "Confirm your email",
+      "lead": "You opened this page from the link in our email.",
+      "checking": "Checking the link…",
+      "successTitle": "Email confirmed",
+      "successBody": "Thank you! Everything is unlocked now.",
+      "failedTitle": "We couldn't confirm your email",
+      "missingToken": "The link has no confirmation code. Copy the whole link from the email or request a new one.",
+      "continue": "Continue",
+      "toLogin": "Go to sign in",
+      "resend": "Send the email again",
+      "resending": "Sending…",
+      "resent": "A new email is on its way.",
+      "banner": "Please confirm your email: we sent a link to {email}.",
+      "bannerLabel": "Email confirmation"
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "lead": "Enter the email you signed up with and we'll send you a link to set a new password.",
+      "submit": "Send link",
+      "submitting": "Sending…",
+      "sentTitle": "Check your inbox",
+      "sentBody": "If an account exists for {email}, we sent it a password reset link.",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "New password",
+      "lead": "Enter a new password. You'll need to sign in again on all devices.",
+      "submit": "Save password",
+      "submitting": "Saving…",
+      "invalidTitle": "This link is not valid",
+      "missingToken": "The link has no reset code. Request a new link.",
+      "requestNew": "Request a new link",
+      "doneTitle": "Password updated",
+      "doneBody": "You can now sign in with your new password.",
+      "toLogin": "Sign in"
+    },
+    "forbidden": {
+      "title": "This section isn't for your account",
+      "body": "{role, select, candidate {You're signed in as a candidate. This page is for employers.} hr {You're signed in as an employer. This page is for candidates.} other {Your account doesn't have access to this page.}}",
+      "toMyArea": "Go to my area"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "lead": "Your account details and interface language.",
+    "email": "Email",
+    "emailHint": "Changing your email will be added later.",
+    "fullName": "Full name",
+    "language": "Interface language",
+    "languageHint": "Emails will use this language too.",
+    "timezone": "Time zone",
+    "saved": "Saved."
+  },
+  "validation": {
+    "required": "Fill in this field.",
+    "email": "Enter a valid email address, e.g. name@example.com.",
+    "passwordShort": "Use at least 8 characters.",
+    "passwordLong": "Use at most 128 characters.",
+    "passwordMismatch": "The passwords don't match.",
+    "tooLong": "This text is too long. Please shorten it.",
+    "tooShort": "This text is too short.",
+    "invalid": "This value isn't valid. Check it and try again.",
+    "integer": "Enter a whole number.",
+    "range": "The number is outside the allowed range.",
+    "salaryRange": "The minimum salary can't be higher than the maximum.",
+    "url": "Enter a valid website address, e.g. https://example.uz.",
+    "role": "Choose how you will use the platform.",
+    "descriptionRequired": "Write a job description to publish.",
+    "skillsMax": "At most 20 skills.",
+    "rubricKey": "Lowercase Latin letters, digits and underscore only (a-z, 0-9, _).",
+    "rubricMin": "Add at least 1 criterion.",
+    "rubricMax": "At most 10 criteria.",
+    "optionsMin": "At least 2 options are needed.",
+    "optionsMax": "At most 8 options.",
+    "correctMin": "Mark at least one correct option.",
+    "langsMin": "Choose at least one programming language.",
+    "testsMin": "Add at least one test.",
+    "testsMax": "Too many tests.",
+    "tasksMax": "At most 5 tasks for Stage 1."
+  },
+  "currency": {
+    "UZS": "Uzbek som (UZS)",
+    "USD": "US dollar (USD)",
+    "EUR": "Euro (EUR)",
+    "RUB": "Russian ruble (RUB)"
+  },
+  "candidate": {
+    "profile": {
+      "title": "My resume",
+      "lead": "Employers see this information. The more precise it is, the better the matches.",
+      "formTitle": "Profile details",
+      "sections": {
+        "main": "Basics",
+        "salary": "Desired salary",
+        "about": "About me"
+      },
+      "headline": "Job title",
+      "headlineHint": "For example, Python backend developer",
+      "country": "Country",
+      "countryNone": "Not selected",
+      "city": "City",
+      "experienceYears": "Work experience, years",
+      "salaryHint": "Per month, after tax. You can leave it empty.",
+      "salaryMin": "From",
+      "salaryMax": "To",
+      "currency": "Currency",
+      "about": "A short summary about you",
+      "aboutHint": "Experience, projects, what you're good at.",
+      "openToWork": "Open to job offers",
+      "openToWorkHint": "When on, employers can send you offers.",
+      "saved": "Profile saved."
+    },
+    "resume": {
+      "title": "Resume file",
+      "hint": "PDF, DOC or DOCX, up to {maxMb} MB.",
+      "meta": "{size} · {date}",
+      "empty": "No file uploaded yet.",
+      "upload": "Upload file",
+      "replace": "Upload another file",
+      "uploading": "Uploading…",
+      "download": "Download",
+      "delete": "Delete",
+      "deleteTitle": "Delete your resume?",
+      "deleteBody": "{filename} will be deleted. You can upload a new one afterwards.",
+      "deleteConfirm": "Delete"
+    }
+  },
+  "hr": {
+    "nav": {
+      "label": "Company sections",
+      "switcher": "Company",
+      "overview": "Overview",
+      "company": "Company profile",
+      "team": "Team",
+      "vacancies": "Jobs",
+      "candidates": "Candidates",
+      "questions": "Questions",
+      "tasks": "Tasks"
+    },
+    "home": {
+      "metaTitle": "Employer dashboard",
+      "company": "Company profile",
+      "companyBody": "Name, logo, website and description — what candidates see.",
+      "team": "Team",
+      "teamBody": "The company's HR members.",
+      "teamBodyOwner": "Invite HR members and manage your team.",
+      "vacancies": "Jobs",
+      "vacanciesBody": "Post vacancies and review the applications.",
+      "roleOwner": "You own this company",
+      "roleHr": "You're an HR member"
+    },
+    "create": {
+      "title": "Add your company",
+      "lead": "You need a company profile before posting jobs. As its creator you become the owner and can invite your team.",
+      "submit": "Create company",
+      "submitting": "Creating…"
+    },
+    "noCompany": {
+      "title": "Create a company first",
+      "body": "This section works with a company profile.",
+      "cta": "Create company"
+    },
+    "company": {
+      "title": "Company profile",
+      "lead": "This is shown next to your jobs.",
+      "details": "Details",
+      "formLabel": "Company details",
+      "name": "Company name",
+      "industry": "Industry",
+      "industryHint": "For example, fintech, telecom, retail",
+      "website": "Website",
+      "country": "Country",
+      "countryNone": "Not selected",
+      "city": "City",
+      "description": "About the company",
+      "descriptionHint": "What you do, what the team is like, what you offer.",
+      "saved": "Saved.",
+      "logo": {
+        "title": "Logo",
+        "hint": "PNG, JPEG or WEBP, up to {maxMb} MB. A square image looks best.",
+        "upload": "Upload logo",
+        "replace": "Replace logo",
+        "uploading": "Uploading…",
+        "uploaded": "Logo updated."
+      }
+    },
+    "team": {
+      "title": "Team",
+      "leadOwner": "Invite HR members by email. They join the team once they accept.",
+      "leadHr": "The company's HR members. Only the owner can change the team.",
+      "members": "Members",
+      "you": "(you)",
+      "roles": {
+        "owner": "Owner",
+        "hr": "HR"
+      },
+      "remove": "Remove",
+      "removeAria": "Remove {name} from the team",
+      "removeTitle": "Remove {name} from the team?",
+      "removeBody": "They will lose access to the company's data and jobs. You can invite them again later.",
+      "removeConfirm": "Remove",
+      "inviteTitle": "Invite a team member",
+      "inviteHint": "The invited person must sign in to an employer (HR) account with exactly this email.",
+      "inviteEmail": "Email",
+      "invite": "Send invitation",
+      "inviting": "Sending…",
+      "invited": "Invitation sent to {email}.",
+      "pending": "Pending invitations",
+      "pendingEmpty": "No pending invitations.",
+      "pendingMeta": "Invited by {by} · valid until {expires}",
+      "revoke": "Revoke",
+      "revokeAria": "Revoke the invitation for {email}"
+    }
+  },
+  "invitation": {
+    "metaTitle": "Team invitation",
+    "title": "Invitation to join {company}",
+    "invitedEmail": "Invitation for {email}",
+    "notFoundTitle": "Invitation not found",
+    "notFoundBody": "The link is wrong or the invitation was removed. Ask the company owner for a new one.",
+    "status": {
+      "accepted": {
+        "title": "Invitation accepted",
+        "body": "This invitation has already been accepted."
+      },
+      "expired": {
+        "title": "Invitation expired",
+        "body": "Ask the company owner to send a new invitation."
+      },
+      "revoked": {
+        "title": "Invitation revoked",
+        "body": "The company owner revoked this invitation."
+      }
+    },
+    "toDashboard": "Go to dashboard",
+    "anonymous": "To accept, sign in to an employer (HR) account with {email}, or create one.",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "roleMismatchTitle": "You're signed in as a candidate",
+    "roleMismatchBody": "Only an employer (HR) account can accept this invitation. Sign out and sign in to an HR account with {email}.",
+    "emailMismatchTitle": "You're signed in to another account",
+    "emailMismatchBody": "You're signed in as {current}, but the invitation is for {invited}. Sign out and sign in with that email.",
+    "switchAccount": "Sign out",
+    "acceptHint": "Once you accept, you'll enter the company dashboard as HR.",
+    "accept": "Accept invitation",
+    "accepting": "Accepting…"
+  },
+  "salary": {
+    "range": "{min} – {max} {currency}",
+    "exact": "{min} {currency}",
+    "from": "from {min} {currency}",
+    "upTo": "up to {max} {currency}",
+    "none": "Salary not specified",
+    "unit": {
+      "UZS": "UZS",
+      "USD": "USD",
+      "EUR": "EUR",
+      "RUB": "RUB"
+    }
+  },
+  "relative": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{count, plural, one {# day ago} other {# days ago}}"
+  },
+  "pagination": {
+    "label": "Pages",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {page}"
+  },
+  "catalog": {
+    "skillPlaceholder": "Search a skill, e.g. Python",
+    "skillSuggestions": "Skills",
+    "searching": "Searching…",
+    "noSkills": "No such skill"
+  },
+  "applicationStatus": {
+    "applied": "Applied",
+    "interview_pending": "Interview pending",
+    "stage1_in_progress": "Stage 1 in progress",
+    "stage1_failed": "Stage 1 not passed",
+    "stage1_disqualified": "Disqualified in stage 1",
+    "stage2_pending": "Stage 2 pending",
+    "stage2_in_progress": "Stage 2 in progress",
+    "stage2_disqualified": "Disqualified in stage 2",
+    "evaluated": "Evaluated",
+    "shortlisted": "Invited",
+    "rejected": "Rejected",
+    "hired": "Hired",
+    "withdrawn": "Withdrawn",
+    "other": "Under review"
+  },
+  "vacancy": {
+    "apply": "Apply",
+    "reapply": "Apply again",
+    "applied": "Applied",
+    "closedShort": "Not accepting applications",
+    "saveAria": "Save the vacancy “{title}”",
+    "saveFailed": "Not saved",
+    "verified": "Verified company",
+    "tagsLabel": "Working conditions",
+    "skillsLabel": "Skills",
+    "tags": {
+      "remote": {
+        "remote": "Remote",
+        "hybrid": "Hybrid"
+      },
+      "noExperience": "No experience",
+      "employment": {
+        "part_time": "Part-time",
+        "project": "Project work",
+        "internship": "Internship"
+      }
+    },
+    "remoteType": {
+      "office": "On-site",
+      "remote": "Remote",
+      "hybrid": "Hybrid"
+    },
+    "employmentType": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "project": "Project work",
+      "internship": "Internship"
+    },
+    "experience": {
+      "no_experience": "No experience",
+      "between_1_3": "1–3 years",
+      "between_3_6": "3–6 years",
+      "more_than_6": "Over 6 years"
+    },
+    "experienceLabel": "Experience",
+    "employmentLabel": "Employment",
+    "remoteLabel": "Work format",
+    "placeLabel": "Location",
+    "skillsTitle": "Key skills",
+    "required": "required",
+    "requiredHint": "Highlighted skills are required.",
+    "descriptionTitle": "About the job",
+    "requirementsTitle": "Requirements",
+    "publishedOn": "Published on {date}",
+    "backToSearch": "← All vacancies",
+    "closedNotice": "This vacancy is no longer accepting applications.",
+    "companyLabel": "Company",
+    "companyVacancies": "{count, plural, one {# open vacancy} other {# open vacancies}}",
+    "toCompany": "Company page",
+    "applyLabel": "Apply",
+    "applyHint": "Applications are verified with a two-stage skill interview.",
+    "similarTitle": "Similar vacancies",
+    "metaTitle": "{title} — {company}",
+    "metaFallback": "Vacancy"
+  },
+  "apply": {
+    "title": "Apply for the vacancy",
+    "doneTitle": "Application sent",
+    "vacancyLine": "{title} · {company}",
+    "interviewNote": "On SkillProof every application is verified with a two-stage skill interview: a practical task and an oral interview. The interview arrives in a later release — for now your application goes to HR.",
+    "coverLabel": "Cover note",
+    "coverPlaceholder": "Why you are a good fit — 2–3 sentences.",
+    "coverHint": "HR reads it together with your application.",
+    "submit": "Send application",
+    "submitting": "Sending…",
+    "doneBody": "HR will see your application. Its status updates in “My applications”.",
+    "statusLabel": "Status:",
+    "alreadyTitle": "You have already applied for this vacancy",
+    "alreadyBody": "Follow its status in “My applications”.",
+    "toApplications": "Go to my applications"
+  },
+  "companyPage": {
+    "metaTitle": "{name} — vacancies",
+    "metaFallback": "Company",
+    "verified": "Verified",
+    "industry": "Industry",
+    "location": "Location",
+    "opensNewTab": "opens in a new tab",
+    "about": "About the company",
+    "openVacancies": "Open vacancies",
+    "openVacanciesCount": "Open vacancies: {count}",
+    "noVacancies": "No open vacancies right now"
+  },
+  "applications": {
+    "title": "My applications",
+    "lead": "Applications you have sent and their status.",
+    "tabsLabel": "Application status",
+    "tabs": {
+      "all": "All",
+      "applied": "Sent",
+      "shortlisted": "Invited",
+      "rejected": "Rejected",
+      "withdrawn": "Withdrawn"
+    },
+    "appliedOn": "Applied: {date}",
+    "coverNote": "Note",
+    "withdraw": "Withdraw",
+    "withdrawTitle": "Withdraw your application?",
+    "withdrawBody": "Your application for “{title}” will disappear from HR’s list. You can apply again later.",
+    "withdrawConfirm": "Yes, withdraw",
+    "withdrawing": "Withdrawing…",
+    "withdrawn": "Application withdrawn.",
+    "reapply": "Apply again",
+    "emptyTitle": "You haven’t applied yet",
+    "emptyBody": "Find a matching vacancy and press “Apply”.",
+    "emptyFiltered": "No applications with this status",
+    "findVacancies": "Browse vacancies",
+    "interviewStart": "Start the interview",
+    "interviewResume": "Resume the interview",
+    "interviewResult": "View the result"
+  },
+  "saved": {
+    "title": "Saved",
+    "lead": "Vacancies you wanted to come back to.",
+    "count": "{count, plural, one {# saved vacancy} other {# saved vacancies}}",
+    "emptyTitle": "Nothing saved yet",
+    "emptyBody": "Press the heart on a vacancy card and it will show up here.",
+    "findVacancies": "Browse vacancies"
+  },
+  "hrVacancies": {
+    "title": "My vacancies",
+    "post": "Post a vacancy",
+    "tabsLabel": "Vacancy status",
+    "tabs": {
+      "published": "Active",
+      "draft": "Drafts",
+      "closed": "Closed",
+      "archived": "Archive"
+    },
+    "status": {
+      "published": "Active",
+      "draft": "Draft",
+      "closed": "Closed",
+      "archived": "Archived"
+    },
+    "columns": {
+      "vacancy": "Vacancy",
+      "applications": "Applications",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "applicationsCount": "{count, plural, one {# application} other {# applications}}",
+    "newCount": "+{count} new",
+    "noRegion": "No region",
+    "empty": {
+      "published": "No active vacancies",
+      "draft": "No drafts",
+      "closed": "No closed vacancies",
+      "archived": "The archive is empty"
+    },
+    "actions": {
+      "publish": "Publish",
+      "close": "Close",
+      "reopen": "Reopen",
+      "archive": "Archive",
+      "edit": "Edit",
+      "view": "View on site",
+      "delete": "Delete",
+      "more": "Actions for “{title}”",
+      "archiveTitle": "Archive this vacancy?",
+      "archiveBody": "“{title}” moves to the archive and can’t be reopened. Applications are kept.",
+      "deleteTitle": "Delete this draft?",
+      "deleteBody": "The draft “{title}” will be deleted permanently.",
+      "published": "“{title}” is published.",
+      "closed": "“{title}” is closed.",
+      "reopened": "“{title}” is open again.",
+      "archived": "“{title}” is archived.",
+      "deleted": "“{title}” is deleted.",
+      "assessment": "Assessment"
+    },
+    "hasAssessment": "Has assessment"
+  },
+  "vacancyForm": {
+    "formLabel": "Vacancy details",
+    "titleNew": "New vacancy",
+    "titleEdit": "Edit vacancy",
+    "back": "My vacancies",
+    "notFound": "Vacancy not found",
+    "sections": {
+      "main": "Basics",
+      "conditions": "Conditions and salary",
+      "description": "Description",
+      "skills": "Skills"
+    },
+    "title": "Job title",
+    "titleHint": "For example, “Python backend developer”. Candidates search by it.",
+    "area": "Profession area",
+    "region": "Region",
+    "regionNone": "Not specified",
+    "city": "City",
+    "remoteType": "Work format",
+    "employmentType": "Employment type",
+    "experience": "Experience",
+    "salaryMin": "Salary from",
+    "salaryMax": "Salary up to",
+    "currency": "Currency",
+    "salaryHint": "Vacancies with a salary get more applications. Whole number, per month.",
+    "description": "Job description",
+    "descriptionHint": "Tasks, team, conditions. Required to publish.",
+    "requirements": "Requirements",
+    "requirementsHint": "One requirement per line.",
+    "skills": "Skills",
+    "skillsHint": "Up to {max}. Weight (1–5) is how important a skill is; mark required ones separately.",
+    "addSkill": "Add a skill",
+    "skillsFull": "At most {max} skills",
+    "noSkills": "No skills added yet.",
+    "weight": "Weight",
+    "weightOf": "Weight of {skill}",
+    "required": "Required",
+    "requiredOf": "{skill} is required",
+    "removeSkill": "Remove {skill}",
+    "saveDraft": "Save as draft",
+    "publish": "Publish",
+    "publishing": "Publishing…",
+    "save": "Save changes",
+    "assessmentLink": "Assessment settings"
+  },
+  "hrCandidates": {
+    "title": "Candidates",
+    "lead": "Applications to your vacancies, newest first.",
+    "vacancyFilter": "Vacancy",
+    "allVacancies": "All vacancies",
+    "tabsLabel": "Application status",
+    "tabs": {
+      "applied": "New",
+      "shortlisted": "Shortlisted",
+      "rejected": "Rejected"
+    },
+    "empty": {
+      "applied": "No new applications",
+      "shortlisted": "No shortlisted candidates",
+      "rejected": "No rejected candidates"
+    },
+    "emptyBody": "Pick another vacancy or status.",
+    "total": "Total: {count}",
+    "location": "Location",
+    "experience": "Experience",
+    "years": "{count, plural, one {# year} other {# years}}",
+    "noExperience": "No experience",
+    "notSpecified": "not specified",
+    "expectedSalary": "Expected salary",
+    "appliedOn": "Applied",
+    "forVacancy": "Vacancy",
+    "coverNote": "Cover note",
+    "expand": "Read more",
+    "collapse": "Show less",
+    "actions": {
+      "shortlisted": "Shortlist",
+      "rejected": "Reject",
+      "applied": "Move back to new"
+    },
+    "resume": "Download resume",
+    "noResume": "No resume uploaded",
+    "scoresLabel": "Interview results",
+    "scoresTitle": "Score and suspicion level",
+    "scoresLater": "Two-stage interview results will appear here in a later release.",
+    "stage1": {
+      "label": "Stage 1",
+      "title": "Stage 1",
+      "level": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "evaluating": "Being evaluated",
+      "notStarted": "Stage 1 not started",
+      "open": "Report and replay"
+    }
+  },
+  "hrBank": {
+    "approved": "Approved",
+    "notApproved": "Not approved",
+    "global": "Global template",
+    "difficulty": "Difficulty",
+    "difficultyOption": "Difficulty {n}/5",
+    "language": "Language",
+    "skill": "Skill",
+    "noSkill": "No skill",
+    "savedNew": "Saved.",
+    "savedEdit": "Changes saved.",
+    "editResets": "An edited item is checked again: its verification status goes back to \"Not checked\".",
+    "languages": {
+      "uz": "Uzbek",
+      "ru": "Russian",
+      "en": "English"
+    },
+    "source": {
+      "manual": "Written by hand",
+      "ai_generated": "AI-generated"
+    },
+    "verification": {
+      "not_checked": "Not checked",
+      "passed": "Passed checks",
+      "flagged": "Flagged",
+      "sandbox_pending": "Sandbox check pending",
+      "flaggedWhy": "Why it was flagged:",
+      "noReason": "No reason given."
+    },
+    "filters": {
+      "label": "Filters",
+      "q": "Search",
+      "search": "Search",
+      "anySkill": "All skills",
+      "approved": "Approval",
+      "source": "Source",
+      "all": "All",
+      "includeGlobal": "Include global templates"
+    },
+    "actions": {
+      "readOnly": "Only an administrator can edit a global template.",
+      "approve": "Approve",
+      "unapprove": "Remove approval",
+      "edit": "Edit",
+      "delete": "Delete",
+      "approvedDone": "Approved: {label}",
+      "unapproved": "Approval removed: {label}",
+      "deletedDone": "Deleted: {label}",
+      "deleteTitle": "Delete this item?",
+      "deleteBody": "\"{label}\" will be removed from the bank. This can't be undone."
+    },
+    "rubric": {
+      "legend": "Scoring rubric",
+      "hint": "1–10 points per criterion. The AI scores against these criteria.",
+      "criterion": "Criterion {n}",
+      "remove": "Remove criterion {n}",
+      "removeShort": "Remove",
+      "name": "Name",
+      "key": "Key",
+      "keyHint": "a-z, 0-9, _",
+      "maxPoints": "Max points",
+      "description": "Description",
+      "levels": "Score levels",
+      "levelsHint": "One per line: points: note. For example, 5: complete answer.",
+      "optional": "(optional)",
+      "add": "Add criterion"
+    },
+    "question": {
+      "title": "Question bank",
+      "titleNew": "New question",
+      "titleEdit": "Edit question",
+      "new": "Add question",
+      "empty": "No questions yet. Add the first one, or generate some with AI on the assessment page.",
+      "type": "Type",
+      "types": {
+        "open": "Open question",
+        "mcq": "Multiple choice",
+        "scenario": "Scenario"
+      },
+      "text": "Question text",
+      "options": "Answer options",
+      "optionsHint": "2 to 8 options. Mark the correct ones.",
+      "optionN": "Option {n}",
+      "correct": "Correct",
+      "removeOption": "Remove option {n}",
+      "addOption": "Add option",
+      "referenceAnswer": "Reference answer"
+    },
+    "task": {
+      "title": "Task bank",
+      "fieldTitle": "Title",
+      "titleNew": "New task",
+      "titleEdit": "Edit task",
+      "new": "Add task",
+      "empty": "No tasks yet. Add the first one, or generate some with AI on the assessment page.",
+      "statement": "Statement",
+      "allowedLanguages": "Allowed languages",
+      "codeLanguages": {
+        "python": "Python",
+        "javascript": "JavaScript",
+        "typescript": "TypeScript",
+        "sql": "SQL",
+        "go": "Go",
+        "java": "Java"
+      },
+      "starter": "Starter code: {lang}",
+      "timeLimit": "Time (minutes)",
+      "cpuLimit": "CPU time (seconds)",
+      "memoryLimit": "Memory (MB)",
+      "limitMinutes": "{n} min",
+      "testsCount": "{visible} visible, {hidden} hidden tests",
+      "tests": {
+        "caseN": "Test {n}",
+        "remove": "Remove test {n}",
+        "name": "Name",
+        "optional": "(optional)",
+        "input": "Input (stdin)",
+        "output": "Expected output (stdout)",
+        "add": "Add test",
+        "visible_tests": {
+          "legend": "Visible tests (1–20)",
+          "hint": "Candidates see and can run these."
+        },
+        "hidden_tests": {
+          "legend": "Hidden tests (1–50)",
+          "hint": "Never shown to candidates; the final score is computed from them."
+        }
+      },
+      "solution": {
+        "legend": "Reference solution",
+        "hint": "Optional. Used for the sandbox check.",
+        "language": "Solution language",
+        "code": "Solution code"
+      }
+    }
+  },
+  "hrAssessment": {
+    "title": "Assessment",
+    "back": "Back to jobs",
+    "formLabel": "Assessment settings",
+    "saved": "Assessment saved.",
+    "save": "Save assessment",
+    "readiness": {
+      "notSavedTitle": "Assessment isn't saved yet",
+      "notSavedBody": "After you save, the readiness check appears here.",
+      "ready": "Assessment is ready",
+      "notReady": "Assessment isn't ready yet",
+      "blocking": "{count, plural, one {# issue blocks launch} other {# issues block launch}}",
+      "warnings": "{count, plural, one {# warning} other {# warnings}}",
+      "noIssues": "No issues or warnings.",
+      "issues": {
+        "unknown": "Unknown issue: {code}",
+        "stage1_no_tasks": "No task is selected for Stage 1.",
+        "task_not_approved": "Task isn't approved: {item}",
+        "task_not_sandbox_validated": "Task hasn't passed the sandbox check: {item}",
+        "question_not_approved": "Question isn't approved: {item}",
+        "question_language_mismatch": "Question language differs from the assessment language: {item}",
+        "stage2_not_enough_questions": "Not enough approved questions for Stage 2: need {needed}, approved {approved}.",
+        "too_many_mandatory_questions": "Mandatory questions ({mandatory}) exceed the question count ({count})."
+      }
+    },
+    "generate": {
+      "title": "Generate with AI",
+      "bodyManual": "The AI writes questions and tasks. They are checked, but stay unused until you approve them.",
+      "bodyAuto": "The AI writes questions and tasks. \"Auto-approve AI items\" is on: items that pass checks are approved right away.",
+      "questionCount": "Questions (0–20)",
+      "taskCount": "Tasks (0–3)",
+      "range": "Enter a whole number from {min} to {max}.",
+      "skills": "Skills",
+      "optional": "(optional)",
+      "skillsHint": "Leave empty to use the vacancy's skills.",
+      "addSkill": "Add a skill",
+      "removeSkill": "Remove {name}",
+      "start": "Generate with AI",
+      "running": "Generating…",
+      "statusQueued": "Queued. Hang on…",
+      "statusRunning": "The AI is working. This can take a few minutes…",
+      "succeeded": "Generation finished",
+      "resultCounts": "Added {questions} questions and {tasks} tasks.",
+      "failed": "Generation failed",
+      "failedBody": "Try again.",
+      "flaggedTitle": "{count, plural, one {# item was flagged} other {# items were flagged}}",
+      "flaggedBody": "Review them in the question and task banks: the reason is shown on each item.",
+      "inProgressTitle": "Generation is already running",
+      "inProgressBody": "The result is added to the assessment when the earlier request finishes. Refresh in a moment.",
+      "inProgressRefresh": "Refresh"
+    },
+    "general": {
+      "title": "General",
+      "language": "Assessment language",
+      "questionMode": "Question source",
+      "questionModeHint": "Manual — only the questions you pick; AI — AI-generated; mixed — both.",
+      "modes": {
+        "manual": "Manual",
+        "ai_generated": "AI-generated",
+        "mixed": "Mixed"
+      },
+      "skillReuse": "Reuse verified skills",
+      "skillReuseHint": "If a candidate already has a verified skill, we won't test that part again.",
+      "autoApprove": "Auto-approve AI items",
+      "autoApproveHint": "When on, AI items that pass checks are approved right away."
+    },
+    "stage1": {
+      "title": "Stage 1 — coding tasks",
+      "hint": "Pick up to 5 tasks from the bank. Empty fields use the default.",
+      "remove": "Remove {title}",
+      "none": "No task selected.",
+      "pick": "Task from the bank",
+      "pickEmpty": "Choose a task",
+      "add": "Add",
+      "duration": "Duration (minutes)",
+      "threshold": "Pass score (%)"
+    },
+    "stage2": {
+      "title": "Stage 2 — interview",
+      "hint": "Question order follows the list order. Mandatory questions go to every candidate.",
+      "duration": "Duration (minutes)",
+      "count": "Question count",
+      "threshold": "Pass score (%)",
+      "mode": "Mode",
+      "modes": {
+        "voice": "Voice",
+        "text": "Text"
+      },
+      "adaptive": "Adaptive interview",
+      "adaptiveHint": "Follow-up questions depend on the answer.",
+      "questions": "Questions",
+      "none": "No question selected.",
+      "mandatory": "Mandatory",
+      "up": "Move up: {label}",
+      "down": "Move down: {label}",
+      "remove": "Remove: {label}",
+      "pick": "Question from the bank",
+      "pickEmpty": "Choose a question",
+      "add": "Add"
+    },
+    "integrity": {
+      "title": "Integrity settings",
+      "hint": "Change the default limits for this vacancy only.",
+      "pasteMax": "Paste limit (lines)",
+      "inactivity": "Inactivity limit (seconds)",
+      "emptyDefault": "An empty field uses the default (shown as a grey hint). Only the server decides the outcome."
+    }
+  },
+  "interview": {
+    "title": "Interview",
+    "notFound": "This application was not found or belongs to someone else.",
+    "desktopOnlyTitle": "Open the interview on a computer",
+    "desktopOnlyBody": "The coding stage does not work on a small screen. Open this link on a computer (a window at least 1024 px wide).",
+    "desktopOnlyBack": "Back to my applications",
+    "editor": {
+      "tabHint": "Tab inserts an indent inside the editor. To leave the editor press Ctrl+M, then Tab."
+    },
+    "blocked": {
+      "title": "The interview can't start right now",
+      "application_closed": "This application is closed: you withdrew it or the employer has made a decision.",
+      "assessment_not_ready": "The employer hasn't finished preparing the interview for this job yet. Try again later.",
+      "unknown": "The interview can't start right now.",
+      "back": "Back to my applications"
+    },
+    "rules": {
+      "reload": "Reload the rules",
+      "versionChanged": "The rules were updated. Refresh the page and read the new rules."
+    },
+    "check": {
+      "title": "System check",
+      "lead": "Check that your browser is compatible before you start.",
+      "websocket": "Real-time connection (WebSocket)",
+      "clipboard": "Clipboard events",
+      "fullscreen": "Fullscreen mode",
+      "ok": "ready",
+      "fail": "missing",
+      "browserHint": "Use a recent version of Chrome, Edge, Firefox or Safari.",
+      "fullscreenHint": "Fullscreen is recommended, not required.",
+      "enterFullscreen": "Go fullscreen",
+      "micTitle": "Microphone test",
+      "micStub": "The microphone test isn't available yet: it arrives with Stage 2 (the voice conversation). Stage 1 needs no microphone.",
+      "browserBlocked": "Your browser lacks required features. Open the page in another browser.",
+      "continue": "Continue"
+    },
+    "warmup": {
+      "title": "Warm-up task",
+      "timer": "Time left",
+      "skip": "Skip",
+      "notice": "This task is not scored and nothing is recorded. Try the editor and the test runner.",
+      "taskTitle": "Add two numbers",
+      "statement": "One line contains two integers. Print their sum.",
+      "done": "I'm ready, continue"
+    },
+    "task": {
+      "visibleTests": "Visible tests",
+      "testN": "Test {n}",
+      "input": "Input",
+      "output": "Output",
+      "editorRegion": "Code editor",
+      "language": "Programming language",
+      "languages": {
+        "python": "Python",
+        "javascript": "JavaScript",
+        "typescript": "TypeScript",
+        "sql": "SQL",
+        "go": "Go",
+        "java": "Java"
+      },
+      "run": "Run tests",
+      "running": "Running…",
+      "submit": "Submit",
+      "editorLabel": "Code editor",
+      "resultsSummary": "{passed} of {total} tests passed",
+      "status": {
+        "passed": "passed",
+        "failed": "failed",
+        "error": "error",
+        "timeout": "timed out"
+      },
+      "submitTitle": "Submit your solution?",
+      "submitBody": "You can't change this task after submitting.",
+      "keepWorking": "Keep working",
+      "submitConfirm": "Submit"
+    },
+    "stage1": {
+      "introTitle": "Stage 1: coding",
+      "introBody": "Each task is timed. The timer follows the server clock. We will offer fullscreen when you start. Pasting code from outside the editor is not possible.",
+      "begin": "Start Stage 1",
+      "starting": "Starting…",
+      "supersededTitle": "The interview continues in another window",
+      "supersededBody": "This interview is open in another browser window. Close this one and continue there.",
+      "taskOf": "Task {n} of {total}",
+      "offline": "Connection lost. Reconnecting. What you wrote is kept.",
+      "taskTimer": "Task time",
+      "inactiveTitle": "Inactivity warning",
+      "inactiveBody": "Keep typing, otherwise the interview ends automatically.",
+      "inactiveCountdown": "{s} seconds left.",
+      "backToFullscreen": "Back to fullscreen",
+      "fullscreenLeft": "You left fullscreen. This is recorded. You can continue, but returning to fullscreen is recommended."
+    },
+    "ended": {
+      "completed": {
+        "title": "Stage 1 is finished",
+        "body": "Your solutions were received."
+      },
+      "expired": {
+        "title": "Time is up",
+        "body": "The time for Stage 1 has run out. What you wrote is saved."
+      },
+      "abandoned": {
+        "title": "The interview was stopped",
+        "body": "The connection was not restored for too long, so the interview was stopped."
+      },
+      "inactivity": {
+        "title": "Interview ended: inactivity",
+        "body": "You did nothing for a long time, and under the rules the interview ended automatically."
+      },
+      "externalPaste": {
+        "title": "Interview ended: code pasted from outside",
+        "body": "A large piece of text from outside was pasted into the editor. Under the rules you accepted before starting, Stage 1 ends here."
+      },
+      "ruleRef": "The rules version you accepted: {version}. The employer can review the decision.",
+      "back": "Back to my applications"
+    },
+    "result": {
+      "title": "Stage 1 result",
+      "pending": "Your code is being checked. This can take a few seconds.",
+      "delayedTitle": "The result is delayed",
+      "delayedBody": "Calculating the result is taking longer than expected. The company will review your solutions directly.",
+      "threshold": "Pass mark: {value}%",
+      "passed": "You passed Stage 1",
+      "notPassed": "The pass mark was not reached this time",
+      "nextStage2": "Stage 2 (the voice conversation) is coming soon. Nothing else is needed from you for now.",
+      "notPassedBody": "The result is below the pass mark, so the application did not move on. The notes below may help next time.",
+      "hidden": "Hidden tests: {passed} of {total}",
+      "strengths": "Strengths",
+      "weaknesses": "Room to grow"
+    }
+  },
+  "hrReplay": {
+    "region": "Code replay player",
+    "editorLabel": "Candidate code (read only)",
+    "play": "Play",
+    "pause": "Pause",
+    "back5": "Back 5 seconds",
+    "fwd5": "Forward 5 seconds",
+    "toStart": "To start",
+    "toEnd": "To end",
+    "speed": "Speed",
+    "skipIdle": "Skip long silences",
+    "time": "Time",
+    "markers": "Timeline markers",
+    "timeline": "Timeline",
+    "legend": "Markers: pastes (outside / inside) {paste}, idle {idle}, away from the tab {focus}, runs {run}.",
+    "keys": "Keyboard: Space plays and pauses. Left / Right arrows move 5 seconds, with Shift 30 seconds.",
+    "marker": {
+      "pasteBlocked": "Blocked outside paste: {length} characters, {lines} lines, {time}",
+      "pasteInternal": "Paste inside the editor, {time}",
+      "idle": "Idle {seconds} s, from {time}",
+      "focus": "Left the tab or fullscreen, {time}",
+      "run": "Ran the tests, {time}"
+    }
+  },
+  "hrStage1": {
+    "title": "Stage 1 report",
+    "back": "Back to candidates",
+    "notStarted": "Stage 1 has not started",
+    "notStartedBody": "The report appears here once the candidate starts the interview.",
+    "status": {
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "expired": "Time ran out",
+      "abandoned": "Stopped",
+      "disqualified": "Disqualified"
+    },
+    "reviewTitle": "Strengths and weaknesses",
+    "replayTitle": "Code replay",
+    "tasksLabel": "Tasks",
+    "codeTitle": "Final code and test results",
+    "suspicion": {
+      "title": "AI-help suspicion",
+      "notYet": "Being calculated: it appears after the Stage 1 analysis.",
+      "none": "No suspicion percentage was calculated.",
+      "rankingAid": "Neither the score nor the suspicion percentage decides anything automatically. The percentage is an aid for comparing candidates, not a probability.",
+      "level": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "reasons": "Main reasons",
+      "noReasons": "No reasons were recorded.",
+      "allSignals": "All signals ({count})",
+      "severity": {
+        "info": "info",
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "disqualifying": "disqualifying"
+      }
+    },
+    "signals": {
+      "unknown": "Unknown signal: {type}",
+      "idle_periods": "Long idle periods: {count} (seconds: {seconds}){atStart, plural, =1 { at the start of the task} other {}}",
+      "idle_with_focus_loss": "Idle while away from the tab: {count} times (seconds: {seconds})",
+      "burst_after_idle": "{chars} characters appeared within {windowS} s after a pause",
+      "superhuman_typing": "Very fast typing: {charsPerS} characters per second",
+      "robotic_typing": "Evenly spaced keystrokes (variation {cv}, {samples} samples)",
+      "linear_writing": "Written with almost no edits: {chars} characters, edit share {editPercent}%, back jumps {backJumps}",
+      "no_run_cycle": "All tests pass, but the code was never run",
+      "no_edits_after_first_run": "The code did not change after the first run ({runs} runs)",
+      "focus_loss": "Left the tab or window {count} times, {totalS} s in total, fullscreen exits {exits}",
+      "evaluator_injection_attempt": "The code contains an instruction aimed at the evaluator",
+      "paste_external": "An outside paste was blocked ({lines} lines, {chars} characters)",
+      "external_insertion": "Unexplained text appeared ({lines} lines, {chars} characters)",
+      "unverified_internal_paste": "Unverified internal paste ({lines} lines, {chars} characters)",
+      "external_paste": "Large outside paste: Stage 1 ended ({lines} lines, {chars} characters)",
+      "inactivity": "Long inactivity: Stage 1 ended automatically"
+    },
+    "scores": {
+      "title": "Scores",
+      "stage1": "Stage 1",
+      "hidden": "Hidden tests",
+      "review": "Code review",
+      "threshold": "pass mark {value}%",
+      "passed": "passed",
+      "notPassed": "not passed",
+      "pending": "Evaluation is running. The page refreshes by itself.",
+      "failedTitle": "Evaluation failed",
+      "failedBody": "The automatic evaluation did not finish, so there is no score. Review the solution by hand.",
+      "needsReviewTitle": "Needs a manual review",
+      "needsReviewBody": "Confidence in the code review is low, or the evaluators disagreed. Look at the replay and the code yourself.",
+      "disqualifiedTitle": "The candidate was disqualified",
+      "disqualified": {
+        "external_paste": "External paste: under the rules the candidate accepted, they pasted outside text above the limit.",
+        "inactivity": "Inactivity: the candidate did nothing for longer than the accepted limit.",
+        "abandoned": "Stopped: the connection was not restored.",
+        "other": "No reason given."
+      },
+      "notAutomatic": "Neither the score nor the suspicion percentage decides anything automatically: the decision is yours."
+    },
+    "review": {
+      "none": "No code review.",
+      "score": "Code review score",
+      "needsReview": "needs a manual review",
+      "strengths": "Strengths",
+      "weaknesses": "Weaknesses",
+      "findings": "Comments on the code",
+      "criteria": "By criterion",
+      "line": "line {n}"
+    },
+    "code": {
+      "finalCode": "Final code",
+      "runs": "Runs: {count}",
+      "visible": "Visible tests",
+      "hidden": "Hidden tests",
+      "status": {
+        "passed": "passed",
+        "failed": "failed",
+        "error": "error",
+        "timeout": "timed out"
+      }
+    }
+  }
+}

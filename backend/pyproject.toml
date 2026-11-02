@@ -1,0 +1,67 @@
+[project]
+name = "skillproof-api"
+version = "0.1.0"
+description = "AI skill-verified hiring platform — API"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic[email]>=2.8",
+    "pydantic-settings>=2.4",
+    "sqlalchemy[asyncio]>=2.0.32",
+    "asyncpg>=0.29",
+    "alembic>=1.13",
+    "redis>=5.0",
+    "arq>=0.26",
+    "httpx>=0.27",
+    "argon2-cffi>=25.1.0",
+    "pyjwt>=2.15.1",
+    "python-multipart>=0.0.32",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "ASYNC", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/services/email.py" = ["RUF001"]  # Russian templates
+"app/seed/*" = ["RUF001"]
+"app/ai/mock_handlers.py" = ["RUF001", "E501"]
+"tests/*" = ["RUF001"]  # uz/ru/en sample texts  # sample texts in uz/ru/en
+"migrations/versions/*" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["migrations/"]
+
+[[tool.mypy.overrides]]
+# Bank CRUD routes are registered in a loop for questions/tasks × company/admin scopes;
+# FastAPI validates the runtime-built annotations, mypy cannot.
+module = ["app.api.v1.assessments"]
+disable_error_code = ["valid-type", "no-untyped-def", "no-untyped-call"]
+
+[[tool.mypy.overrides]]
+module = ["arq.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]

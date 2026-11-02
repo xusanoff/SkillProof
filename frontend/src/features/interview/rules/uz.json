@@ -1,0 +1,35 @@
+{
+  "title": "Intervyu qoidalari",
+  "lead": "Boshlashdan oldin qoidalarni diqqat bilan o'qing. Ular barcha nomzodlar uchun bir xil.",
+  "version": "Qoidalar versiyasi",
+  "items": [
+    {
+      "title": "1-bosqich — kod yozish",
+      "body": "1-bosqich — bizning muharrirda amaliy topshiriq. Muharrirdan tashqaridan kod qo'yish (paste) bloklanadi. Katta hajmdagi tashqi matn qo'yilsa, 1-bosqich darhol muvaffaqiyatsiz tugaydi va 2-bosqichga o'tilmaydi."
+    },
+    {
+      "title": "Nima qayd etiladi",
+      "body": "Brauzer oynasidan yoki to'liq ekran rejimidan chiqish, uzoq harakatsizlik va shunga o'xshash holatlar qayd etiladi va ish beruvchiga ko'rsatiladi."
+    },
+    {
+      "title": "Yozish jarayoni yoziladi",
+      "body": "Yozish va tahrirlash harakatlari yozib boriladi, shunda ish beruvchi kod qanday yozilganini qayta ko'ra oladi."
+    },
+    {
+      "title": "2-bosqich — ovozli suhbat",
+      "body": "2-bosqich — sun'iy intellekt bilan ovozli suhbat. Uzoq sukunat va boshqa signallar qayd etiladi. AI sizning o'z kodingiz haqida so'raydi."
+    },
+    {
+      "title": "Harakatsizlik chegarasi: 90 soniya",
+      "body": "Agar 90 soniya hech narsa qilmasangiz (1-bosqichda yozmasangiz va Testlarni ishga tushirmasangiz), intervyu avtomatik tugaydi va natija muvaffaqiyatsiz bo'ladi. 60-soniyada orqaga sanash bilan ogohlantirish chiqadi. Internet uzilib qolsa, taymer to'xtaydi va bu sizga qarshi hisoblanmaydi."
+    },
+    {
+      "title": "Ish beruvchi ko'rib chiqishi mumkin",
+      "body": "Diskvalifikatsiya holatida ish beruvchi hodisalar tarixini ko'rib, sizni izoh bilan qayta tiklashi mumkin."
+    }
+  ],
+  "accept": "Qoidalarni o'qidim va qabul qilaman",
+  "acceptRequired": "Davom etish uchun qoidalarni qabul qiling.",
+  "continue": "Davom etish",
+  "saving": "Saqlanmoqda…"
+}

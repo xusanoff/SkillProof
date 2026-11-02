@@ -1,0 +1,7 @@
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
+  # next-intl's optional message-extraction tooling; not used at runtime
+  '@parcel/watcher': false
+  '@swc/core': false
+  msw: false

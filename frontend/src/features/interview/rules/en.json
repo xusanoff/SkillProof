@@ -1,0 +1,35 @@
+{
+  "title": "Interview rules",
+  "lead": "Read the rules carefully before you start. They are the same for every candidate.",
+  "version": "Rules version",
+  "items": [
+    {
+      "title": "Stage 1 — coding",
+      "body": "Stage 1 is a coding task in our editor. Pasting code from outside the editor is blocked, and a large external paste ends Stage 1 immediately with a fail, without Stage 2."
+    },
+    {
+      "title": "What is recorded",
+      "body": "Leaving the tab or exiting fullscreen, long inactivity and similar behaviour are recorded and shown to the employer."
+    },
+    {
+      "title": "Typing is recorded",
+      "body": "Typing and editing are recorded so the employer can replay how the code was written."
+    },
+    {
+      "title": "Stage 2 — voice conversation",
+      "body": "Stage 2 is a voice conversation with an AI. Long silences and other signals are recorded. The AI will ask about your own code."
+    },
+    {
+      "title": "Inactivity limit: 90 seconds",
+      "body": "If you do nothing for 90 seconds (in Stage 1: no typing and no test runs), the interview ends automatically with a fail. A warning with a countdown appears at 60 seconds. If your connection drops, the timer pauses and it is not held against you."
+    },
+    {
+      "title": "The employer can review",
+      "body": "If you are disqualified, the employer can review the event history and reinstate you with a comment."
+    }
+  ],
+  "accept": "I have read and accept the rules",
+  "acceptRequired": "Accept the rules to continue.",
+  "continue": "Continue",
+  "saving": "Saving…"
+}

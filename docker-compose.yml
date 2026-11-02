@@ -1,0 +1,132 @@
+name: skillproof
+
+x-api-env: &api-env
+  ENVIRONMENT: ${ENVIRONMENT:-local}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  # Set COMPOSE_DATABASE_URL to use an external database (e.g. the host's Postgres via host.docker.internal).
+  DATABASE_URL: ${COMPOSE_DATABASE_URL:-postgresql+asyncpg://${POSTGRES_USER:-skillproof}:${POSTGRES_PASSWORD:-skillproof}@postgres:5432/${POSTGRES_DB:-skillproof}}
+  REDIS_URL: redis://redis:6379/0
+  STORAGE_BACKEND: ${STORAGE_BACKEND:-local}
+  STORAGE_LOCAL_DIR: /data/uploads
+  JWT_SECRET: ${JWT_SECRET:-dev-only-insecure-jwt-secret-change-me-in-env}
+  CORS_ORIGINS: '["http://localhost:${WEB_PORT:-3000}"]'
+  LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+  LLM_MODEL: ${LLM_MODEL:-mock-1}
+  LLM_BASE_URL: ${LLM_BASE_URL:-}
+  LLM_API_KEY: ${LLM_API_KEY:-}
+  SANDBOX_PROVIDER: ${SANDBOX_PROVIDER:-judge0}
+  JUDGE0_URL: http://judge0-server:2358
+  JUDGE0_AUTHN_TOKEN: ${JUDGE0_AUTHN_TOKEN:-dev-only-judge0-token}
+  STT_PROVIDER: ${STT_PROVIDER:-mock}
+  TTS_PROVIDER: ${TTS_PROVIDER:-mock}
+
+x-judge0-env: &judge0-env
+  REDIS_PASSWORD: ${JUDGE0_REDIS_PASSWORD:-dev-only-judge0-redis}
+  POSTGRES_PASSWORD: ${JUDGE0_DB_PASSWORD:-dev-only-judge0-db}
+  AUTHN_HEADER: X-Auth-Token
+  AUTHN_TOKEN: ${JUDGE0_AUTHN_TOKEN:-dev-only-judge0-token}
+
+services:
+  api:
+    build: ./backend
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    environment: *api-env
+    ports: ["${API_PORT:-8000}:8000"]
+    networks: [default, sandbox]
+    volumes: [uploads:/data/uploads]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  worker:
+    build: ./backend
+    command: arq app.workers.worker.WorkerSettings
+    environment: *api-env
+    networks: [default, sandbox]
+    volumes: [uploads:/data/uploads]
+    depends_on:
+      redis: { condition: service_healthy }
+      postgres: { condition: service_healthy }
+
+  # Code execution (spec §3). No published ports: only api and worker reach it, on `sandbox`.
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    environment: *judge0-env
+    volumes: ["./infra/judge0.conf:/judge0.conf:ro"]
+    privileged: true # isolate needs it
+    networks: [sandbox]
+    depends_on: [judge0-db, judge0-redis]
+
+  judge0-workers:
+    image: judge0/judge0:1.13.1
+    command: ["./scripts/workers"]
+    environment: *judge0-env
+    volumes: ["./infra/judge0.conf:/judge0.conf:ro"]
+    privileged: true
+    mem_limit: 6g
+    pids_limit: 2048
+    networks: [sandbox]
+    depends_on: [judge0-db, judge0-redis]
+
+  judge0-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: ${JUDGE0_DB_PASSWORD:-dev-only-judge0-db}
+    networks: [sandbox]
+
+  judge0-redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "no", "--requirepass", "${JUDGE0_REDIS_PASSWORD:-dev-only-judge0-redis}"]
+    networks: [sandbox]
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_APP_NAME: ${APP_NAME:-SkillProof}  # inlined at build time
+        NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-ws://localhost:8000}  # inlined at build time
+    environment:
+      API_INTERNAL_URL: http://api:8000
+    ports: ["${WEB_PORT:-3000}:3000"]
+    depends_on:
+      api: { condition: service_healthy }
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-skillproof}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-skillproof}
+      POSTGRES_DB: ${POSTGRES_DB:-skillproof}
+    ports: ["${POSTGRES_PORT:-5432}:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-skillproof}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports: ["${REDIS_PORT:-6379}:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Judge0 (code sandbox) is added in Phase 4.
+
+networks:
+  sandbox:
+    internal: true
+
+volumes:
+  pgdata:
+  uploads:

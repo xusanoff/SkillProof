@@ -1,0 +1,1373 @@
+{
+  "meta": {
+    "title": "{appName} — ko'nikmasi tasdiqlangan ish o'rinlari",
+    "description": "Har bir ariza ikki bosqichli suhbat bilan tasdiqlanadigan ish maydoni: amaliy topshiriq va AI bilan og'zaki suhbat."
+  },
+  "common": {
+    "skipToContent": "Asosiy kontentga o'tish",
+    "retry": "Qayta urinish",
+    "backHome": "Bosh sahifaga qaytish",
+    "example": "Namuna",
+    "optional": "(ixtiyoriy)",
+    "save": "Saqlash",
+    "saving": "Saqlanmoqda…",
+    "cancel": "Bekor qilish",
+    "close": "Yopish",
+    "units": {
+      "kb": "{value} KB",
+      "mb": "{value} MB"
+    }
+  },
+  "nav": {
+    "label": "Asosiy bo'limlar",
+    "home": "{appName} bosh sahifasi",
+    "signIn": "Kirish",
+    "postVacancy": "Vakansiya joylash",
+    "accountMenu": "Hisob menyusi: {name}",
+    "signOut": "Chiqish",
+    "bottomLabel": "Tezkor bo'limlar",
+    "roles": {
+      "candidate": "Nomzod",
+      "hr": "Ish beruvchi (HR)",
+      "admin": "Administrator"
+    },
+    "menu": {
+      "resumes": "Rezyumelarim",
+      "applications": "Arizalarim",
+      "saved": "Saqlanganlar",
+      "results": "Natijalarim",
+      "settings": "Sozlamalar",
+      "myVacancies": "Vakansiyalarim",
+      "candidates": "Nomzodlar",
+      "company": "Kompaniya",
+      "team": "Jamoa",
+      "search": "Qidiruv",
+      "profile": "Profil"
+    }
+  },
+  "locale": {
+    "label": "Interfeys tili",
+    "names": {
+      "uz": "O'zbekcha",
+      "ru": "Русский",
+      "en": "English"
+    }
+  },
+  "theme": {
+    "toggle": "Yorug' yoki qorong'i mavzuga o'tish"
+  },
+  "home": {
+    "hero": {
+      "title": "Ishga rezyume bilan emas, bilim bilan kiring",
+      "lead": "Bu yerdagi har bir ariza ikki bosqichli suhbat bilan tasdiqlanadi: amaliy topshiriq va AI bilan og'zaki suhbat. Ish beruvchi chiroyli rezyumeni emas, haqiqiy natijani ko'radi, siz esa xatolaringiz va nimani o'rganish kerakligini bilib olasiz.",
+      "scopeNote": "Hozircha IT yo'nalishidagi vakansiyalar: dasturlash, QA, ma'lumotlar tahlili, DevOps."
+    },
+    "sample": {
+      "caption": "Ish beruvchi arizani shunday ko'radi",
+      "role": "Backend dasturchi, Python",
+      "applicant": "Nomzod arizasi",
+      "stage1": "Amaliy topshiriq",
+      "stage2": "Og'zaki suhbat",
+      "suspicion": "Shubha darajasi",
+      "suspicionLow": "Past",
+      "replay": "Kod qanday yozilgani yozib olingan",
+      "replayHint": "Ish beruvchi har bir tahrirni qayta ko'ra oladi.",
+      "decision": "Ball va izohlarni AI tayyorlaydi, qarorni HR qabul qiladi."
+    },
+    "steps": {
+      "title": "Suhbat qanday o'tadi",
+      "lead": "To'rt qadam, hammasi bitta oynada. Qoidalar oldindan aytiladi va boshlanishidan oldin ularni qabul qilasiz.",
+      "rules": {
+        "title": "Qoidalar",
+        "body": "Boshlashdan oldin qoidalarni o'qib, qabul qilasiz: tashqaridan kod qo'yish bloklanadi, uzoq harakatsizlik suhbatni yakunlaydi."
+      },
+      "stage1": {
+        "title": "1-bosqich: amaliy topshiriq",
+        "body": "Platforma muharririda kod yozasiz va ko'rinadigan testlarni ishga tushirasiz. Natijani yashirin testlar va kod tahlili belgilaydi."
+      },
+      "stage2": {
+        "title": "2-bosqich: og'zaki suhbat",
+        "body": "AI suhbatdosh ovoz orqali savol beradi, ko'pincha aynan siz yozgan kod haqida. O'zingiz yozgan kodni tushuntirish oson."
+      },
+      "results": {
+        "title": "Natija",
+        "body": "Har ikki bosqich bo'yicha foizli ball va izoh olasiz. Ish beruvchi dalillar bilan tartiblangan nomzodlar ro'yxatini ko'radi."
+      }
+    },
+    "principle": "AI baholaydi va sababini tushuntiradi. Ishga olish haqidagi yakuniy qarorni esa inson qabul qiladi.",
+    "audience": {
+      "candidates": {
+        "title": "Nomzodlarga",
+        "body": "Bir marta tasdiqlangan ko'nikmalar profilingizda qoladi va keyingi arizalarda ham ishlaydi. Rad javobi ham sababsiz qolmaydi: nima yetishmaganini ko'rasiz.",
+        "cta": "Vakansiyalarni ko'rish"
+      },
+      "employers": {
+        "title": "Ish beruvchilarga",
+        "body": "Vakansiya joylang, savol va topshiriqlarni o'zingiz yozing yoki AI yordamida tuzing. Yuzlab rezyume o'rniga tekshirilgan nomzodlar reytingini kod yozilishi yozuvi bilan birga olasiz.",
+        "cta": "Vakansiya joylash"
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Ko'nikmalar tasdiqlanadigan ish maydoni.",
+    "status": "Tizim holati"
+  },
+  "status": {
+    "metaTitle": "Tizim holati",
+    "title": "Tizim holati",
+    "lead": "Veb-ilova API serveriga ulana olishini tekshiradi.",
+    "api": "API serveri",
+    "checking": "Tekshirilmoqda…",
+    "ok": "Ishlayapti",
+    "degraded": "Qisman ishlayapti",
+    "unavailable": "Mavjud emas",
+    "version": "Versiya",
+    "environment": "Muhit",
+    "dependencies": "Bog'liq xizmatlar",
+    "checkNames": {
+      "database": "Ma'lumotlar bazasi",
+      "redis": "Redis"
+    },
+    "checkOk": "ishlayapti",
+    "checkFailed": "javob bermayapti",
+    "lastChecked": "Oxirgi tekshiruv: {time}",
+    "refresh": "Qayta tekshirish",
+    "unavailableTitle": "API serveriga ulanib bo'lmadi",
+    "requestId": "So'rov ID: {id}"
+  },
+  "errors": {
+    "unknown": "Kutilmagan xato yuz berdi. Birozdan keyin qayta urinib ko'ring.",
+    "network": "Tarmoqqa ulanib bo'lmadi. Internet aloqasini tekshirib, qayta urinib ko'ring.",
+    "upstream_unavailable": "Server hozir javob bermayapti. U ishga tushganini tekshiring va qayta urinib ko'ring.",
+    "not_found": "So'ralgan ma'lumot topilmadi.",
+    "internal_error": "Serverda xato yuz berdi. Qayta urinib ko'ring.",
+    "validation_error": "Ba'zi maydonlar noto'g'ri to'ldirilgan. Tekshirib, qayta yuboring.",
+    "invalid_credentials": "Pochta yoki parol noto'g'ri.",
+    "rate_limited": "Urinishlar juda ko'p. Bir necha daqiqadan keyin qayta urinib ko'ring.",
+    "email_taken": "Bu pochta bilan hisob allaqachon bor. Kiring yoki parolni tiklang.",
+    "invalid_token": "Havola yaroqsiz yoki muddati o'tgan. Yangisini so'rang.",
+    "weak_password": "Parol juda oddiy. Uzunroq yoki murakkabroq parol tanlang.",
+    "invalid_refresh_token": "Sessiya tugadi. Qaytadan kiring.",
+    "unauthorized": "Avval hisobingizga kiring.",
+    "account_disabled": "Hisobingiz o'chirilgan. Yordam xizmatiga murojaat qiling.",
+    "permission_denied": "Bu amalni bajarishga ruxsatingiz yo'q.",
+    "unsupported_file_type": "Bu fayl turi qo'llab-quvvatlanmaydi. Ko'rsatilgan formatlardan birini tanlang.",
+    "file_too_large": "Fayl juda katta. Hajmi kichikroq faylni tanlang.",
+    "empty_file": "Fayl bo'sh. Boshqa faylni tanlang.",
+    "last_owner": "Kompaniyada kamida bitta egasi qolishi kerak.",
+    "already_member": "Bu foydalanuvchi allaqachon jamoada.",
+    "invitation_pending": "Bu pochtaga taklif allaqachon yuborilgan.",
+    "email_mismatch": "Taklif boshqa pochtaga yuborilgan. O'sha pochta bilan kiring.",
+    "role_mismatch": "Taklifni faqat ish beruvchi (HR) hisobi qabul qila oladi.",
+    "invitation_expired": "Taklif muddati tugagan. Kompaniya egasidan yangi taklif so'rang.",
+    "invitation_used": "Bu taklif allaqachon ishlatilgan.",
+    "already_applied": "Siz bu vakansiyaga allaqachon ariza bergansiz.",
+    "vacancy_not_open": "Bu vakansiya bo'yicha arizalar qabul qilinmayapti.",
+    "cannot_withdraw": "Bu arizani endi qaytarib olib bo'lmaydi.",
+    "invalid_status_transition": "Vakansiya holatini bunday o'zgartirib bo'lmaydi. Sahifani yangilang.",
+    "not_draft": "Faqat qoralamani o'chirish mumkin. Bu vakansiyani arxivlang.",
+    "application_withdrawn": "Nomzod arizasini qaytarib olgan.",
+    "description_required": "Nashr qilish uchun vakansiya tavsifini yozing.",
+    "email_not_verified": "Ariza berish uchun avval pochtangizni tasdiqlang.",
+    "generation_in_progress": "Bu vakansiya uchun AI yaratish allaqachon ishlayapti. Tugashini kuting.",
+    "queue_unavailable": "AI navbati hozir mavjud emas. Birozdan keyin qayta urinib ko'ring.",
+    "unknown_items": "Tanlangan savol yoki topshiriqlardan biri topilmadi. Sahifani yangilab, qayta tanlang."
+  },
+  "errorPage": {
+    "title": "Nimadir noto'g'ri ketdi",
+    "body": "Sahifani yuklashda xato yuz berdi. Qayta urinib ko'ring yoki bosh sahifaga qayting."
+  },
+  "notFound": {
+    "metaTitle": "Sahifa topilmadi",
+    "title": "Bu sahifa topilmadi",
+    "body": "Sahifa hali tayyor emas yoki boshqa manzilga ko'chirilgan. Bosh sahifadan davom eting."
+  },
+  "search": {
+    "label": "Vakansiya qidirish",
+    "queryLabel": "Kasb, lavozim yoki kompaniya",
+    "placeholder": "Kasb, lavozim yoki kompaniya",
+    "regionLabel": "Hudud",
+    "anyRegion": "Barcha hududlar",
+    "submit": "Qidirish",
+    "open": "Qidiruvni ochish",
+    "suggestionsLabel": "Takliflar",
+    "kinds": {
+      "vacancy": "Vakansiya",
+      "skill": "Ko'nikma",
+      "company": "Kompaniya"
+    },
+    "chips": {
+      "label": "Tezkor filtrlar",
+      "remote": "Masofaviy",
+      "noExperience": "Tajribasiz",
+      "partTime": "Yarim stavka",
+      "it": "IT",
+      "internship": "Stajirovka"
+    }
+  },
+  "comingSoon": {
+    "body": "Bu bo'lim keyingi bosqichda ishga tushadi. Hozircha profilingizni to'ldirib qo'yishingiz mumkin."
+  },
+  "vacancies": {
+    "title": "Vakansiyalar",
+    "metaTitleFor": "«{q}» bo'yicha vakansiyalar",
+    "count": "{count} ta vakansiya",
+    "countFor": "«{q}» bo'yicha {count} ta vakansiya",
+    "resultsLabel": "Qidiruv natijalari",
+    "sort": {
+      "label": "Saralash",
+      "relevance": "Mosligi bo'yicha",
+      "date": "Sanasi bo'yicha",
+      "salary_desc": "Maosh: avval yuqori",
+      "salary_asc": "Maosh: avval past"
+    },
+    "filters": {
+      "title": "Filtrlar",
+      "open": "Filtrlar",
+      "openCount": "Filtrlar ({count})",
+      "region": "Hudud",
+      "showMore": "Yana {count} ta",
+      "showLess": "Yig'ish",
+      "remoteType": "Ish formati",
+      "employmentType": "Bandlik turi",
+      "experience": "Tajriba",
+      "salary": "Daromad",
+      "salaryFrom": "Eng kam maosh",
+      "salaryFromPlaceholder": "dan",
+      "currency": "Valyuta",
+      "onlyWithSalary": "Faqat maosh ko'rsatilganlar",
+      "area": "Kasb sohasi",
+      "anyArea": "Barcha sohalar",
+      "skills": "Ko'nikmalar",
+      "skillsHint": "Tanlangan ko'nikmalarning barchasi talab qilingan vakansiyalar.",
+      "reset": "Filtrlarni tozalash",
+      "resetShort": "Tozalash",
+      "apply": "{count} ta vakansiyani ko'rsatish",
+      "applyNoCount": "Ko'rsatish"
+    },
+    "chips": {
+      "label": "Tanlangan filtrlar",
+      "remove": "«{label}» filtrini olib tashlash",
+      "salaryFrom": "{amount} {currency} dan",
+      "onlyWithSalary": "Maosh ko'rsatilgan"
+    },
+    "empty": {
+      "title": "Hech narsa topilmadi",
+      "titleFor": "«{q}» bo'yicha hech narsa topilmadi",
+      "tipQuery": "So'rovni qisqartiring yoki boshqa so'z bilan yozing.",
+      "tipFilters": "Ba'zi filtrlarni olib tashlang.",
+      "tipRegion": "Boshqa hududni yoki masofaviy ishni tanlab ko'ring.",
+      "resetFilters": "Filtrlarni tozalash",
+      "showAll": "Barcha vakansiyalar"
+    },
+    "latest": {
+      "title": "Yangi vakansiyalar",
+      "all": "Barcha vakansiyalar"
+    }
+  },
+  "auth": {
+    "email": "Elektron pochta",
+    "password": "Parol",
+    "fullName": "Ism va familiya",
+    "newPassword": "Yangi parol",
+    "confirmPassword": "Parolni takrorlang",
+    "passwordHint": "Kamida {min} ta belgi.",
+    "showPassword": "Parolni ko'rsatish",
+    "hidePassword": "Parolni yashirish",
+    "login": {
+      "title": "Kirish",
+      "lead": "Elektron pochta va parolingizni kiriting.",
+      "submit": "Kirish",
+      "submitting": "Kirilmoqda…",
+      "forgot": "Parolni unutdingizmi?",
+      "noAccount": "Hisobingiz yo'qmi?",
+      "toRegister": "Ro'yxatdan o'ting"
+    },
+    "register": {
+      "title": "Ro'yxatdan o'tish",
+      "lead": "Bir daqiqa vaqt oladi. Keyin pochtangizni tasdiqlaysiz.",
+      "submit": "Hisob yaratish",
+      "submitting": "Hisob yaratilmoqda…",
+      "haveAccount": "Hisobingiz bormi?",
+      "toLogin": "Kirish",
+      "role": {
+        "legend": "Kim sifatida ro'yxatdan o'tasiz?",
+        "candidate": {
+          "title": "Ish izlayman",
+          "hint": "Rezyume joylang, vakansiyalarga ariza bering va suhbatdan o'ting."
+        },
+        "hr": {
+          "title": "Xodim izlayman",
+          "hint": "Kompaniya yarating, vakansiya joylang va tasdiqlangan nomzodlarni ko'ring."
+        }
+      }
+    },
+    "verify": {
+      "title": "Pochtani tasdiqlash",
+      "lead": "Xatdagi havola orqali ochilgan sahifa.",
+      "checking": "Havola tekshirilmoqda…",
+      "successTitle": "Pochta tasdiqlandi",
+      "successBody": "Rahmat! Endi barcha imkoniyatlardan foydalanishingiz mumkin.",
+      "failedTitle": "Pochtani tasdiqlab bo'lmadi",
+      "missingToken": "Havolada tasdiqlash kodi yo'q. Xatdagi havolani to'liq nusxalang yoki yangi xat so'rang.",
+      "continue": "Davom etish",
+      "toLogin": "Kirish sahifasiga",
+      "resend": "Xatni qayta yuborish",
+      "resending": "Yuborilmoqda…",
+      "resent": "Yangi xat yuborildi.",
+      "banner": "Pochtangizni tasdiqlang: {email} manziliga havola yubordik.",
+      "bannerLabel": "Pochtani tasdiqlash"
+    },
+    "forgot": {
+      "title": "Parolni tiklash",
+      "lead": "Ro'yxatdan o'tgan pochtangizni kiriting, yangi parol o'rnatish uchun havola yuboramiz.",
+      "submit": "Havola yuborish",
+      "submitting": "Yuborilmoqda…",
+      "sentTitle": "Pochtangizni tekshiring",
+      "sentBody": "Agar {email} bilan hisob mavjud bo'lsa, unga parolni tiklash havolasi yuborildi.",
+      "backToLogin": "Kirish sahifasiga qaytish"
+    },
+    "reset": {
+      "title": "Yangi parol",
+      "lead": "Yangi parolni kiriting. Shundan keyin barcha qurilmalarda qaytadan kirasiz.",
+      "submit": "Parolni saqlash",
+      "submitting": "Saqlanmoqda…",
+      "invalidTitle": "Havola yaroqsiz",
+      "missingToken": "Havolada tiklash kodi yo'q. Yangi havola so'rang.",
+      "requestNew": "Yangi havola so'rash",
+      "doneTitle": "Parol yangilandi",
+      "doneBody": "Endi yangi parol bilan kirishingiz mumkin.",
+      "toLogin": "Kirish"
+    },
+    "forbidden": {
+      "title": "Bu bo'lim siz uchun emas",
+      "body": "{role, select, candidate {Siz nomzod sifatida kirgansiz. Bu sahifa ish beruvchilar uchun.} hr {Siz ish beruvchi sifatida kirgansiz. Bu sahifa nomzodlar uchun.} other {Hisobingizda bu sahifaga ruxsat yo'q.}}",
+      "toMyArea": "O'z bo'limimga o'tish"
+    }
+  },
+  "settings": {
+    "title": "Sozlamalar",
+    "lead": "Hisobingiz ma'lumotlari va interfeys tili.",
+    "email": "Elektron pochta",
+    "emailHint": "Pochtani o'zgartirish keyinroq qo'shiladi.",
+    "fullName": "Ism va familiya",
+    "language": "Interfeys tili",
+    "languageHint": "Xatlar ham shu tilda keladi.",
+    "timezone": "Vaqt mintaqasi",
+    "saved": "Saqlandi."
+  },
+  "validation": {
+    "required": "Bu maydonni to'ldiring.",
+    "email": "Elektron pochta manzilini to'g'ri kiriting, masalan, ism@example.com.",
+    "passwordShort": "Parol kamida 8 ta belgidan iborat bo'lsin.",
+    "passwordLong": "Parol 128 ta belgidan oshmasin.",
+    "passwordMismatch": "Parollar bir xil emas.",
+    "tooLong": "Matn juda uzun. Qisqartiring.",
+    "tooShort": "Matn juda qisqa.",
+    "invalid": "Qiymat noto'g'ri. Tekshirib, qayta kiriting.",
+    "integer": "Faqat butun son kiriting.",
+    "range": "Son ruxsat etilgan oraliqda emas.",
+    "salaryRange": "Eng kam maosh eng ko'pidan katta bo'lmasin.",
+    "url": "Sayt manzilini to'g'ri kiriting, masalan, https://example.uz.",
+    "role": "Kim sifatida ro'yxatdan o'tishingizni tanlang.",
+    "descriptionRequired": "Nashr qilish uchun vakansiya tavsifini yozing.",
+    "skillsMax": "Ko'pi bilan 20 ta ko'nikma.",
+    "rubricKey": "Faqat kichik lotin harflari, raqamlar va pastki chiziq (a-z, 0-9, _).",
+    "rubricMin": "Kamida 1 ta mezon qo'shing.",
+    "rubricMax": "Ko'pi bilan 10 ta mezon.",
+    "optionsMin": "Kamida 2 ta variant kerak.",
+    "optionsMax": "Ko'pi bilan 8 ta variant.",
+    "correctMin": "Kamida bitta to'g'ri variantni belgilang.",
+    "langsMin": "Kamida bitta dasturlash tilini tanlang.",
+    "testsMin": "Kamida bitta test qo'shing.",
+    "testsMax": "Testlar soni chegaradan oshdi.",
+    "tasksMax": "Stage 1 uchun ko'pi bilan 5 ta topshiriq."
+  },
+  "currency": {
+    "UZS": "so'm (UZS)",
+    "USD": "AQSh dollari (USD)",
+    "EUR": "Yevro (EUR)",
+    "RUB": "Rubl (RUB)"
+  },
+  "candidate": {
+    "profile": {
+      "title": "Mening rezyumem",
+      "lead": "Ish beruvchilar shu ma'lumotni ko'radi. Qancha aniq bo'lsa, shuncha mos takliflar keladi.",
+      "formTitle": "Profil ma'lumotlari",
+      "sections": {
+        "main": "Asosiy",
+        "salary": "Kutilayotgan maosh",
+        "about": "O'zim haqimda"
+      },
+      "headline": "Lavozim",
+      "headlineHint": "Masalan, Python backend dasturchi",
+      "country": "Mamlakat",
+      "countryNone": "Tanlanmagan",
+      "city": "Shahar",
+      "experienceYears": "Ish tajribasi, yil",
+      "salaryHint": "Oyiga, soliqlar chegirilganidan keyin. Bo'sh qoldirish mumkin.",
+      "salaryMin": "Dan",
+      "salaryMax": "Gacha",
+      "currency": "Valyuta",
+      "about": "Qisqacha o'zingiz haqingizda",
+      "aboutHint": "Tajriba, loyihalar, nimalarni yaxshi bilasiz.",
+      "openToWork": "Ish takliflariga ochiqman",
+      "openToWorkHint": "Yoqilgan bo'lsa, ish beruvchilar sizga taklif yubora oladi.",
+      "saved": "Profil saqlandi."
+    },
+    "resume": {
+      "title": "Rezyume fayli",
+      "hint": "PDF, DOC yoki DOCX, {maxMb} MB gacha.",
+      "meta": "{size} · {date}",
+      "empty": "Fayl hali yuklanmagan.",
+      "upload": "Fayl yuklash",
+      "replace": "Boshqa fayl yuklash",
+      "uploading": "Yuklanmoqda…",
+      "download": "Yuklab olish",
+      "delete": "O'chirish",
+      "deleteTitle": "Rezyume o'chirilsinmi?",
+      "deleteBody": "{filename} fayli o'chiriladi. Keyin yangisini yuklashingiz mumkin.",
+      "deleteConfirm": "O'chirish"
+    }
+  },
+  "hr": {
+    "nav": {
+      "label": "Kompaniya bo'limlari",
+      "switcher": "Kompaniya",
+      "overview": "Umumiy",
+      "company": "Kompaniya profili",
+      "team": "Jamoa",
+      "vacancies": "Vakansiyalar",
+      "candidates": "Nomzodlar",
+      "questions": "Savollar",
+      "tasks": "Topshiriqlar"
+    },
+    "home": {
+      "metaTitle": "Ish beruvchi kabineti",
+      "company": "Kompaniya profili",
+      "companyBody": "Nomi, logotip, sayt va tavsif — nomzodlar shuni ko'radi.",
+      "team": "Jamoa",
+      "teamBody": "Kompaniyadagi HR xodimlar ro'yxati.",
+      "teamBodyOwner": "HR xodimlarni taklif qiling va jamoani boshqaring.",
+      "vacancies": "Vakansiyalar",
+      "vacanciesBody": "Vakansiya joylang va kelgan arizalarni ko'rib chiqing.",
+      "roleOwner": "Siz kompaniya egasisiz",
+      "roleHr": "Siz HR xodimisiz"
+    },
+    "create": {
+      "title": "Kompaniyangizni qo'shing",
+      "lead": "Vakansiya joylashdan oldin kompaniya profili kerak. Uni yaratgan siz egasi bo'lasiz va jamoani taklif qila olasiz.",
+      "submit": "Kompaniya yaratish",
+      "submitting": "Yaratilmoqda…"
+    },
+    "noCompany": {
+      "title": "Avval kompaniya yarating",
+      "body": "Bu bo'lim kompaniya profili bilan ishlaydi.",
+      "cta": "Kompaniya yaratish"
+    },
+    "company": {
+      "title": "Kompaniya profili",
+      "lead": "Bu ma'lumot vakansiyalaringiz yonida ko'rinadi.",
+      "details": "Ma'lumotlar",
+      "formLabel": "Kompaniya ma'lumotlari",
+      "name": "Kompaniya nomi",
+      "industry": "Soha",
+      "industryHint": "Masalan, fintech, telekom, chakana savdo",
+      "website": "Sayt",
+      "country": "Mamlakat",
+      "countryNone": "Tanlanmagan",
+      "city": "Shahar",
+      "description": "Kompaniya haqida",
+      "descriptionHint": "Nima bilan shug'ullanasiz, jamoa qanday, nimani taklif qilasiz.",
+      "saved": "Saqlandi.",
+      "logo": {
+        "title": "Logotip",
+        "hint": "PNG, JPEG yoki WEBP, {maxMb} MB gacha. Kvadrat rasm yaxshiroq ko'rinadi.",
+        "upload": "Logotip yuklash",
+        "replace": "Logotipni almashtirish",
+        "uploading": "Yuklanmoqda…",
+        "uploaded": "Logotip yangilandi."
+      }
+    },
+    "team": {
+      "title": "Jamoa",
+      "leadOwner": "HR xodimlarni pochta orqali taklif qiling. Ular taklifni qabul qilgach, jamoada paydo bo'ladi.",
+      "leadHr": "Kompaniyadagi HR xodimlar. Jamoani faqat kompaniya egasi o'zgartira oladi.",
+      "members": "A'zolar",
+      "you": "(siz)",
+      "roles": {
+        "owner": "Egasi",
+        "hr": "HR"
+      },
+      "remove": "Chiqarish",
+      "removeAria": "{name}ni jamoadan chiqarish",
+      "removeTitle": "{name} jamoadan chiqarilsinmi?",
+      "removeBody": "U kompaniya ma'lumotlari va vakansiyalariga kira olmaydi. Keyin qayta taklif qilishingiz mumkin.",
+      "removeConfirm": "Chiqarish",
+      "inviteTitle": "Xodimni taklif qilish",
+      "inviteHint": "Taklif qilinadigan odam ish beruvchi (HR) hisobi bilan aynan shu pochtadan kirishi kerak.",
+      "inviteEmail": "Elektron pochta",
+      "invite": "Taklif yuborish",
+      "inviting": "Yuborilmoqda…",
+      "invited": "{email} manziliga taklif yuborildi.",
+      "pending": "Javob kutilayotgan takliflar",
+      "pendingEmpty": "Hozircha kutilayotgan taklif yo'q.",
+      "pendingMeta": "Taklif qildi: {by} · {expires} gacha amal qiladi",
+      "revoke": "Bekor qilish",
+      "revokeAria": "{email} uchun taklifni bekor qilish"
+    }
+  },
+  "invitation": {
+    "metaTitle": "Jamoaga taklif",
+    "title": "{company} jamoasiga taklif",
+    "invitedEmail": "Taklif {email} uchun",
+    "notFoundTitle": "Taklif topilmadi",
+    "notFoundBody": "Havola noto'g'ri yoki taklif o'chirilgan. Kompaniya egasidan yangi taklif so'rang.",
+    "status": {
+      "accepted": {
+        "title": "Taklif qabul qilingan",
+        "body": "Bu taklif allaqachon qabul qilingan."
+      },
+      "expired": {
+        "title": "Taklif muddati tugagan",
+        "body": "Kompaniya egasidan yangi taklif yuborishni so'rang."
+      },
+      "revoked": {
+        "title": "Taklif bekor qilingan",
+        "body": "Kompaniya egasi bu taklifni bekor qilgan."
+      }
+    },
+    "toDashboard": "Kabinetga o'tish",
+    "anonymous": "Taklifni qabul qilish uchun {email} pochtasi bilan ish beruvchi (HR) hisobiga kiring yoki shunday hisob yarating.",
+    "signIn": "Kirish",
+    "createAccount": "Hisob yaratish",
+    "roleMismatchTitle": "Nomzod hisobi bilan kirgansiz",
+    "roleMismatchBody": "Taklifni faqat ish beruvchi (HR) hisobi qabul qila oladi. Hisobdan chiqib, {email} pochtasi bilan HR hisobiga kiring.",
+    "emailMismatchTitle": "Boshqa hisob bilan kirgansiz",
+    "emailMismatchBody": "Siz {current} sifatida kirgansiz, taklif esa {invited} uchun. Hisobdan chiqib, o'sha pochta bilan kiring.",
+    "switchAccount": "Hisobdan chiqish",
+    "acceptHint": "Qabul qilgach, kompaniya kabinetiga HR sifatida kirasiz.",
+    "accept": "Taklifni qabul qilish",
+    "accepting": "Qabul qilinmoqda…"
+  },
+  "salary": {
+    "range": "{min} – {max} {currency}",
+    "exact": "{min} {currency}",
+    "from": "dan {min} {currency}",
+    "upTo": "{max} {currency} gacha",
+    "none": "Maosh ko'rsatilmagan",
+    "unit": {
+      "UZS": "so'm",
+      "USD": "USD",
+      "EUR": "EUR",
+      "RUB": "RUB"
+    }
+  },
+  "relative": {
+    "today": "Bugun",
+    "yesterday": "Kecha",
+    "daysAgo": "{count} kun oldin"
+  },
+  "pagination": {
+    "label": "Sahifalar",
+    "prev": "Oldingi",
+    "next": "Keyingi",
+    "page": "{page}-sahifa"
+  },
+  "catalog": {
+    "skillPlaceholder": "Ko'nikma qidirish, masalan, Python",
+    "skillSuggestions": "Ko'nikmalar",
+    "searching": "Qidirilmoqda…",
+    "noSkills": "Bunday ko'nikma topilmadi"
+  },
+  "applicationStatus": {
+    "applied": "Ariza yuborildi",
+    "interview_pending": "Suhbat kutilmoqda",
+    "stage1_in_progress": "1-bosqich davom etmoqda",
+    "stage1_failed": "1-bosqichdan o'tmadi",
+    "stage1_disqualified": "1-bosqichda chetlatildi",
+    "stage2_pending": "2-bosqich kutilmoqda",
+    "stage2_in_progress": "2-bosqich davom etmoqda",
+    "stage2_disqualified": "2-bosqichda chetlatildi",
+    "evaluated": "Baholandi",
+    "shortlisted": "Taklif",
+    "rejected": "Rad etildi",
+    "hired": "Ishga qabul qilindi",
+    "withdrawn": "Qaytarib olindi",
+    "other": "Ko'rib chiqilmoqda"
+  },
+  "vacancy": {
+    "apply": "Ariza berish",
+    "reapply": "Qayta ariza berish",
+    "applied": "Ariza yuborildi",
+    "closedShort": "Qabul yopilgan",
+    "saveAria": "«{title}» vakansiyasini saqlash",
+    "saveFailed": "Saqlanmadi",
+    "verified": "Tasdiqlangan kompaniya",
+    "tagsLabel": "Ish shartlari",
+    "skillsLabel": "Ko'nikmalar",
+    "tags": {
+      "remote": {
+        "remote": "Masofaviy",
+        "hybrid": "Gibrid"
+      },
+      "noExperience": "Tajribasiz",
+      "employment": {
+        "part_time": "Yarim stavka",
+        "project": "Loyiha ishi",
+        "internship": "Stajirovka"
+      }
+    },
+    "remoteType": {
+      "office": "Ofisda",
+      "remote": "Masofaviy",
+      "hybrid": "Gibrid"
+    },
+    "employmentType": {
+      "full_time": "To'liq bandlik",
+      "part_time": "Yarim stavka",
+      "project": "Loyiha ishi",
+      "internship": "Stajirovka"
+    },
+    "experience": {
+      "no_experience": "Tajribasiz",
+      "between_1_3": "1–3 yil",
+      "between_3_6": "3–6 yil",
+      "more_than_6": "6 yildan ortiq"
+    },
+    "experienceLabel": "Tajriba",
+    "employmentLabel": "Bandlik",
+    "remoteLabel": "Ish formati",
+    "placeLabel": "Joylashuv",
+    "skillsTitle": "Asosiy ko'nikmalar",
+    "required": "majburiy",
+    "requiredHint": "Ajratib ko'rsatilganlari — majburiy ko'nikmalar.",
+    "descriptionTitle": "Vakansiya tavsifi",
+    "requirementsTitle": "Talablar",
+    "publishedOn": "Vakansiya {date} da e'lon qilingan",
+    "backToSearch": "← Vakansiyalar ro'yxati",
+    "closedNotice": "Bu vakansiya bo'yicha arizalar qabul qilinmayapti.",
+    "companyLabel": "Kompaniya",
+    "companyVacancies": "{count} ta ochiq vakansiya",
+    "toCompany": "Kompaniya sahifasi",
+    "applyLabel": "Ariza berish",
+    "applyHint": "Ariza 2 bosqichli ko'nikma suhbati bilan tasdiqlanadi.",
+    "similarTitle": "O'xshash vakansiyalar",
+    "metaTitle": "{title} — {company}",
+    "metaFallback": "Vakansiya"
+  },
+  "apply": {
+    "title": "Vakansiyaga ariza",
+    "doneTitle": "Ariza yuborildi",
+    "vacancyLine": "{title} · {company}",
+    "interviewNote": "SkillProof'da har bir ariza 2 bosqichli ko'nikma suhbati bilan tasdiqlanadi: amaliy topshiriq va og'zaki suhbat. Suhbat keyingi bosqichlarda ishga tushadi — hozircha ariza HR'ga yuboriladi.",
+    "coverLabel": "Qo'shimcha xat",
+    "coverPlaceholder": "Nima uchun aynan siz mos kelasiz — 2–3 jumla.",
+    "coverHint": "HR arizangiz bilan birga o'qiydi.",
+    "submit": "Ariza yuborish",
+    "submitting": "Yuborilmoqda…",
+    "doneBody": "HR arizangizni ko'radi. Holati «Arizalarim» bo'limida yangilanadi.",
+    "statusLabel": "Holati:",
+    "alreadyTitle": "Siz bu vakansiyaga allaqachon ariza bergansiz",
+    "alreadyBody": "Holatini «Arizalarim» bo'limida kuzating.",
+    "toApplications": "Arizalarimga o'tish"
+  },
+  "companyPage": {
+    "metaTitle": "{name} — vakansiyalar",
+    "metaFallback": "Kompaniya",
+    "verified": "Tasdiqlangan",
+    "industry": "Soha",
+    "location": "Joylashuv",
+    "opensNewTab": "yangi oynada ochiladi",
+    "about": "Kompaniya haqida",
+    "openVacancies": "Ochiq vakansiyalar",
+    "openVacanciesCount": "Ochiq vakansiyalar: {count}",
+    "noVacancies": "Hozircha ochiq vakansiyalar yo'q"
+  },
+  "applications": {
+    "title": "Arizalarim",
+    "lead": "Yuborgan arizalaringiz va ularning holati.",
+    "tabsLabel": "Ariza holati",
+    "tabs": {
+      "all": "Barchasi",
+      "applied": "Yuborilgan",
+      "shortlisted": "Taklif",
+      "rejected": "Rad etilgan",
+      "withdrawn": "Qaytarib olingan"
+    },
+    "appliedOn": "Ariza: {date}",
+    "coverNote": "Xat",
+    "withdraw": "Qaytarib olish",
+    "withdrawTitle": "Arizani qaytarib olasizmi?",
+    "withdrawBody": "«{title}» bo'yicha arizangiz HR ro'yxatidan chiqadi. Keyinroq yana ariza berishingiz mumkin.",
+    "withdrawConfirm": "Ha, qaytarib olish",
+    "withdrawing": "Qaytarib olinmoqda…",
+    "withdrawn": "Ariza qaytarib olindi.",
+    "reapply": "Qayta ariza berish",
+    "emptyTitle": "Hali ariza yubormagansiz",
+    "emptyBody": "Mos vakansiyani toping va «Ariza berish» tugmasini bosing.",
+    "emptyFiltered": "Bu holatda arizalar yo'q",
+    "findVacancies": "Vakansiyalarni ko'rish",
+    "interviewStart": "Intervyuni boshlash",
+    "interviewResume": "Intervyuni davom ettirish",
+    "interviewResult": "Natijani ko'rish"
+  },
+  "saved": {
+    "title": "Saqlanganlar",
+    "lead": "Keyinroq qaytish uchun saqlagan vakansiyalaringiz.",
+    "count": "{count} ta saqlangan vakansiya",
+    "emptyTitle": "Saqlangan vakansiyalar yo'q",
+    "emptyBody": "Vakansiya kartochkasidagi yurakcha belgisini bosing — u shu yerda paydo bo'ladi.",
+    "findVacancies": "Vakansiyalarni ko'rish"
+  },
+  "hrVacancies": {
+    "title": "Vakansiyalarim",
+    "post": "Vakansiya joylash",
+    "tabsLabel": "Vakansiya holati",
+    "tabs": {
+      "published": "Faol",
+      "draft": "Qoralama",
+      "closed": "Yopilgan",
+      "archived": "Arxiv"
+    },
+    "status": {
+      "published": "Faol",
+      "draft": "Qoralama",
+      "closed": "Yopilgan",
+      "archived": "Arxivda"
+    },
+    "columns": {
+      "vacancy": "Vakansiya",
+      "applications": "Arizalar",
+      "updated": "Yangilangan",
+      "actions": "Amallar"
+    },
+    "applicationsCount": "{count} ta ariza",
+    "newCount": "+{count} yangi",
+    "noRegion": "Hudud ko'rsatilmagan",
+    "empty": {
+      "published": "Faol vakansiyalar yo'q",
+      "draft": "Qoralamalar yo'q",
+      "closed": "Yopilgan vakansiyalar yo'q",
+      "archived": "Arxiv bo'sh"
+    },
+    "actions": {
+      "publish": "Nashr qilish",
+      "close": "Yopish",
+      "reopen": "Qayta ochish",
+      "archive": "Arxivlash",
+      "edit": "Tahrirlash",
+      "view": "Saytda ko'rish",
+      "delete": "O'chirish",
+      "more": "«{title}» uchun amallar",
+      "archiveTitle": "Vakansiyani arxivlaysizmi?",
+      "archiveBody": "«{title}» arxivga o'tadi va qayta ochib bo'lmaydi. Arizalar saqlanib qoladi.",
+      "deleteTitle": "Qoralamani o'chirasizmi?",
+      "deleteBody": "«{title}» qoralamasi butunlay o'chiriladi.",
+      "published": "«{title}» nashr qilindi.",
+      "closed": "«{title}» yopildi.",
+      "reopened": "«{title}» qayta ochildi.",
+      "archived": "«{title}» arxivlandi.",
+      "deleted": "«{title}» o'chirildi.",
+      "assessment": "Assessment"
+    },
+    "hasAssessment": "Assessment bor"
+  },
+  "vacancyForm": {
+    "formLabel": "Vakansiya ma'lumotlari",
+    "titleNew": "Yangi vakansiya",
+    "titleEdit": "Vakansiyani tahrirlash",
+    "back": "Vakansiyalarim",
+    "notFound": "Vakansiya topilmadi",
+    "sections": {
+      "main": "Asosiy ma'lumot",
+      "conditions": "Shartlar va maosh",
+      "description": "Tavsif",
+      "skills": "Ko'nikmalar"
+    },
+    "title": "Lavozim nomi",
+    "titleHint": "Masalan, «Python backend dasturchi». Nomzodlar shu bo'yicha qidiradi.",
+    "area": "Kasb sohasi",
+    "region": "Hudud",
+    "regionNone": "Ko'rsatilmagan",
+    "city": "Shahar",
+    "remoteType": "Ish formati",
+    "employmentType": "Bandlik turi",
+    "experience": "Tajriba",
+    "salaryMin": "Maosh, dan",
+    "salaryMax": "Maosh, gacha",
+    "currency": "Valyuta",
+    "salaryHint": "Maosh ko'rsatilgan vakansiyalarga ko'proq ariza keladi. Butun son, oyiga.",
+    "description": "Vakansiya tavsifi",
+    "descriptionHint": "Vazifalar, jamoa, sharoit. Nashr qilish uchun majburiy.",
+    "requirements": "Talablar",
+    "requirementsHint": "Har bir talabni yangi qatordan yozing.",
+    "skills": "Ko'nikmalar",
+    "skillsHint": "{max} tagacha. Vazn (1–5) — ko'nikma qanchalik muhimligi; majburiylari alohida belgilanadi.",
+    "addSkill": "Ko'nikma qo'shish",
+    "skillsFull": "Ko'pi bilan {max} ta ko'nikma",
+    "noSkills": "Hali ko'nikma qo'shilmagan.",
+    "weight": "Vazn",
+    "weightOf": "{skill} vazni",
+    "required": "Majburiy",
+    "requiredOf": "{skill} — majburiy",
+    "removeSkill": "{skill}ni olib tashlash",
+    "saveDraft": "Qoralama sifatida saqlash",
+    "publish": "Nashr qilish",
+    "publishing": "Nashr qilinmoqda…",
+    "save": "O'zgarishlarni saqlash",
+    "assessmentLink": "Assessment sozlamalari"
+  },
+  "hrCandidates": {
+    "title": "Nomzodlar",
+    "lead": "Vakansiyalaringizga kelgan arizalar. Eng yangilari yuqorida.",
+    "vacancyFilter": "Vakansiya",
+    "allVacancies": "Barcha vakansiyalar",
+    "tabsLabel": "Ariza holati",
+    "tabs": {
+      "applied": "Yangi",
+      "shortlisted": "Tanlanganlar",
+      "rejected": "Rad etilganlar"
+    },
+    "empty": {
+      "applied": "Yangi arizalar yo'q",
+      "shortlisted": "Tanlangan nomzodlar yo'q",
+      "rejected": "Rad etilgan nomzodlar yo'q"
+    },
+    "emptyBody": "Boshqa vakansiya yoki holatni tanlang.",
+    "total": "Jami: {count}",
+    "location": "Joylashuv",
+    "experience": "Tajriba",
+    "years": "{count} yil",
+    "noExperience": "Tajribasiz",
+    "notSpecified": "ko'rsatilmagan",
+    "expectedSalary": "Kutilayotgan maosh",
+    "appliedOn": "Ariza sanasi",
+    "forVacancy": "Vakansiya",
+    "coverNote": "Qo'shimcha xat",
+    "expand": "To'liq o'qish",
+    "collapse": "Yig'ish",
+    "actions": {
+      "shortlisted": "Taklif qilish",
+      "rejected": "Rad etish",
+      "applied": "Yangilarga qaytarish"
+    },
+    "resume": "Rezyumeni yuklab olish",
+    "noResume": "Rezyume yuklanmagan",
+    "scoresLabel": "Suhbat natijalari",
+    "scoresTitle": "Ball va shubha darajasi",
+    "scoresLater": "Ikki bosqichli suhbat natijalari keyingi bosqichda shu yerda chiqadi.",
+    "stage1": {
+      "label": "1-bosqich",
+      "title": "1-bosqich",
+      "level": {
+        "low": "Past",
+        "medium": "O'rta",
+        "high": "Yuqori"
+      },
+      "evaluating": "Baholanmoqda",
+      "notStarted": "1-bosqich boshlanmagan",
+      "open": "Hisobot va replay"
+    }
+  },
+  "hrBank": {
+    "approved": "Tasdiqlangan",
+    "notApproved": "Tasdiqlanmagan",
+    "global": "Umumiy shablon",
+    "difficulty": "Qiyinlik",
+    "difficultyOption": "Qiyinlik {n}/5",
+    "language": "Til",
+    "skill": "Ko'nikma",
+    "noSkill": "Ko'nikmasiz",
+    "savedNew": "Saqlandi.",
+    "savedEdit": "O'zgarishlar saqlandi.",
+    "editResets": "Tahrirlangan element qayta tekshiriladi va tekshiruv holati \"Tekshirilmagan\"ga qaytadi.",
+    "languages": {
+      "uz": "O'zbekcha",
+      "ru": "Ruscha",
+      "en": "Inglizcha"
+    },
+    "source": {
+      "manual": "Qo'lda yozilgan",
+      "ai_generated": "AI yaratgan"
+    },
+    "verification": {
+      "not_checked": "Tekshirilmagan",
+      "passed": "Tekshiruvdan o'tgan",
+      "flagged": "Shubhali deb belgilangan",
+      "sandbox_pending": "Sandbox tekshiruvi kutilmoqda",
+      "flaggedWhy": "Nega belgilangan:",
+      "noReason": "Sabab ko'rsatilmagan."
+    },
+    "filters": {
+      "label": "Filtrlar",
+      "q": "Qidiruv",
+      "search": "Qidirish",
+      "anySkill": "Barcha ko'nikmalar",
+      "approved": "Tasdiq holati",
+      "source": "Manba",
+      "all": "Hammasi",
+      "includeGlobal": "Umumiy shablonlarni ham ko'rsatish"
+    },
+    "actions": {
+      "readOnly": "Umumiy shablonni faqat administrator tahrirlaydi.",
+      "approve": "Tasdiqlash",
+      "unapprove": "Tasdiqni olib tashlash",
+      "edit": "Tahrirlash",
+      "delete": "O'chirish",
+      "approvedDone": "Tasdiqlandi: {label}",
+      "unapproved": "Tasdiq olib tashlandi: {label}",
+      "deletedDone": "O'chirildi: {label}",
+      "deleteTitle": "Elementni o'chiramizmi?",
+      "deleteBody": "\"{label}\" bankdan o'chiriladi. Bu amalni qaytarib bo'lmaydi."
+    },
+    "rubric": {
+      "legend": "Baholash rubrikasi",
+      "hint": "Har bir mezon uchun 1–10 ball. Ballarni AI shu mezonlar bo'yicha qo'yadi.",
+      "criterion": "Mezon {n}",
+      "remove": "{n}-mezonni olib tashlash",
+      "removeShort": "Olib tashlash",
+      "name": "Nomi",
+      "key": "Kalit",
+      "keyHint": "a-z, 0-9, _",
+      "maxPoints": "Maks. ball",
+      "description": "Tavsif",
+      "levels": "Ball darajalari",
+      "levelsHint": "Har qatorda bitta: ball: izoh. Masalan, 5: to'liq javob.",
+      "optional": "(ixtiyoriy)",
+      "add": "Mezon qo'shish"
+    },
+    "question": {
+      "title": "Savollar banki",
+      "titleNew": "Yangi savol",
+      "titleEdit": "Savolni tahrirlash",
+      "new": "Savol qo'shish",
+      "empty": "Hozircha savol yo'q. Birinchi savolni qo'shing yoki assessment sahifasida AI bilan yarating.",
+      "type": "Turi",
+      "types": {
+        "open": "Ochiq savol",
+        "mcq": "Test (variantli)",
+        "scenario": "Ssenariy"
+      },
+      "text": "Savol matni",
+      "options": "Javob variantlari",
+      "optionsHint": "2 tadan 8 tagacha variant. To'g'ri variantlarni belgilang.",
+      "optionN": "Variant {n}",
+      "correct": "To'g'ri",
+      "removeOption": "{n}-variantni olib tashlash",
+      "addOption": "Variant qo'shish",
+      "referenceAnswer": "Namunaviy javob"
+    },
+    "task": {
+      "title": "Topshiriqlar banki",
+      "fieldTitle": "Sarlavha",
+      "titleNew": "Yangi topshiriq",
+      "titleEdit": "Topshiriqni tahrirlash",
+      "new": "Topshiriq qo'shish",
+      "empty": "Hozircha topshiriq yo'q. Birinchi topshiriqni qo'shing yoki assessment sahifasida AI bilan yarating.",
+      "statement": "Shart",
+      "allowedLanguages": "Ruxsat etilgan tillar",
+      "codeLanguages": {
+        "python": "Python",
+        "javascript": "JavaScript",
+        "typescript": "TypeScript",
+        "sql": "SQL",
+        "go": "Go",
+        "java": "Java"
+      },
+      "starter": "Boshlang'ich kod: {lang}",
+      "timeLimit": "Vaqt (daqiqa)",
+      "cpuLimit": "CPU vaqti (soniya)",
+      "memoryLimit": "Xotira (MB)",
+      "limitMinutes": "{n} daqiqa",
+      "testsCount": "{visible} ochiq, {hidden} yashirin test",
+      "tests": {
+        "caseN": "Test {n}",
+        "remove": "{n}-testni olib tashlash",
+        "name": "Nomi",
+        "optional": "(ixtiyoriy)",
+        "input": "Kirish (stdin)",
+        "output": "Kutilgan chiqish (stdout)",
+        "add": "Test qo'shish",
+        "visible_tests": {
+          "legend": "Ochiq testlar (1–20)",
+          "hint": "Nomzod bularni ko'radi va ishga tushira oladi."
+        },
+        "hidden_tests": {
+          "legend": "Yashirin testlar (1–50)",
+          "hint": "Nomzodga ko'rsatilmaydi, yakuniy ball shular bo'yicha hisoblanadi."
+        }
+      },
+      "solution": {
+        "legend": "Namunaviy yechim",
+        "hint": "Ixtiyoriy. Sandbox tekshiruvi uchun ishlatiladi.",
+        "language": "Yechim tili",
+        "code": "Yechim kodi"
+      }
+    }
+  },
+  "hrAssessment": {
+    "title": "Assessment",
+    "back": "Vakansiyalarga qaytish",
+    "formLabel": "Assessment sozlamalari",
+    "saved": "Assessment saqlandi.",
+    "save": "Assessmentni saqlash",
+    "readiness": {
+      "notSavedTitle": "Assessment hali saqlanmagan",
+      "notSavedBody": "Saqlaganingizdan so'ng tayyorlik tekshiruvi shu yerda ko'rinadi.",
+      "ready": "Assessment tayyor",
+      "notReady": "Assessment hali tayyor emas",
+      "blocking": "{count, plural, other {# ta muammo ishga tushirishga to'sqinlik qiladi}}",
+      "warnings": "{count, plural, other {# ta ogohlantirish}}",
+      "noIssues": "Muammo va ogohlantirishlar yo'q.",
+      "issues": {
+        "unknown": "Noma'lum muammo: {code}",
+        "stage1_no_tasks": "Stage 1 uchun topshiriq tanlanmagan.",
+        "task_not_approved": "Topshiriq tasdiqlanmagan: {item}",
+        "task_not_sandbox_validated": "Topshiriq sandbox'da tekshirilmagan: {item}",
+        "question_not_approved": "Savol tasdiqlanmagan: {item}",
+        "question_language_mismatch": "Savol tili assessment tiliga mos emas: {item}",
+        "stage2_not_enough_questions": "Stage 2 uchun tasdiqlangan savol yetarli emas: kerak {needed}, tasdiqlangan {approved}.",
+        "too_many_mandatory_questions": "Majburiy savollar ({mandatory}) savollar sonidan ({count}) ko'p."
+      }
+    },
+    "generate": {
+      "title": "AI bilan yaratish",
+      "bodyManual": "AI savol va topshiriqlarni yaratadi. Ular tekshiruvdan o'tadi, lekin siz tasdiqlamaguningizcha ishlatilmaydi.",
+      "bodyAuto": "AI savol va topshiriqlarni yaratadi. \"AI elementlarini avtomatik tasdiqlash\" yoqilgan: tekshiruvdan o'tganlari darhol tasdiqlanadi.",
+      "questionCount": "Savollar soni (0–20)",
+      "taskCount": "Topshiriqlar soni (0–3)",
+      "range": "{min} dan {max} gacha butun son kiriting.",
+      "skills": "Ko'nikmalar",
+      "optional": "(ixtiyoriy)",
+      "skillsHint": "Bo'sh qoldirsangiz, vakansiya ko'nikmalari olinadi.",
+      "addSkill": "Ko'nikma qo'shish",
+      "removeSkill": "{name} ni olib tashlash",
+      "start": "AI bilan yaratish",
+      "running": "Yaratilmoqda…",
+      "statusQueued": "Navbatda. Biroz kuting…",
+      "statusRunning": "AI ishlayapti. Bu bir necha daqiqa olishi mumkin…",
+      "succeeded": "Yaratish tugadi",
+      "resultCounts": "{questions} ta savol va {tasks} ta topshiriq qo'shildi.",
+      "failed": "Yaratib bo'lmadi",
+      "failedBody": "Qayta urinib ko'ring.",
+      "flaggedTitle": "{count} ta element shubhali deb belgilandi",
+      "flaggedBody": "Ularni savollar va topshiriqlar bankida ko'rib chiqing: sabab har bir elementda ko'rsatilgan.",
+      "inProgressTitle": "Yaratish allaqachon ishlayapti",
+      "inProgressBody": "Avvalgi so'rov tugagach natija assessmentga qo'shiladi. Birozdan keyin yangilang.",
+      "inProgressRefresh": "Yangilash"
+    },
+    "general": {
+      "title": "Umumiy",
+      "language": "Assessment tili",
+      "questionMode": "Savollar manbai",
+      "questionModeHint": "Qo'lda — faqat siz tanlagan savollar; AI — AI yaratganlari; aralash — ikkalasi.",
+      "modes": {
+        "manual": "Qo'lda",
+        "ai_generated": "AI yaratgan",
+        "mixed": "Aralash"
+      },
+      "skillReuse": "Tasdiqlangan ko'nikmani qayta ishlatish",
+      "skillReuseHint": "Nomzodning tasdiqlangan ko'nikmasi bo'lsa, tegishli qismni qayta topshirtirmaymiz.",
+      "autoApprove": "AI elementlarini avtomatik tasdiqlash",
+      "autoApproveHint": "Yoqilsa, tekshiruvdan o'tgan AI elementlari darhol tasdiqlanadi."
+    },
+    "stage1": {
+      "title": "Stage 1 — kod topshiriqlari",
+      "hint": "Bankdan 5 tagacha topshiriq tanlang. Bo'sh maydonlar standart qiymatni oladi.",
+      "remove": "{title} ni olib tashlash",
+      "none": "Topshiriq tanlanmagan.",
+      "pick": "Bankdan topshiriq",
+      "pickEmpty": "Topshiriq tanlang",
+      "add": "Qo'shish",
+      "duration": "Davomiyligi (daqiqa)",
+      "threshold": "O'tish bali (%)"
+    },
+    "stage2": {
+      "title": "Stage 2 — suhbat",
+      "hint": "Savollar tartibi ro'yxat tartibi bilan bir xil. Majburiy savollar har bir nomzodga beriladi.",
+      "duration": "Davomiyligi (daqiqa)",
+      "count": "Savollar soni",
+      "threshold": "O'tish bali (%)",
+      "mode": "Rejim",
+      "modes": {
+        "voice": "Ovozli",
+        "text": "Matnli"
+      },
+      "adaptive": "Moslashuvchan suhbat",
+      "adaptiveHint": "Javobga qarab qo'shimcha savollar beriladi.",
+      "questions": "Savollar",
+      "none": "Savol tanlanmagan.",
+      "mandatory": "Majburiy",
+      "up": "Yuqoriga: {label}",
+      "down": "Pastga: {label}",
+      "remove": "Olib tashlash: {label}",
+      "pick": "Bankdan savol",
+      "pickEmpty": "Savol tanlang",
+      "add": "Qo'shish"
+    },
+    "integrity": {
+      "title": "Halollik sozlamalari",
+      "hint": "Faqat shu vakansiya uchun standart chegaralarni o'zgartirish.",
+      "pasteMax": "Joylashtirish chegarasi (qator)",
+      "inactivity": "Harakatsizlik chegarasi (soniya)",
+      "emptyDefault": "Bo'sh maydon — standart qiymat (kulrang maslahat sifatida ko'rsatilgan). Qiymatni faqat server hal qiladi."
+    }
+  },
+  "interview": {
+    "title": "Intervyu",
+    "notFound": "Bu ariza topilmadi yoki sizga tegishli emas.",
+    "desktopOnlyTitle": "Intervyuni kompyuterda oching",
+    "desktopOnlyBody": "Kod yozish bosqichi kichik ekranda ishlamaydi. Kompyuterdan (kamida 1024 px kenglikdagi oynada) shu havolani qayta oching.",
+    "desktopOnlyBack": "Arizalarimga qaytish",
+    "editor": {
+      "tabHint": "Tab tugmasi muharrir ichida bo'shliq qo'shadi. Muharrirdan chiqish uchun Ctrl+M ni bosing, so'ng Tab."
+    },
+    "blocked": {
+      "title": "Intervyuni hozir boshlab bo'lmaydi",
+      "application_closed": "Bu ariza yopilgan: uni qaytarib olgansiz yoki ish beruvchi qaror qabul qilgan.",
+      "assessment_not_ready": "Ish beruvchi bu vakansiya uchun intervyuni hali tayyorlab bo'lmadi. Keyinroq qayta urinib ko'ring.",
+      "unknown": "Intervyuni hozircha boshlab bo'lmaydi.",
+      "back": "Arizalarimga qaytish"
+    },
+    "rules": {
+      "reload": "Qoidalarni yangilash",
+      "versionChanged": "Qoidalar yangilangan. Sahifani yangilab, yangi qoidalarni o'qing."
+    },
+    "check": {
+      "title": "Tizim tekshiruvi",
+      "lead": "Boshlashdan oldin brauzeringiz mosligini tekshiring.",
+      "websocket": "Real vaqt aloqasi (WebSocket)",
+      "clipboard": "Buferga kirish hodisalari",
+      "fullscreen": "To'liq ekran rejimi",
+      "ok": "tayyor",
+      "fail": "yo'q",
+      "browserHint": "Zamonaviy Chrome, Edge, Firefox yoki Safari ning yangi versiyasidan foydalaning.",
+      "fullscreenHint": "To'liq ekran tavsiya etiladi, lekin majburiy emas.",
+      "enterFullscreen": "To'liq ekranga o'tish",
+      "micTitle": "Mikrofon testi",
+      "micStub": "Mikrofon testi hali mavjud emas: u 2-bosqich (ovozli suhbat) bilan keyingi versiyada qo'shiladi. Hozir 1-bosqich uchun mikrofon kerak emas.",
+      "browserBlocked": "Brauzeringiz kerakli imkoniyatlarni qo'llamaydi. Boshqa brauzerda oching.",
+      "continue": "Davom etish"
+    },
+    "warmup": {
+      "title": "Qizish topshirig'i",
+      "timer": "Qolgan vaqt",
+      "skip": "O'tkazib yuborish",
+      "notice": "Bu topshiriq baholanmaydi va yozuvlar saqlanmaydi. Muharrir va testlarni sinab ko'ring.",
+      "taskTitle": "Ikki sonni qo'shing",
+      "statement": "Bir qatorda ikkita butun son beriladi. Ularning yig'indisini chiqaring.",
+      "done": "Tayyorman, davom etish"
+    },
+    "task": {
+      "visibleTests": "Ochiq testlar",
+      "testN": "Test {n}",
+      "input": "Kirish",
+      "output": "Chiqish",
+      "editorRegion": "Kod muharriri",
+      "language": "Dasturlash tili",
+      "languages": {
+        "python": "Python",
+        "javascript": "JavaScript",
+        "typescript": "TypeScript",
+        "sql": "SQL",
+        "go": "Go",
+        "java": "Java"
+      },
+      "run": "Testlarni ishga tushirish",
+      "running": "Ishlamoqda…",
+      "submit": "Topshirish",
+      "editorLabel": "Kod muharriri",
+      "resultsSummary": "{passed} / {total} ta testdan o'tdi",
+      "status": {
+        "passed": "o'tdi",
+        "failed": "o'tmadi",
+        "error": "xato",
+        "timeout": "vaqt tugadi"
+      },
+      "submitTitle": "Yechimni topshiramizmi?",
+      "submitBody": "Topshirilgandan keyin bu topshiriqni o'zgartirib bo'lmaydi.",
+      "keepWorking": "Yozishda davom etish",
+      "submitConfirm": "Topshirish"
+    },
+    "stage1": {
+      "introTitle": "1-bosqich: kod yozish",
+      "introBody": "Topshiriq(lar) vaqt bilan cheklangan. Taymer server vaqti bo'yicha ishlaydi. Boshlaganingizda to'liq ekran taklif etiladi. Muharrirdan tashqaridan kod qo'yib bo'lmaydi.",
+      "begin": "1-bosqichni boshlash",
+      "starting": "Boshlanmoqda…",
+      "supersededTitle": "Intervyu boshqa oynada davom etmoqda",
+      "supersededBody": "Bu intervyu boshqa brauzer oynasida ochilgan. Shu oynani yoping va u yerda davom eting.",
+      "taskOf": "{n}-topshiriq, jami {total} ta",
+      "offline": "Aloqa uzildi. Qayta ulanmoqda. Yozganlaringiz saqlanadi.",
+      "taskTimer": "Topshiriq vaqti",
+      "inactiveTitle": "Harakatsizlik ogohlantirishi",
+      "inactiveBody": "Yozishda davom eting, aks holda intervyu avtomatik tugaydi.",
+      "inactiveCountdown": "{s} soniya qoldi.",
+      "backToFullscreen": "To'liq ekranga qaytish",
+      "fullscreenLeft": "To'liq ekrandan chiqdingiz. Bu qayd etiladi. Davom etishingiz mumkin, lekin to'liq ekranga qaytish tavsiya etiladi."
+    },
+    "ended": {
+      "completed": {
+        "title": "1-bosqich tugadi",
+        "body": "Yechimlaringiz qabul qilindi."
+      },
+      "expired": {
+        "title": "Vaqt tugadi",
+        "body": "1-bosqich uchun ajratilgan vaqt tugadi. Yozganlaringiz saqlangan."
+      },
+      "abandoned": {
+        "title": "Intervyu to'xtatildi",
+        "body": "Aloqa uzoq vaqt tiklanmagani uchun intervyu to'xtatildi."
+      },
+      "inactivity": {
+        "title": "Intervyu tugadi: harakatsizlik",
+        "body": "Siz uzoq vaqt hech narsa yozmadingiz va qoidalarga ko'ra intervyu avtomatik tugadi."
+      },
+      "externalPaste": {
+        "title": "Intervyu tugadi: tashqaridan kod qo'yildi",
+        "body": "Muharrirga tashqaridan katta hajmdagi matn qo'yildi. Boshlashdan oldin qabul qilgan qoidaga ko'ra 1-bosqich shu yerda tugaydi."
+      },
+      "ruleRef": "Siz qabul qilgan qoidalar versiyasi: {version}. Ish beruvchi qarorni ko'rib chiqishi mumkin.",
+      "back": "Arizalarimga qaytish"
+    },
+    "result": {
+      "title": "1-bosqich natijasi",
+      "pending": "Kodingiz tekshirilmoqda. Bu bir necha soniya olishi mumkin.",
+      "delayedTitle": "Natija kechikmoqda",
+      "delayedBody": "Natijani hisoblash kechikmoqda. Kompaniya yechimlaringizni o'zi ko'rib chiqadi.",
+      "threshold": "O'tish chegarasi: {value}%",
+      "passed": "1-bosqichdan o'tdingiz",
+      "notPassed": "Bu safar o'tish chegarasiga yetmadi",
+      "nextStage2": "2-bosqich (ovozli suhbat) tez orada. Hozircha boshqa harakat talab qilinmaydi.",
+      "notPassedBody": "Natija o'tish chegarasidan past bo'ldi, shuning uchun ariza keyingi bosqichga o'tmadi. Quyidagi izohlar keyingi urinishlarda foydali bo'lishi mumkin.",
+      "hidden": "Yashirin testlar: {passed} / {total}",
+      "strengths": "Kuchli tomonlar",
+      "weaknesses": "Rivojlantirish mumkin"
+    }
+  },
+  "hrReplay": {
+    "region": "Kod replay pleyeri",
+    "editorLabel": "Nomzod kodi (faqat o'qish)",
+    "play": "Ijro",
+    "pause": "Pauza",
+    "back5": "5 soniya orqaga",
+    "fwd5": "5 soniya oldinga",
+    "toStart": "Boshiga",
+    "toEnd": "Oxiriga",
+    "speed": "Tezlik",
+    "skipIdle": "Uzun bo'shliqlarni o'tkazib yuborish",
+    "time": "Vaqt",
+    "markers": "Timeline belgilari",
+    "timeline": "Timeline",
+    "legend": "Belgilar: tashqi/ichki paste {paste}, harakatsizlik {idle}, tabdan chiqish {focus}, Run {run}.",
+    "keys": "Klaviatura: Probel, ijro va pauza. Chap/o'ng o'q, 5 soniya. Shift bilan 30 soniya.",
+    "marker": {
+      "pasteBlocked": "Bloklangan tashqi paste, {length} belgi, {lines} qator, {time}",
+      "pasteInternal": "Ichki paste, {time}",
+      "idle": "Harakatsizlik {seconds} soniya, {time} dan",
+      "focus": "Tabdan yoki to'liq ekrandan chiqish, {time}",
+      "run": "Testlarni ishga tushirish, {time}"
+    }
+  },
+  "hrStage1": {
+    "title": "1-bosqich hisoboti",
+    "back": "Nomzodlarga qaytish",
+    "notStarted": "1-bosqich hali boshlanmagan",
+    "notStartedBody": "Nomzod intervyuni boshlagach hisobot shu yerda paydo bo'ladi.",
+    "status": {
+      "not_started": "Boshlanmagan",
+      "in_progress": "Davom etmoqda",
+      "completed": "Tugagan",
+      "expired": "Vaqti tugagan",
+      "abandoned": "To'xtatilgan",
+      "disqualified": "Chetlatilgan"
+    },
+    "reviewTitle": "Kuchli va zaif tomonlar",
+    "replayTitle": "Kod replay",
+    "tasksLabel": "Topshiriqlar",
+    "codeTitle": "Yakuniy kod va test natijalari",
+    "suspicion": {
+      "title": "AI yordami shubhasi",
+      "notYet": "Hisoblanmoqda: 1-bosqich tahlili tugagach paydo bo'ladi.",
+      "none": "Shubha foizi hisoblanmagan.",
+      "rankingAid": "Ball ham, shubha foizi ham qarorni avtomatik hal qilmaydi. Foiz nomzodlarni solishtirishga yordam beruvchi belgi, ehtimollik emas.",
+      "level": {
+        "low": "Past",
+        "medium": "O'rta",
+        "high": "Yuqori"
+      },
+      "reasons": "Asosiy sabablar",
+      "noReasons": "Sabablar qayd etilmagan.",
+      "allSignals": "Barcha signallar ({count})",
+      "severity": {
+        "info": "ma'lumot",
+        "low": "past",
+        "medium": "o'rta",
+        "high": "yuqori",
+        "disqualifying": "chetlatuvchi"
+      }
+    },
+    "signals": {
+      "unknown": "Noma'lum signal: {type}",
+      "idle_periods": "{count} marta uzoq harakatsizlik (soniya: {seconds}){atStart, plural, =1 { topshiriq boshida} other {}}",
+      "idle_with_focus_loss": "Harakatsizlik paytida tabdan chiqilgan: {count} marta (soniya: {seconds})",
+      "burst_after_idle": "Harakatsizlikdan keyin {windowS} soniyada {chars} belgi paydo bo'lgan",
+      "superhuman_typing": "Juda tez yozish: soniyasiga {charsPerS} belgi",
+      "robotic_typing": "Tugmalar oralig'i bir xil (variatsiya {cv}, {samples} namuna)",
+      "linear_writing": "Tahrirsiz yozilgan: {chars} belgi, tahrir ulushi {editPercent}%, orqaga qaytish {backJumps} marta",
+      "no_run_cycle": "Hamma testlar o'tgan, lekin kod bir marta ham ishga tushirilmagan",
+      "no_edits_after_first_run": "Birinchi Run'dan keyin kod o'zgartirilmagan ({runs} marta ishga tushirilgan)",
+      "focus_loss": "Tabdan yoki oynadan chiqish: {count} marta, jami {totalS} soniya, to'liq ekrandan chiqish {exits}",
+      "evaluator_injection_attempt": "Kodda baholovchiga qaratilgan ko'rsatma bor",
+      "paste_external": "Tashqi paste urinishi bloklandi ({lines} qator, {chars} belgi)",
+      "external_insertion": "Tushuntirib bo'lmaydigan matn qo'shildi ({lines} qator, {chars} belgi)",
+      "unverified_internal_paste": "Tasdiqlanmagan ichki paste ({lines} qator, {chars} belgi)",
+      "external_paste": "Katta tashqi paste: 1-bosqich shu yerda tugagan ({lines} qator, {chars} belgi)",
+      "inactivity": "Uzoq harakatsizlik: 1-bosqich avtomatik tugagan"
+    },
+    "scores": {
+      "title": "Ballar",
+      "stage1": "1-bosqich",
+      "hidden": "Yashirin testlar",
+      "review": "Kod tahlili",
+      "threshold": "o'tish chegarasi {value}%",
+      "passed": "o'tdi",
+      "notPassed": "o'tmadi",
+      "pending": "Baholash davom etmoqda. Sahifa o'zi yangilanadi.",
+      "failedTitle": "Baholash bajarilmadi",
+      "failedBody": "Avtomatik baholash tugallanmadi, ball yo'q. Yechimni qo'lda ko'rib chiqing.",
+      "needsReviewTitle": "Qo'lda ko'rib chiqish kerak",
+      "needsReviewBody": "Kod tahlili natijasiga ishonch past yoki baholovchilar kelishmadi. Replay va kodni o'zingiz ko'ring.",
+      "disqualifiedTitle": "Nomzod chetlatilgan",
+      "disqualified": {
+        "external_paste": "Tashqi paste: nomzod qabul qilgan qoidaga ko'ra chegaradan katta tashqi matn qo'ygan.",
+        "inactivity": "Harakatsizlik: nomzod qabul qilingan chegaradan uzoq hech narsa qilmagan.",
+        "abandoned": "Aloqa qayta tiklanmagani uchun to'xtatilgan.",
+        "other": "Sabab ko'rsatilmagan."
+      },
+      "notAutomatic": "Ball ham, shubha foizi ham qarorni avtomatik hal qilmaydi: qaror sizniki."
+    },
+    "review": {
+      "none": "Kod tahlili mavjud emas.",
+      "score": "Kod tahlili bali",
+      "needsReview": "qo'lda ko'rib chiqish kerak",
+      "strengths": "Kuchli tomonlar",
+      "weaknesses": "Zaif tomonlar",
+      "findings": "Kod bo'yicha izohlar",
+      "criteria": "Mezonlar bo'yicha",
+      "line": "{n}-qator"
+    },
+    "code": {
+      "finalCode": "Yakuniy kod",
+      "runs": "Run: {count} marta",
+      "visible": "Ochiq testlar",
+      "hidden": "Yashirin testlar",
+      "status": {
+        "passed": "o'tdi",
+        "failed": "o'tmadi",
+        "error": "xato",
+        "timeout": "vaqt tugadi"
+      }
+    }
+  }
+}

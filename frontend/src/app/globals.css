@@ -1,0 +1,195 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * SkillProof design tokens — "Lapis & paper".
+ *
+ * Layer 1 (semantic, raw values below in :root / .dark):
+ *   bg, surface, surface-2, fg, muted (= secondary text), border,
+ *   accent, accent-fg, danger, warning, success, info (+ *-soft backgrounds).
+ * Layer 2 (shadcn): --background, --primary, ... are ALIASES of layer 1 —
+ *   there is no second palette. NOTE: the utility names `muted` and `accent`
+ *   follow our semantics (muted = secondary text colour, accent = brand lapis),
+ *   not shadcn's. After `shadcn add`, replace `bg-muted`/`bg-accent` (hover
+ *   surfaces) with `bg-surface-2` and `text-*-foreground` with `text-muted`/`text-fg`.
+ * Layer 3 (domain state): score-high|mid|low, suspicion-low|medium|high.
+ *   Always paired with a text label — never colour alone.
+ */
+@theme inline {
+  /* semantic */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted-fg);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-info: var(--info);
+
+  /* domain state */
+  --color-score-high: var(--score-high);
+  --color-score-mid: var(--score-mid);
+  --color-score-low: var(--score-low);
+  --color-suspicion-low: var(--suspicion-low);
+  --color-suspicion-medium: var(--suspicion-medium);
+  --color-suspicion-high: var(--suspicion-high);
+
+  /* shadcn names, aliased to the semantic layer */
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--fg);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--fg);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-fg);
+  --color-secondary: var(--surface-2);
+  --color-secondary-foreground: var(--fg);
+  --color-destructive: var(--danger);
+  --color-input: var(--border-strong);
+  --color-ring: var(--accent);
+
+  /* typography: Onest for UI/body, Literata for display headings */
+  --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-literata), ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* radius scale — restrained, slightly squared */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+}
+
+/* Type scale (fluid display sizes). Stays on Tailwind's names so `cn()` merging works. */
+@theme {
+  --text-display: clamp(2.25rem, 1.6rem + 2.6vw, 3.75rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* paper: cool off-white, ink: deep blue-black */
+  --bg: oklch(0.982 0.005 250);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.955 0.009 252);
+  --fg: oklch(0.23 0.035 262);
+  --muted-fg: oklch(0.47 0.025 260);
+  --border: oklch(0.9 0.012 255);
+  --border-strong: oklch(0.8 0.018 258);
+
+  /* lapis lazuli */
+  --accent: oklch(0.44 0.17 264);
+  --accent-fg: oklch(0.99 0.004 250);
+  --accent-soft: oklch(0.94 0.035 262);
+
+  --danger: oklch(0.52 0.19 27);
+  --danger-soft: oklch(0.95 0.03 27);
+  --warning: oklch(0.55 0.13 65);
+  --warning-soft: oklch(0.95 0.045 80);
+  --success: oklch(0.5 0.11 170);
+  --success-soft: oklch(0.95 0.035 170);
+  --info: oklch(0.5 0.12 240);
+
+  --score-high: var(--success);
+  --score-mid: var(--warning);
+  --score-low: var(--danger);
+  --suspicion-low: var(--success);
+  --suspicion-medium: var(--warning);
+  --suspicion-high: var(--danger);
+
+  /* raw shadcn variable names for any registry code reading them directly */
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-fg);
+  --secondary: var(--surface-2);
+  --destructive: var(--danger);
+  --ring: var(--accent);
+}
+
+.dark {
+  /* lapis night — blue-tinted, not neutral black */
+  --bg: oklch(0.175 0.028 264);
+  --surface: oklch(0.215 0.032 264);
+  --surface-2: oklch(0.26 0.034 264);
+  --fg: oklch(0.95 0.01 250);
+  --muted-fg: oklch(0.74 0.025 255);
+  --border: oklch(0.31 0.034 264);
+  --border-strong: oklch(0.42 0.04 262);
+
+  --accent: oklch(0.74 0.12 258);
+  --accent-fg: oklch(0.18 0.03 264);
+  --accent-soft: oklch(0.3 0.06 262);
+
+  --danger: oklch(0.72 0.15 25);
+  --danger-soft: oklch(0.3 0.07 25);
+  --warning: oklch(0.8 0.13 75);
+  --warning-soft: oklch(0.31 0.06 70);
+  --success: oklch(0.76 0.11 170);
+  --success-soft: oklch(0.29 0.05 170);
+  --info: oklch(0.75 0.1 240);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-accent;
+  }
+  html {
+    @apply bg-bg font-sans text-fg antialiased;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply min-h-dvh bg-bg text-fg;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    @apply bg-accent text-accent-fg;
+  }
+}
+
+/* Reduced motion: CSS animations/transitions (tw-animate-css, Radix enter/exit) become instant.
+   Motion (JS) animations are handled by <MotionConfig reducedMotion="user">. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Compact interview room (Stage 1 running): no site header, footer, search or navigation.
+   `useInterviewRoom` sets the attribute on <body>. */
+body[data-interview-room] [data-site-chrome] {
+  display: none;
+}
+body[data-interview-room] {
+  padding-bottom: 0;
+}
