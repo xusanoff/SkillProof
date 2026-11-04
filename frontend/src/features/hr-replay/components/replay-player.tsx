@@ -1,5 +1,6 @@
 'use client';
 
+import { defineEditorThemes, editorTheme } from '@/components/editor/theme';
 import {
   ClipboardPaste,
   Eye,
@@ -171,7 +172,8 @@ function Player({ replay }: { replay: Replay }) {
         <MonacoEditor
           value={state.code}
           language={MONACO_LANG[state.language ?? replay.language] ?? 'plaintext'}
-          theme={resolvedTheme === 'dark' ? 'vs-dark' : 'vs'}
+          beforeMount={defineEditorThemes}
+          theme={editorTheme(resolvedTheme)}
           options={{
             readOnly: true,
             domReadOnly: true,

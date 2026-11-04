@@ -21,6 +21,7 @@ from app.models.interview import (
     InterviewTurn,
     RulesAcceptance,
 )
+from app.models.notification import Notification
 from app.models.report import ApplicationNote, HrOverride, SessionReport
 from app.models.user import AuthToken, User
 from app.models.vacancy import Application, SavedVacancy, Vacancy, VacancySkill
@@ -46,6 +47,7 @@ __all__ = [
     "IntegritySignal",
     "InterviewSession",
     "InterviewTurn",
+    "Notification",
     "PracticalTask",
     "ProfessionArea",
     "Question",

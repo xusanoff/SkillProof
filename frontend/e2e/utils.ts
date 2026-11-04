@@ -93,6 +93,10 @@ export function me(overrides: Record<string, unknown> = {}) {
     is_email_verified: true,
     created_at: '2026-10-01T09:00:00Z',
     companies: [],
+    notify_email: true,
+    notify_telegram: true,
+    telegram_linked: false,
+    telegram_available: false,
     ...overrides,
   };
 }

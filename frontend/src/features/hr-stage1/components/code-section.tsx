@@ -42,6 +42,7 @@ export function CodeSection({ task }: { task: TaskReport }) {
         {task.language} · {t('runs', { count: task.run_count })}
       </p>
       <ol
+        tabIndex={0}
         aria-label={t('finalCode')}
         className="overflow-x-auto rounded-lg border border-border bg-surface-2 py-2 font-mono text-sm"
       >

@@ -34,7 +34,7 @@ function Point({ point }: { point: ReportPoint }) {
               {t('lines', { lines: point.lines.join(', ') })}
             </figcaption>
           ) : null}
-          <pre className="overflow-x-auto rounded-lg bg-surface-2 p-3 text-sm">
+          <pre tabIndex={0} className="overflow-x-auto rounded-lg bg-surface-2 p-3 text-sm">
             <code className="font-mono">{point.excerpt}</code>
           </pre>
         </figure>

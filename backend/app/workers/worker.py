@@ -78,6 +78,16 @@ async def sweep_reports(ctx: dict[str, Any]) -> None:
         )
 
 
+async def deliver_notifications(ctx: dict[str, Any]) -> None:
+    from app.core.db import SessionLocal
+    from app.services.email import get_email_sender
+    from app.services.notifications import deliver_due
+    from app.services.telegram import get_telegram_sender
+
+    async with SessionLocal() as session:
+        await deliver_due(session, get_email_sender(), get_telegram_sender())
+
+
 async def startup(ctx: dict[str, Any]) -> None:
     configure_logging(get_settings().log_level)
     logger.info("worker_started")
@@ -95,6 +105,7 @@ class WorkerSettings:
         cron(sweep_stage1, second={0, 15, 30, 45}),
         cron(sweep_stage2, second={5, 20, 35, 50}),
         cron(sweep_reports, second={10, 25, 40, 55}),
+        cron(deliver_notifications, second={12, 42}),
     ]
     job_timeout = 600
     on_startup = startup

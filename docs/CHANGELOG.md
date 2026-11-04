@@ -1,5 +1,12 @@
 # Changelog
 
+## Phase 9 — Notifications, translation, mobile and accessibility (2026-11-04)
+- Outbox `notifications`, email (console or SMTP) and Telegram delivery with retries, per-channel settings (D-150…D-154). Guide: `docs/NOTIFICATIONS.md`.
+- Translation review: 12 backend errors had no text, Russian terms made consistent, leftover English removed from Uzbek.
+- `e2e/responsive-a11y.spec.ts` sweeps non-coding pages on phone and desktop. Fixed sideways scrolling on HR lists, keyboard access to code blocks, comment contrast in the dark editor.
+- Not done: audio heuristics, which wait for a speech provider and real recordings. Real SMTP and Telegram not exercised.
+- Details: `docs/reports/phase-9/REPORT.md`.
+
 ## Phase 8 — Verified skill profile (2026-11-03)
 - `verified_skills`: earned from clean machine results only, 365-day validity, private by default (D-130…D-133).
 - Reuse on new applications, chosen by the candidate when Stage 1 starts: covered tasks and questions are skipped, mandatory questions stay. A stage can be covered entirely.

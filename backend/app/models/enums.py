@@ -16,6 +16,7 @@ class TokenPurpose(StrEnum):
     refresh = "refresh"
     email_verification = "email_verification"
     password_reset = "password_reset"
+    telegram_link = "telegram_link"
 
 
 class Locale(StrEnum):
@@ -161,3 +162,28 @@ class EvaluationState(StrEnum):
 class EvaluationStatus(StrEnum):
     ok = "ok"
     needs_review = "needs_review"
+
+
+class NotificationChannel(StrEnum):
+    email = "email"
+    telegram = "telegram"
+
+
+class NotificationStatus(StrEnum):
+    pending = "pending"
+    sent = "sent"
+    failed = "failed"
+    skipped = "skipped"
+
+
+class NotificationEvent(StrEnum):
+    new_applicant = "new_applicant"
+    report_ready = "report_ready"
+    stage1_invite = "stage1_invite"
+    stage2_invite = "stage2_invite"
+    stage1_failed = "stage1_failed"
+    disqualified = "disqualified"
+    results_ready = "results_ready"
+    shortlisted = "shortlisted"
+    rejected = "rejected"
+    hired = "hired"

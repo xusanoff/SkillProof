@@ -15,6 +15,7 @@ import { routing, type Locale } from '@/i18n/routing';
 import { applyServerErrors, useErrorText, useFieldError } from '@/lib/forms';
 import { useMe, useUpdateMe } from '../api';
 import type { Me } from '../model';
+import { NotificationSettings } from './notification-settings';
 
 const settingsSchema = z.object({
   full_name: z.string().trim().min(1, 'required').max(200, 'tooLong'),
@@ -37,6 +38,7 @@ export function SettingsPage() {
       <h1 className="font-display text-3xl font-semibold tracking-tight">{t('title')}</h1>
       <p className="mt-2 text-muted">{t('lead')}</p>
       {me ? <SettingsForm me={me} /> : null}
+      {me ? <NotificationSettings me={me} /> : null}
     </div>
   );
 }

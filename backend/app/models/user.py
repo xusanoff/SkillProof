@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Index, String
+from sqlalchemy import BigInteger, Boolean, DateTime, Enum, ForeignKey, Index, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base
@@ -25,6 +25,9 @@ class User(UUIDPk, Timestamps, Base):
     timezone: Mapped[str] = mapped_column(String(64), default="Asia/Tashkent")
     is_email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    notify_email: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    notify_telegram: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    telegram_chat_id: Mapped[int | None] = mapped_column(BigInteger)
 
 
 class AuthToken(UUIDPk, CreatedAt, Base):

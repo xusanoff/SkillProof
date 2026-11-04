@@ -1358,6 +1358,41 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/auth/me/telegram': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Create Link */
+    post: operations['create_link_api_v1_auth_me_telegram_post'];
+    /** Unlink */
+    delete: operations['unlink_api_v1_auth_me_telegram_delete'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/telegram/webhook': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Webhook */
+    post: operations['webhook_api_v1_telegram_webhook_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2513,6 +2548,14 @@ export interface components {
       created_at: string;
       /** Companies */
       companies: components['schemas']['MeCompany'][];
+      /** Notify Email */
+      notify_email: boolean;
+      /** Notify Telegram */
+      notify_telegram: boolean;
+      /** Telegram Linked */
+      telegram_linked: boolean;
+      /** Telegram Available */
+      telegram_available: boolean;
     };
     /** MeCompany */
     MeCompany: {
@@ -2534,6 +2577,10 @@ export interface components {
       locale?: components['schemas']['Locale'] | null;
       /** Timezone */
       timezone?: string | null;
+      /** Notify Email */
+      notify_email?: boolean | null;
+      /** Notify Telegram */
+      notify_telegram?: boolean | null;
     };
     /** MemberOut */
     MemberOut: {
@@ -3496,6 +3543,31 @@ export interface components {
      * @enum {string}
      */
     TaskType: 'coding';
+    /** TelegramChat */
+    TelegramChat: {
+      /** Id */
+      id: number;
+      /** Type */
+      type: string;
+    };
+    /** TelegramIncoming */
+    TelegramIncoming: {
+      /** Text */
+      text?: string | null;
+      chat: components['schemas']['TelegramChat'];
+    };
+    /** TelegramLink */
+    TelegramLink: {
+      /** Url */
+      url: string;
+    };
+    /**
+     * TelegramUpdate
+     * @description The part of a Bot API update we read; everything else is ignored.
+     */
+    TelegramUpdate: {
+      message?: components['schemas']['TelegramIncoming'] | null;
+    };
     /** TestCase */
     TestCase: {
       /**
@@ -7207,6 +7279,77 @@ export interface operations {
         content: {
           'application/json': components['schemas']['Stage2SessionOut'];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  create_link_api_v1_auth_me_telegram_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TelegramLink'];
+        };
+      };
+    };
+  };
+  unlink_api_v1_auth_me_telegram_delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  webhook_api_v1_telegram_webhook_post: {
+    parameters: {
+      query?: never;
+      header?: {
+        'X-Telegram-Bot-Api-Secret-Token'?: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TelegramUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
       /** @description Validation Error */
       422: {

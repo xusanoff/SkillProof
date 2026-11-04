@@ -149,8 +149,29 @@ export function useUpdateMe() {
   const api = useApi();
   const setMe = useSetMe();
   return useMutation({
-    mutationFn: (body: { full_name?: string; locale?: Locale; timezone?: string }) =>
-      unwrap(api.PATCH('/api/v1/auth/me', { body })),
+    mutationFn: (body: {
+      full_name?: string;
+      locale?: Locale;
+      timezone?: string;
+      notify_email?: boolean;
+      notify_telegram?: boolean;
+    }) => unwrap(api.PATCH('/api/v1/auth/me', { body })),
     onSuccess: setMe,
+  });
+}
+
+export function useTelegramLink() {
+  const api = useApi();
+  return useMutation({
+    mutationFn: () => unwrap(api.POST('/api/v1/auth/me/telegram')),
+  });
+}
+
+export function useTelegramUnlink() {
+  const api = useApi();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => unwrap(api.DELETE('/api/v1/auth/me/telegram')),
+    onSuccess: () => qc.invalidateQueries({ queryKey: authKeys.me() }),
   });
 }

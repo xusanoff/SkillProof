@@ -21,7 +21,7 @@ from app.models import AuthToken, Company, CompanyMember, User
 from app.models.enums import TokenPurpose, UserRole
 from app.schemas.auth import Me, MeCompany, MeUpdate, RegisterIn
 from app.services import audit
-from app.services.email import EmailSender, render
+from app.services.email import EmailSender, render, send_best_effort
 
 
 @dataclass(frozen=True)
@@ -70,7 +70,7 @@ async def _send_verification(session: AsyncSession, user: User, sender: EmailSen
         timedelta(hours=settings.email_verification_hours),
     )
     link = f"{settings.frontend_url}/{user.locale}/verify-email?token={raw}"
-    await sender.send(render("verify_email", user.locale, user.email, link=link))
+    await send_best_effort(sender, render("verify_email", user.locale, user.email, link=link))
 
 
 async def register(
@@ -180,7 +180,7 @@ async def forgot_password(session: AsyncSession, email: str, sender: EmailSender
         timedelta(minutes=settings.password_reset_minutes),
     )
     link = f"{settings.frontend_url}/{user.locale}/reset-password?token={raw}"
-    await sender.send(render("reset_password", user.locale, user.email, link=link))
+    await send_best_effort(sender, render("reset_password", user.locale, user.email, link=link))
     await session.commit()
 
 
@@ -213,6 +213,7 @@ async def build_me(session: AsyncSession, user: User) -> Me:
         .order_by(Company.name)
     )
     companies = [MeCompany(id=r[0], name=r[1], slug=r[2], member_role=r[3]) for r in rows]
+    settings = get_settings()
     return Me(
         id=user.id,
         email=user.email,
@@ -223,4 +224,35 @@ async def build_me(session: AsyncSession, user: User) -> Me:
         is_email_verified=user.is_email_verified,
         created_at=user.created_at,
         companies=companies,
+        notify_email=user.notify_email,
+        notify_telegram=user.notify_telegram,
+        telegram_linked=user.telegram_chat_id is not None,
+        telegram_available=settings.telegram_bot_token is not None,
     )
+
+
+async def telegram_link_url(session: AsyncSession, user: User) -> str:
+    """A one-time deep link. Opening it in Telegram sends the token to our webhook."""
+    await _revoke_all(session, user.id, TokenPurpose.telegram_link)
+    raw = await _issue_token(session, user.id, TokenPurpose.telegram_link, timedelta(minutes=15))
+    await session.commit()
+    return f"https://t.me/{get_settings().telegram_bot_username}?start={raw}"
+
+
+async def telegram_confirm(session: AsyncSession, raw: str, chat_id: int) -> User | None:
+    token = await _consume(session, raw, TokenPurpose.telegram_link)
+    if token is None:
+        await session.rollback()
+        return None
+    user = await session.get(User, token.user_id)
+    assert user is not None  # the foreign key cascades
+    user.telegram_chat_id = chat_id
+    audit.record(session, user.id, "user.telegram_link", "user", user.id)
+    await session.commit()
+    return user
+
+
+async def telegram_unlink(session: AsyncSession, user: User) -> None:
+    user.telegram_chat_id = None
+    audit.record(session, user.id, "user.telegram_unlink", "user", user.id)
+    await session.commit()

@@ -26,7 +26,7 @@ export function TabLinks({
   className?: string;
 }) {
   return (
-    <nav aria-label={label} className={cn('-mx-4 border-b border-border sm:mx-0', className)}>
+    <nav aria-label={label} className={cn('-mx-4 min-w-0 border-b border-border sm:mx-0', className)}>
       <ul className="flex gap-1 overflow-x-auto px-4 sm:px-0">
         {items.map((item) => {
           const current = item.key === active;

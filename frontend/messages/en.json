@@ -176,7 +176,20 @@
     "unknown_items": "One of the selected questions or tasks was not found. Refresh the page and pick again.",
     "report_not_ready": "The report is not ready yet, so it cannot be changed. Try again in a moment.",
     "invalid_override": "This value is not allowed for the chosen field.",
-    "not_disqualified": "This application is not disqualified."
+    "not_disqualified": "This application is not disqualified.",
+    "telegram_unavailable": "Telegram notifications are not set up yet.",
+    "answer_too_long": "The answer is too long. Shorten it.",
+    "audio_required": "This interview is answered by voice.",
+    "audio_too_large": "The recording is too large.",
+    "duplicate_items": "An item is listed twice.",
+    "invalid_audio": "This audio format is not supported.",
+    "language_not_allowed": "This language is not allowed for this task.",
+    "rules_not_accepted": "Accept the rules first.",
+    "rules_version_mismatch": "The rules have changed. Read them again.",
+    "sandbox_unavailable": "Code can't run right now. Try again.",
+    "session_not_active": "This interview stage has ended.",
+    "stage2_not_available": "Stage 2 is not available for this application.",
+    "task_not_current": "This is not the current task."
   },
   "errorPage": {
     "title": "Something went wrong",
@@ -359,7 +372,18 @@
     "language": "Interface language",
     "languageHint": "Emails will use this language too.",
     "timezone": "Time zone",
-    "saved": "Saved."
+    "saved": "Saved.",
+    "notifications": "Notifications",
+    "notificationsLead": "News about applications and results arrives on these channels. Messages contain no scores.",
+    "notifyEmail": "Email",
+    "notifyEmailUnverified": "Emails start once you confirm your address.",
+    "notifyTelegram": "Telegram",
+    "telegramConnect": "Connect Telegram",
+    "telegramOpen": "Open in Telegram",
+    "telegramWaiting": "Press Start in Telegram. The link works for 15 minutes.",
+    "telegramLinked": "Telegram is connected.",
+    "telegramDisconnect": "Disconnect",
+    "telegramNotLinked": "Telegram is not connected."
   },
   "validation": {
     "required": "Fill in this field.",

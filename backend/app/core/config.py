@@ -18,7 +18,11 @@ _DEV_JWT_SECRET = "dev-only-insecure-jwt-secret-change-me-in-env"
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", env_nested_delimiter="__", extra="ignore", case_sensitive=False
+        env_file=".env",
+        env_ignore_empty=True,
+        env_nested_delimiter="__",
+        extra="ignore",
+        case_sensitive=False,
     )
 
     app_name: str = "SkillProof"
@@ -47,7 +51,17 @@ class Settings(BaseSettings):
     email_verification_hours: int = 48
     password_reset_minutes: int = 60
     invitation_days: int = 7
-    email_backend: Literal["console"] = "console"
+    email_backend: Literal["console", "smtp"] = "console"
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_username: str | None = None
+    smtp_password: SecretStr | None = None
+    smtp_from: str | None = None
+
+    # Telegram stays off until all three are set.
+    telegram_bot_token: SecretStr | None = None
+    telegram_bot_username: str | None = None
+    telegram_webhook_secret: SecretStr | None = None
 
     # Candidates must confirm their email before applying (owner can switch on later).
     require_verified_email_to_apply: bool = False
@@ -112,6 +126,18 @@ class Settings(BaseSettings):
             secret = self.jwt_secret.get_secret_value()
             if secret == _DEV_JWT_SECRET or len(secret) < 32:
                 raise ValueError("JWT_SECRET must be set to a random value of 32+ characters")
+        if self.email_backend == "smtp" and not (self.smtp_host and self.smtp_from):
+            raise ValueError("EMAIL_BACKEND=smtp needs SMTP_HOST and SMTP_FROM")
+        telegram = (
+            self.telegram_bot_token,
+            self.telegram_bot_username,
+            self.telegram_webhook_secret,
+        )
+        if any(telegram) and not all(telegram):
+            raise ValueError(
+                "Telegram needs TELEGRAM_BOT_TOKEN, TELEGRAM_BOT_USERNAME "
+                "and TELEGRAM_WEBHOOK_SECRET together"
+            )
         return self
 
     @property

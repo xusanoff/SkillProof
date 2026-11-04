@@ -22,7 +22,10 @@ Cookies (httpOnly, `SameSite=Lax`, `Secure` outside local): `sp_access` (JWT, 15
 | POST | `/api/v1/auth/refresh` | refresh cookie | → `200 Me` + new cookies. `401 invalid_refresh_token` |
 | POST | `/api/v1/auth/logout` | – | → `204`, cookies cleared |
 | GET | `/api/v1/auth/me` | user | → `Me` |
-| PATCH | `/api/v1/auth/me` | user | `{full_name?, locale?, timezone?}` → `Me` |
+| PATCH | `/api/v1/auth/me` | user | `{full_name?, locale?, timezone?, notify_email?, notify_telegram?}` → `Me` |
+| POST | `/api/v1/auth/me/telegram` | user | → `{url}`, one-time deep link, 15 min. `503 telegram_unavailable` when no bot is set up |
+| DELETE | `/api/v1/auth/me/telegram` | user | → 204 |
+| POST | `/api/v1/telegram/webhook` | Telegram, header `X-Telegram-Bot-Api-Secret-Token` | Bot API update → 204. Wrong secret or no bot → 404 |
 | POST | `/api/v1/auth/verify-email` | – | `{token}` → `Me`-less `204`. `400 invalid_token` |
 | POST | `/api/v1/auth/resend-verification` | user | → `204` |
 | POST | `/api/v1/auth/password/forgot` | – | `{email}` → `202` always (no account enumeration) |
@@ -272,3 +275,5 @@ Rules and reasons: D-130…D-133. No response names the company or application a
 - All tasks covered: the response has `status: completed`, `tasks: []`, `result.passed`, and the application moves to `stage2_pending`.
 - `POST …/interview/stage2/start` with all questions covered: `status: completed`, `current_turn: null`. The report follows from the worker, as after any Stage 2 (poll `GET /applications/{id}/results`).
 - `HrReport` adds `reused_skills: [{skill_id, name, stage (stage1|stage2), percent, verified_at, valid_until}]`; `per_skill[].reused` lists the stages taken from a verified skill. `CandidateResults.per_skill[].reused` is a boolean.
+
+`Me` also has `notify_email`, `notify_telegram`, `telegram_linked`, `telegram_available` (Phase 9).

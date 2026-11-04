@@ -37,6 +37,28 @@ class MeUpdate(BaseModel):
     full_name: FullName | None = None
     locale: Locale | None = None
     timezone: Timezone | None = None
+    notify_email: bool | None = None
+    notify_telegram: bool | None = None
+
+
+class TelegramLink(BaseModel):
+    url: str
+
+
+class TelegramChat(BaseModel):
+    id: int
+    type: str
+
+
+class TelegramIncoming(BaseModel):
+    text: str | None = None
+    chat: TelegramChat
+
+
+class TelegramUpdate(BaseModel):
+    """The part of a Bot API update we read; everything else is ignored."""
+
+    message: TelegramIncoming | None = None
 
 
 class TokenIn(BaseModel):
@@ -71,3 +93,7 @@ class Me(BaseModel):
     is_email_verified: bool
     created_at: datetime
     companies: list[MeCompany]
+    notify_email: bool
+    notify_telegram: bool
+    telegram_linked: bool
+    telegram_available: bool

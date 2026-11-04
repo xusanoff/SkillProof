@@ -1,8 +1,15 @@
 """Outgoing email. Locally the console backend logs the message (spec Phase 1)."""
 
+import asyncio
+import email.message
 import logging
+import smtplib
+import ssl
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Protocol
+
+from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -55,8 +62,52 @@ def render(template: str, locale: str, to: str, **params: str) -> EmailMessage:
     return EmailMessage(to, subject.format(**params), body.format(**params), template)
 
 
-_sender = ConsoleEmailSender()
+class SmtpEmailSender:
+    """Blocking smtplib in a thread: the volume is low and it needs no new dependency."""
+
+    _TIMEOUT_S = 15
+
+    def __init__(
+        self, host: str, port: int, sender: str, username: str | None, password: str | None
+    ) -> None:
+        self._host, self._port, self._from = host, port, sender
+        self._username, self._password = username, password
+
+    def _deliver(self, message: EmailMessage) -> None:
+        mail = email.message.EmailMessage()
+        mail["From"], mail["To"] = self._from, message.to
+        mail["Subject"] = message.subject  # raises on a line break, so no header injection
+        mail.set_content(message.body)
+        with smtplib.SMTP(self._host, self._port, timeout=self._TIMEOUT_S) as smtp:
+            smtp.starttls(context=ssl.create_default_context())
+            if self._username and self._password:
+                smtp.login(self._username, self._password)
+            smtp.send_message(mail)
+
+    async def send(self, message: EmailMessage) -> None:
+        await asyncio.to_thread(self._deliver, message)
+
+
+async def send_best_effort(sender: EmailSender, message: EmailMessage) -> None:
+    """For requests where the person can ask again: a mail outage must not become a 500."""
+    try:
+        await sender.send(message)
+    except Exception as exc:
+        logger.error(
+            "email_failed", extra={"template": message.template, "error": type(exc).__name__}
+        )
+
+
+_console = ConsoleEmailSender()
+
+
+@lru_cache
+def _smtp() -> SmtpEmailSender:
+    s = get_settings()
+    assert s.smtp_host is not None and s.smtp_from is not None  # checked by Settings
+    password = s.smtp_password.get_secret_value() if s.smtp_password else None
+    return SmtpEmailSender(s.smtp_host, s.smtp_port, s.smtp_from, s.smtp_username, password)
 
 
 def get_email_sender() -> EmailSender:
-    return _sender
+    return _smtp() if get_settings().email_backend == "smtp" else _console

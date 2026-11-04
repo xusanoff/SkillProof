@@ -1,5 +1,6 @@
 'use client';
 
+import { defineEditorThemes, editorTheme } from '@/components/editor/theme';
 import type { OnMount } from '@monaco-editor/react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
@@ -184,7 +185,8 @@ export function CodeEditor({
         <MonacoEditor
           language={MONACO_LANG[language] ?? 'plaintext'}
           defaultValue={defaultValue}
-          theme={resolvedTheme === 'dark' ? 'vs-dark' : 'vs'}
+          beforeMount={defineEditorThemes}
+          theme={editorTheme(resolvedTheme)}
           onMount={onMount}
           options={{
             ariaLabel: label,

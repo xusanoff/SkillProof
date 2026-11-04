@@ -176,7 +176,20 @@
     "unknown_items": "Tanlangan savol yoki topshiriqlardan biri topilmadi. Sahifani yangilab, qayta tanlang.",
     "report_not_ready": "Hisobot hali tayyor emas, shuning uchun o'zgartirib bo'lmaydi. Birozdan keyin urinib ko'ring.",
     "invalid_override": "Tanlangan maydon uchun bu qiymat mumkin emas.",
-    "not_disqualified": "Bu ariza chetlatilmagan."
+    "not_disqualified": "Bu ariza chetlatilmagan.",
+    "telegram_unavailable": "Telegram bildirishnomalari hozircha sozlanmagan.",
+    "answer_too_long": "Javob juda uzun. Qisqartiring.",
+    "audio_required": "Bu suhbatda ovoz bilan javob beriladi.",
+    "audio_too_large": "Yozuv juda katta.",
+    "duplicate_items": "Bitta element ikki marta ko'rsatilgan.",
+    "invalid_audio": "Bu audio format qo'llab-quvvatlanmaydi.",
+    "language_not_allowed": "Bu topshiriq uchun bu tilni tanlab bo'lmaydi.",
+    "rules_not_accepted": "Avval qoidalarni qabul qiling.",
+    "rules_version_mismatch": "Qoidalar o'zgardi. Ularni qaytadan o'qing.",
+    "sandbox_unavailable": "Kodni hozir ishga tushirib bo'lmaydi. Qayta urinib ko'ring.",
+    "session_not_active": "Intervyuning bu bosqichi tugagan.",
+    "stage2_not_available": "Bu ariza uchun 2-bosqich mavjud emas.",
+    "task_not_current": "Bu topshiriq hozirgisi emas."
   },
   "errorPage": {
     "title": "Nimadir noto'g'ri ketdi",
@@ -359,7 +372,18 @@
     "language": "Interfeys tili",
     "languageHint": "Xatlar ham shu tilda keladi.",
     "timezone": "Vaqt mintaqasi",
-    "saved": "Saqlandi."
+    "saved": "Saqlandi.",
+    "notifications": "Bildirishnomalar",
+    "notificationsLead": "Ariza va natijalar haqida xabarlar shu kanallarga keladi. Xabarlarda ball bo'lmaydi.",
+    "notifyEmail": "Elektron pochta",
+    "notifyEmailUnverified": "Xatlar pochtangizni tasdiqlaganingizdan keyin keladi.",
+    "notifyTelegram": "Telegram",
+    "telegramConnect": "Telegramni ulash",
+    "telegramOpen": "Telegramda ochish",
+    "telegramWaiting": "Telegramda Start tugmasini bosing. Havola 15 daqiqa ishlaydi.",
+    "telegramLinked": "Telegram ulangan.",
+    "telegramDisconnect": "Uzish",
+    "telegramNotLinked": "Telegram ulanmagan."
   },
   "validation": {
     "required": "Bu maydonni to'ldiring.",
@@ -779,7 +803,7 @@
       "reopened": "«{title}» qayta ochildi.",
       "archived": "«{title}» arxivlandi.",
       "deleted": "«{title}» o'chirildi.",
-      "assessment": "Assessment"
+      "assessment": "Baholash"
     },
     "hasAssessment": "Assessment bor"
   },
@@ -1027,7 +1051,7 @@
     }
   },
   "hrAssessment": {
-    "title": "Assessment",
+    "title": "Baholash",
     "back": "Vakansiyalarga qaytish",
     "formLabel": "Assessment sozlamalari",
     "saved": "Assessment saqlandi.",
@@ -1292,7 +1316,7 @@
     "skipIdle": "Uzun bo'shliqlarni o'tkazib yuborish",
     "time": "Vaqt",
     "markers": "Timeline belgilari",
-    "timeline": "Timeline",
+    "timeline": "Vaqt shkalasi",
     "legend": "Belgilar: tashqi/ichki paste {paste}, harakatsizlik {idle}, tabdan chiqish {focus}, Run {run}.",
     "keys": "Klaviatura: Probel, ijro va pauza. Chap/o'ng o'q, 5 soniya. Shift bilan 30 soniya.",
     "marker": {

@@ -26,7 +26,7 @@ from app.schemas.company import (
     MemberOut,
 )
 from app.services import audit
-from app.services.email import EmailSender, render
+from app.services.email import EmailSender, render, send_best_effort
 from app.services.files import check_size, detect_image
 from app.services.storage import Storage
 
@@ -282,8 +282,8 @@ async def create_invitation(
     audit.record(session, user.id, "company.invite", "company", company_id, {"email": email})
     await session.commit()
     link = f"{settings.frontend_url}/{user.locale}/invitations/{raw}"
-    await sender.send(
-        render("company_invitation", user.locale, email, company=company.name, link=link)
+    await send_best_effort(
+        sender, render("company_invitation", user.locale, email, company=company.name, link=link)
     )
     await session.refresh(inv)
     return _invitation_out(inv, user.full_name)
