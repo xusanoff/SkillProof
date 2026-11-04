@@ -13,9 +13,11 @@ import { SkillOptions } from './bank-fields';
 
 /** Filters live in the URL (the page owner calls `onChange`); text search applies on submit. */
 export function BankFiltersBar({
+  showGlobalToggle = true,
   filters,
   onChange,
 }: {
+  showGlobalToggle?: boolean;
   filters: BankFilters;
   onChange: (next: BankFilters) => void;
 }) {
@@ -84,13 +86,15 @@ export function BankFiltersBar({
           )}
         </Field>
       </div>
-      <label className="flex min-h-11 items-center gap-2 text-sm">
-        <Checkbox
-          checked={filters.include_global}
-          onChange={(e) => set({ include_global: e.target.checked })}
-        />
-        {t('includeGlobal')}
-      </label>
+      {showGlobalToggle ? (
+        <label className="flex min-h-11 items-center gap-2 text-sm">
+          <Checkbox
+            checked={filters.include_global}
+            onChange={(e) => set({ include_global: e.target.checked })}
+          />
+          {t('includeGlobal')}
+        </label>
+      ) : null}
     </section>
   );
 }

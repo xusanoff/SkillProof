@@ -33,7 +33,14 @@ async def test_hr_creates_company_and_becomes_owner(signup: SignUp) -> None:
     assert company["country"] == "UZ"
     me = (await hr.get("/api/v1/auth/me")).json()
     assert me["companies"] == [
-        {"id": company["id"], "name": "O'zbek Soft", "slug": "ozbek-soft", "member_role": "owner"}
+        {
+            "id": company["id"],
+            "name": "O'zbek Soft",
+            "slug": "ozbek-soft",
+            "member_role": "owner",
+            "blocked": False,
+            "block_reason": None,
+        }
     ]
     second = await _company(hr, "O'zbek Soft")
     assert second["slug"].startswith("ozbek-soft-") and second["slug"] != "ozbek-soft"

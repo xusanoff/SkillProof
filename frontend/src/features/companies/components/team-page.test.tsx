@@ -21,6 +21,8 @@ const members = [
     email: 'owner@acme.uz',
     full_name: 'Olim Owner',
     member_role: 'owner',
+    blocked: false,
+    block_reason: null,
     joined_at: '2026-10-01T09:00:00Z',
   },
   {
@@ -28,6 +30,8 @@ const members = [
     email: 'hr@acme.uz',
     full_name: 'Hilola HR',
     member_role: 'hr',
+    blocked: false,
+    block_reason: null,
     joined_at: '2026-10-05T09:00:00Z',
   },
 ];
@@ -36,6 +40,8 @@ const invitations = [
     id: 'i-1',
     email: 'new@acme.uz',
     member_role: 'hr',
+    blocked: false,
+    block_reason: null,
     invited_by_name: 'Olim Owner',
     created_at: '2026-10-28T09:00:00Z',
     expires_at: '2026-11-04T09:00:00Z',
@@ -54,7 +60,9 @@ function setup(role: 'owner' | 'hr', userId: string) {
   const me = makeMe({
     id: userId,
     role: 'hr',
-    companies: [{ id: CID, name: 'Acme', slug: 'acme', member_role: role }],
+    companies: [
+      { id: CID, name: 'Acme', slug: 'acme', member_role: role, blocked: false, block_reason: null },
+    ],
   });
   const { queryClient } = renderWithProviders(
     <ActiveCompanyProvider>

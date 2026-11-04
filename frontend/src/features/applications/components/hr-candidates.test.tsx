@@ -20,7 +20,16 @@ vi.mock('next/navigation', async () => (await import('@/test/navigation-mock')).
 const C = `${API}/api/v1/companies/c-1`;
 const hr = makeMe({
   role: 'hr',
-  companies: [{ id: 'c-1', name: 'Najot Soft', slug: 'najot-soft', member_role: 'owner' }],
+  companies: [
+    {
+      id: 'c-1',
+      name: 'Najot Soft',
+      slug: 'najot-soft',
+      member_role: 'owner',
+      blocked: false,
+      block_reason: null,
+    },
+  ],
 });
 
 function application(status: HrApplication['status']): HrApplication {

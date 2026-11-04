@@ -41,6 +41,10 @@ class MeUpdate(BaseModel):
     notify_telegram: bool | None = None
 
 
+class DeleteAccountIn(BaseModel):
+    password: Annotated[str, StringConstraints(max_length=128)]
+
+
 class TelegramLink(BaseModel):
     url: str
 
@@ -79,6 +83,8 @@ class MeCompany(BaseModel):
     name: str
     slug: str
     member_role: MemberRole
+    blocked: bool = False
+    block_reason: str | None = None
 
 
 class Me(BaseModel):

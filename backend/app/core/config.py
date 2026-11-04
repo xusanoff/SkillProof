@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import Literal, Self
 
-from pydantic import Field, SecretStr, model_validator
+from pydantic import BaseModel, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.core.thresholds import Thresholds
@@ -14,6 +14,13 @@ SpeechProvider = Literal["mock"]
 
 
 _DEV_JWT_SECRET = "dev-only-insecure-jwt-secret-change-me-in-env"
+
+
+class AiPrice(BaseModel):
+    input_per_mtok: float = 0.0
+    output_per_mtok: float = 0.0
+    per_minute: float = 0.0
+    per_mchar: float = 0.0
 
 
 class Settings(BaseSettings):
@@ -116,9 +123,12 @@ class Settings(BaseSettings):
     logo_max_bytes: int = 2 * 1024 * 1024
 
     # Rate limits: "<count>/<seconds>"
+    # Only behind a proxy that overwrites X-Forwarded-For, or anyone could pick their own limit.
+    trust_forwarded_for: bool = False
     rate_limit_login: str = "10/60"
     rate_limit_register: str = "5/60"
     rate_limit_password: str = "5/900"
+    rate_limit_export: str = "3/3600"
 
     @model_validator(mode="after")
     def _require_real_secret(self) -> Self:
@@ -126,6 +136,22 @@ class Settings(BaseSettings):
             secret = self.jwt_secret.get_secret_value()
             if secret == _DEV_JWT_SECRET or len(secret) < 32:
                 raise ValueError("JWT_SECRET must be set to a random value of 32+ characters")
+        if self.environment == "production":
+            # A mock would hand out invented scores in real hiring, and the console email
+            # backend would write password reset links into the logs.
+            not_real = [
+                name
+                for name, is_stand_in in {
+                    "LLM_PROVIDER": self.llm_provider == "mock",
+                    "STT_PROVIDER": self.stt_provider == "mock",
+                    "TTS_PROVIDER": self.tts_provider == "mock",
+                    "SANDBOX_PROVIDER": self.sandbox_provider == "stub",
+                    "EMAIL_BACKEND": self.email_backend == "console",
+                }.items()
+                if is_stand_in
+            ]
+            if not_real:
+                raise ValueError(f"Production needs real services: {', '.join(not_real)}")
         if self.email_backend == "smtp" and not (self.smtp_host and self.smtp_from):
             raise ValueError("EMAIL_BACKEND=smtp needs SMTP_HOST and SMTP_FROM")
         telegram = (
@@ -144,6 +170,8 @@ class Settings(BaseSettings):
     def cookie_secure(self) -> bool:
         return self.environment not in ("local", "test")
 
+    # USD. Keys: LLM model name, or speech provider name. Without a price, cost shows as unknown.
+    ai_prices: dict[str, AiPrice] = Field(default_factory=dict)
     llm_provider: LLMProvider = "mock"
     llm_model: str = "mock-1"
     llm_base_url: str | None = None

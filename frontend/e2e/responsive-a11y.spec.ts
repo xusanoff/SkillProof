@@ -3,12 +3,19 @@
  * Fails on sideways scrolling and on serious or critical axe findings.
  * Problems are collected per sweep, so one run shows all of them.
  */
-import { expect, test, type Browser, type BrowserContextOptions, type Page } from '@playwright/test';
+import {
+  expect,
+  test,
+  type Browser,
+  type BrowserContextOptions,
+  type Page,
+} from '@playwright/test';
 import { API, login } from './interview-setup';
 import { settle } from './utils';
 
 const PASSWORD = process.env.DEMO_PASSWORD ?? 'Demo-parol-2026';
 const HR = process.env.DEMO_HR_EMAIL ?? 'demo.hr@example.com';
+const ADMIN = process.env.DEMO_ADMIN_EMAIL ?? 'demo.admin@example.com';
 const CANDIDATE = process.env.DEMO_CANDIDATE_EMAIL ?? 'demo.candidate@example.com';
 
 const MODES: { name: string; locale: string; options: BrowserContextOptions }[] = [
@@ -33,6 +40,8 @@ const MODES: { name: string; locale: string; options: BrowserContextOptions }[] 
 
 async function checkPage(page: Page, url: string, problems: string[]) {
   const res = await page.goto(url);
+  // Reveal-on-scroll needs hydration first, or settle() scrolls past cards that never wake up.
+  await page.waitForLoadState('networkidle');
   await settle(page);
   if (!res || res.status() >= 400) problems.push(`${url} HTTP ${res?.status()}`);
 
@@ -64,7 +73,12 @@ async function checkPage(page: Page, url: string, problems: string[]) {
   }
 }
 
-async function sweep(browser: Browser, mode: (typeof MODES)[number], pages: string[], who?: string) {
+async function sweep(
+  browser: Browser,
+  mode: (typeof MODES)[number],
+  pages: string[],
+  who?: string,
+) {
   const context = await browser.newContext({
     ...mode.options,
     baseURL: test.info().project.use.baseURL,
@@ -122,6 +136,24 @@ for (const mode of MODES) {
     );
   });
 
+  test(`admin pages, ${mode.name}`, async ({ browser }) => {
+    await sweep(
+      browser,
+      mode,
+      [
+        '/admin',
+        '/admin/users',
+        '/admin/companies',
+        '/admin/vacancies',
+        '/admin/questions',
+        '/admin/tasks',
+        '/admin/thresholds',
+        '/admin/ai-usage',
+      ],
+      ADMIN,
+    );
+  });
+
   test(`HR pages, ${mode.name}`, async ({ browser }) => {
     const me = await json(browser, HR, '/auth/me');
     const company = me.companies[0].id;
@@ -136,12 +168,15 @@ for (const mode of MODES) {
         '/hr',
         '/hr/vacancies',
         '/hr/vacancies/new',
-        ...(vacancy ? [`/hr/vacancies/${vacancy}/edit`, `/hr/vacancies/${vacancy}/assessment`] : []),
+        ...(vacancy
+          ? [`/hr/vacancies/${vacancy}/edit`, `/hr/vacancies/${vacancy}/assessment`]
+          : []),
         '/hr/candidates',
         ...(app ? [`/hr/candidates/${app}`, `/hr/candidates/${app}/stage1`] : []),
         '/hr/questions',
         '/hr/tasks',
         '/hr/talent',
+        '/hr/analytics',
         '/hr/team',
         '/hr/company',
         '/settings',

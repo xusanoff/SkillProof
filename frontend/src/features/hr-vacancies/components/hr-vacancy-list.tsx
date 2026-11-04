@@ -158,6 +158,14 @@ function Row({
           <span className="shrink-0 rounded bg-surface-2 px-1.5 py-0.5 text-xs font-medium text-fg">
             {t(`status.${v.status}`)}
           </span>
+          {v.is_hidden ? (
+            <span
+              className="shrink-0 rounded bg-warning-soft px-1.5 py-0.5 text-xs font-medium text-fg"
+              title={v.hidden_reason ?? undefined}
+            >
+              {t('hiddenByPlatform')}
+            </span>
+          ) : null}
           {v.has_assessment ? <span className="shrink-0 text-xs">{t('hasAssessment')}</span> : null}
           <span className="truncate">{place || t('noRegion')}</span>
         </p>

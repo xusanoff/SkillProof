@@ -402,3 +402,10 @@ def test_every_link_opens_a_real_page(event: NotificationEvent) -> None:
     route = re.sub(r"[0-9a-f]{8}-[0-9a-f-]{27}", "[applicationId]", path)
     pages = Path(__file__).parents[2] / "frontend/src/app/[locale]"
     assert (pages / route / "page.tsx").exists(), route
+
+
+def test_production_refuses_stand_in_services(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    monkeypatch.setenv("JWT_SECRET", "x" * 40)
+    with pytest.raises(ValueError, match=r"LLM_PROVIDER.*STT_PROVIDER.*EMAIL_BACKEND"):
+        Settings(_env_file=None)  # type: ignore[call-arg]

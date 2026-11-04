@@ -53,6 +53,9 @@ class Vacancy(UUIDPk, Timestamps, Base):
         ForeignKey("companies.id", ondelete="CASCADE"), index=True
     )
     title: Mapped[str] = mapped_column(String(200))
+    # Set by a platform admin: stays with the company, but leaves the public site.
+    hidden_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    hidden_reason: Mapped[str | None] = mapped_column(String(500))
     description: Mapped[str] = mapped_column(Text, default="")
     requirements: Mapped[str | None] = mapped_column(Text)
     profession_area: Mapped[str] = mapped_column(ForeignKey("profession_areas.slug"), index=True)

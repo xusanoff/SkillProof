@@ -129,7 +129,7 @@ async def list_mine(session: AsyncSession, user: User) -> list[CompanyOut]:
 
 async def get_by_slug(session: AsyncSession, slug: str) -> CompanyPublic:
     company = await session.scalar(select(Company).where(Company.slug == slug))
-    if company is None:
+    if company is None or company.blocked_at is not None:
         raise NotFoundError("Company not found")
     return to_public(company)
 
@@ -198,6 +198,27 @@ async def list_members(session: AsyncSession, company_id: uuid.UUID, user: User)
         )
         for u, m in rows.all()
     ]
+
+
+async def make_owner(
+    session: AsyncSession, company_id: uuid.UUID, user: User, member_user_id: uuid.UUID
+) -> None:
+    """Adds an owner; nobody loses the role. The way out for an owner who wants to leave."""
+    await get_membership(session, company_id, user, owner=True)
+    member = await session.get(CompanyMember, (company_id, member_user_id))
+    if member is None:
+        raise NotFoundError("Member not found")
+    if member.member_role is not MemberRole.owner:
+        member.member_role = MemberRole.owner
+        audit.record(
+            session,
+            user.id,
+            "company.member_owner",
+            "company",
+            company_id,
+            {"user_id": str(member_user_id)},
+        )
+    await session.commit()
 
 
 async def remove_member(

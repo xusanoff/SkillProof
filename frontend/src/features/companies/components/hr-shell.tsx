@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  BarChart3,
   BriefcaseBusiness,
   Building2,
   CircleHelp,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
+import { Notice } from '@/components/common/notice';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Link, usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
@@ -26,6 +28,7 @@ const NAV = [
   { href: '/hr/tasks', key: 'tasks', icon: Code2 },
   { href: '/hr/candidates', key: 'candidates', icon: UsersRound },
   { href: '/hr/talent', key: 'talent', icon: Search },
+  { href: '/hr/analytics', key: 'analytics', icon: BarChart3 },
 ] as const;
 
 /**
@@ -93,7 +96,14 @@ export function HrShell({ children }: { children: ReactNode }) {
           </ul>
         </nav>
       </aside>
-      <div className="min-w-0">{children}</div>
+      <div className="grid min-w-0 content-start gap-5">
+        {active.blocked ? (
+          <Notice tone="danger" role="alert" title={t('blockedTitle')}>
+            {active.block_reason ?? t('blockedBody')}
+          </Notice>
+        ) : null}
+        <div className="min-w-0">{children}</div>
+      </div>
     </div>
   );
 }

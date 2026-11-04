@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import get_settings
 from app.core.db import get_session
 from app.core.errors import AppError, PermissionDeniedError
 from app.core.security import decode_access_token
@@ -16,6 +17,11 @@ DbSession = Annotated[AsyncSession, Depends(get_session)]
 
 
 def client_ip(request: Request) -> str:
+    if get_settings().trust_forwarded_for:
+        forwarded = request.headers.get("x-forwarded-for", "")
+        first = forwarded.split(",")[0].strip()
+        if first:
+            return first
     return request.client.host if request.client else "unknown"
 
 

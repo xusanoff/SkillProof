@@ -236,7 +236,7 @@ test('HR replays the session to the end: Monaco text equals final_code exactly',
   // Start: the initial code (not the final one).
   expect(await text()).not.toBe(finalCode);
   // Scrub to the end with the timeline, then check with the button too.
-  const slider = hrPage.getByRole('slider', { name: 'Timeline' });
+  const slider = hrPage.getByRole('slider', { name: 'Vaqt shkalasi' });
   await slider.fill((await slider.getAttribute('max')) as string);
   await expect.poll(text).toBe(finalCode);
   await hrPage.getByRole('button', { name: 'Boshiga' }).click();

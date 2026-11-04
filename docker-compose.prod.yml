@@ -1,0 +1,79 @@
+# Production overlay: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# Only Caddy is reachable from outside. See docs/DEPLOY.md.
+
+x-prod-env: &prod-env
+  ENVIRONMENT: ${ENVIRONMENT:-production}
+  CORS_ORIGINS: '["https://${DOMAIN:?set DOMAIN}"]'
+  FRONTEND_URL: https://${DOMAIN}
+  TRUST_FORWARDED_FOR: "true"
+  JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+  AI_PRICES: ${AI_PRICES:-{}}
+
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web: { condition: service_healthy }
+      api: { condition: service_healthy }
+
+  api:
+    restart: unless-stopped
+    ports: !reset []
+    environment: *prod-env
+
+  worker:
+    restart: unless-stopped
+    environment: *prod-env
+
+  web:
+    restart: unless-stopped
+    ports: !reset []
+    build:
+      args:
+        NEXT_PUBLIC_WS_URL: wss://${DOMAIN}
+
+  postgres:
+    restart: unless-stopped
+    ports: !reset []
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+
+  redis:
+    restart: unless-stopped
+    ports: !reset []
+
+  judge0-server:
+    restart: unless-stopped
+    environment:
+      AUTHN_TOKEN: ${JUDGE0_AUTHN_TOKEN:?set JUDGE0_AUTHN_TOKEN}
+      POSTGRES_PASSWORD: ${JUDGE0_DB_PASSWORD:?set JUDGE0_DB_PASSWORD}
+      REDIS_PASSWORD: ${JUDGE0_REDIS_PASSWORD:?set JUDGE0_REDIS_PASSWORD}
+
+  judge0-workers:
+    restart: unless-stopped
+    environment:
+      AUTHN_TOKEN: ${JUDGE0_AUTHN_TOKEN}
+      POSTGRES_PASSWORD: ${JUDGE0_DB_PASSWORD}
+      REDIS_PASSWORD: ${JUDGE0_REDIS_PASSWORD}
+
+  judge0-db:
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${JUDGE0_DB_PASSWORD}
+
+  judge0-redis:
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${JUDGE0_REDIS_PASSWORD}
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -44,7 +44,8 @@
       "search": "Search",
       "profile": "Profile",
       "skills": "Verified skills",
-      "talent": "Talent search"
+      "talent": "Talent search",
+      "adminPanel": "Admin"
     }
   },
   "locale": {
@@ -189,7 +190,15 @@
     "sandbox_unavailable": "Code can't run right now. Try again.",
     "session_not_active": "This interview stage has ended.",
     "stage2_not_available": "Stage 2 is not available for this application.",
-    "task_not_current": "This is not the current task."
+    "task_not_current": "This is not the current task.",
+    "company_blocked": "This company is blocked by the platform.",
+    "vacancy_hidden": "This vacancy is hidden by the platform.",
+    "cannot_change_self": "You can't deactivate your own account.",
+    "invalid_thresholds": "A threshold is unknown or out of range.",
+    "invalid_password": "The password is not correct.",
+    "last_admin": "The platform needs at least one admin.",
+    "sole_company_owner": "Hand the company over to another owner first.",
+    "replay_expired": "The replay was removed after the retention period."
   },
   "errorPage": {
     "title": "Something went wrong",
@@ -383,7 +392,15 @@
     "telegramWaiting": "Press Start in Telegram. The link works for 15 minutes.",
     "telegramLinked": "Telegram is connected.",
     "telegramDisconnect": "Disconnect",
-    "telegramNotLinked": "Telegram is not connected."
+    "telegramNotLinked": "Telegram is not connected.",
+    "dataTitle": "Your data",
+    "dataLead": "Download a copy of your data or delete your account.",
+    "dataExport": "Download my data",
+    "deleteAccount": "Delete account",
+    "deleteTitle": "Delete your account for good?",
+    "deleteBody": "Your applications, results and recordings will be deleted. This can't be undone.",
+    "deletePassword": "Your password",
+    "deleteConfirm": "Delete for good"
   },
   "validation": {
     "required": "Fill in this field.",
@@ -470,7 +487,10 @@
       "candidates": "Candidates",
       "questions": "Questions",
       "tasks": "Tasks",
-      "talent": "Talent search"
+      "talent": "Talent search",
+      "analytics": "Analytics",
+      "blockedTitle": "Company blocked",
+      "blockedBody": "The company and its vacancies are not visible on the site."
     },
     "home": {
       "metaTitle": "Employer dashboard",
@@ -544,7 +564,37 @@
       "pendingEmpty": "No pending invitations.",
       "pendingMeta": "Invited by {by} · valid until {expires}",
       "revoke": "Revoke",
-      "revokeAria": "Revoke the invitation for {email}"
+      "revokeAria": "Revoke the invitation for {email}",
+      "makeOwner": "Make owner",
+      "makeOwnerAria": "Make {name} a company owner",
+      "makeOwnerTitle": "Make {name} an owner too?",
+      "makeOwnerBody": "They will fully manage the team and the company. You stay an owner as well."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "range": "Period",
+      "days": "{count} days",
+      "loadFailed": "Couldn't load the analytics.",
+      "empty": "No applications in this period.",
+      "stage1PassRate": "Stage 1 pass rate",
+      "stage2PassRate": "Stage 2 pass rate",
+      "timeToShortlist": "Time to shortlist (median)",
+      "hours": "{hours} h",
+      "avgStage1": "Average score, Stage 1",
+      "avgStage2": "Average score, Stage 2",
+      "avgOverall": "Average overall score",
+      "funnel": "Funnel",
+      "byVacancy": "By vacancy",
+      "vacancy": "Vacancy",
+      "steps": {
+        "applied": "Applied",
+        "stage1_started": "Started Stage 1",
+        "stage1_passed": "Passed Stage 1",
+        "stage2_started": "Started Stage 2",
+        "stage2_passed": "Passed Stage 2",
+        "shortlisted": "Shortlisted",
+        "hired": "Hired"
+      }
     }
   },
   "invitation": {
@@ -805,7 +855,8 @@
       "deleted": "“{title}” is deleted.",
       "assessment": "Assessment"
     },
-    "hasAssessment": "Has assessment"
+    "hasAssessment": "Has assessment",
+    "hiddenByPlatform": "Hidden by the platform"
   },
   "vacancyForm": {
     "formLabel": "Vacancy details",
@@ -1793,5 +1844,107 @@
     "total": "{count, plural, one {# candidate} other {# candidates}}",
     "openProfile": "Open profile",
     "experience": "{years, plural, one {# year of experience} other {# years of experience}}"
+  },
+  "admin": {
+    "nav": {
+      "label": "Admin sections",
+      "overview": "Overview",
+      "users": "Users",
+      "companies": "Companies",
+      "vacancies": "Vacancies",
+      "questions": "Question templates",
+      "tasks": "Task templates",
+      "thresholds": "Thresholds",
+      "aiUsage": "AI usage"
+    },
+    "list": {
+      "search": "Search",
+      "searchButton": "Search",
+      "loadFailed": "Couldn't load the list.",
+      "empty": "Nothing found.",
+      "total": "Total: {count}"
+    },
+    "confirm": {
+      "reason": "Reason (the company will see it)"
+    },
+    "overview": {
+      "title": "Admin panel",
+      "loadFailed": "Couldn't load the data.",
+      "candidates": "Candidates",
+      "hrUsers": "HR users",
+      "companies": "Companies",
+      "blocked": "Blocked: {count}",
+      "vacancies": "Active vacancies",
+      "hidden": "Hidden: {count}",
+      "applications": "Applications",
+      "aiCost": "AI cost, 30 days",
+      "aiCalls": "{calls} calls",
+      "aiUnpriced": "{calls} calls, {unpriced} with no known price"
+    },
+    "users": {
+      "title": "Users",
+      "verified": "Email confirmed",
+      "notVerified": "Email not confirmed",
+      "inactive": "Deactivated",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "deactivateTitle": "Deactivate this user?",
+      "activateTitle": "Activate this user?",
+      "deactivateBody": "They are signed out at once and can't sign back in. Their data stays.",
+      "activateBody": "They can sign in again."
+    },
+    "companies": {
+      "title": "Companies",
+      "members": "Members: {count}",
+      "vacancies": "Vacancies: {count}",
+      "verified": "Verified",
+      "blocked": "Blocked",
+      "verify": "Verify",
+      "unverify": "Remove verification",
+      "block": "Block",
+      "unblock": "Unblock",
+      "blockTitle": "Block this company?",
+      "unblockTitle": "Unblock this company?",
+      "blockBody": "The company and its vacancies leave the site, and it can't publish new ones. Interviews already started continue.",
+      "unblockBody": "The company and its vacancies return to the site."
+    },
+    "vacancies": {
+      "title": "Vacancies",
+      "hidden": "Hidden",
+      "hide": "Hide",
+      "show": "Restore",
+      "hideTitle": "Hide this vacancy?",
+      "showTitle": "Restore this vacancy?",
+      "hideBody": "The vacancy leaves the site and takes no applications. The company can still see it.",
+      "showBody": "The vacancy returns to the site."
+    },
+    "thresholds": {
+      "title": "Global thresholds",
+      "lead": "Defaults for all assessments. A change takes effect within 30 seconds and only for new sessions.",
+      "loadFailed": "Couldn't load the thresholds.",
+      "default": "Default: {value}",
+      "changed": "changed",
+      "saved": "Saved."
+    },
+    "aiUsage": {
+      "title": "AI usage",
+      "range": "Period",
+      "days": "{count} days",
+      "loadFailed": "Couldn't load the data.",
+      "empty": "No AI calls in this period.",
+      "unpricedNote": "{count} calls have no known price and are not in the total. Prices are set in AI_PRICES.",
+      "total": "Total",
+      "byKind": "By type",
+      "byModel": "By model",
+      "byRole": "By purpose",
+      "byDay": "By day",
+      "key": "Name",
+      "calls": "Calls",
+      "tokens": "Tokens",
+      "seconds": "Seconds",
+      "failed": "Failed",
+      "cost": "Cost",
+      "unknown": "Unknown"
+    }
   }
 }

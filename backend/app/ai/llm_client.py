@@ -14,6 +14,7 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel, ValidationError
 
+from app.ai import usage
 from app.ai.mock_data import build_sample
 from app.core.config import Settings, get_settings
 
@@ -104,6 +105,18 @@ class LLMClient:
                     "output_tokens": raw.output_tokens,
                     "validation": outcome,
                 },
+            )
+            await usage.record(
+                usage.Call(
+                    kind="llm",
+                    provider=get_settings().llm_provider,
+                    model=raw.model,
+                    role=request.role,
+                    input_tokens=raw.input_tokens,
+                    output_tokens=raw.output_tokens,
+                    latency_ms=round((time.perf_counter() - started) * 1000),
+                    outcome=outcome,
+                )
             )
             if outcome == "ok":
                 return LLMResult(output, "ok", raw.model, request.prompt_version, attempt, errors)

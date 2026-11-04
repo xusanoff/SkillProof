@@ -40,11 +40,21 @@ export const ACCOUNT_MENU: Record<UserRole, MenuItem[]> = {
     { href: '/hr/team', key: 'team', icon: Users },
     { href: '/settings', key: 'settings', icon: Settings },
   ],
-  admin: [{ href: '/settings', key: 'settings', icon: Settings }],
+  admin: [
+    { href: '/admin', key: 'adminPanel', icon: ShieldCheck },
+    { href: '/settings', key: 'settings', icon: Settings },
+  ],
 };
 
 /** Phone bottom bar: four destinations. Anonymous users get the candidate set. */
 export function bottomNav(role: UserRole | null): MenuItem[] {
+  if (role === 'admin') {
+    return [
+      { href: '/vacancies', key: 'search', icon: Search },
+      { href: '/admin', key: 'adminPanel', icon: ShieldCheck },
+      { href: '/settings', key: 'settings', icon: Settings },
+    ];
+  }
   if (role === 'hr') {
     return [
       { href: '/vacancies', key: 'search', icon: Search },
@@ -67,6 +77,7 @@ export function bottomNav(role: UserRole | null): MenuItem[] {
 
 /** Active when the path is the item or below it (but `/hr` only matches exactly-ish). */
 export function isActivePath(pathname: string, href: string): boolean {
+  if (href === '/admin') return pathname === href || pathname.startsWith('/admin/');
   if (href === '/hr')
     return pathname === '/hr' || pathname === '/hr/company' || pathname === '/hr/team';
   return pathname === href || pathname.startsWith(`${href}/`);

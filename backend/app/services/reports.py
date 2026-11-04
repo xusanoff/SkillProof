@@ -21,6 +21,7 @@ from app.ai.report_writer import (
 )
 from app.core.config import get_settings
 from app.core.errors import AppError, NotFoundError
+from app.core.live_thresholds import current_thresholds
 from app.core.thresholds import Thresholds
 from app.models import (
     Application,
@@ -117,7 +118,7 @@ async def _thresholds(
     assessment = await session.scalar(
         select(Assessment).where(Assessment.vacancy_id == app.vacancy_id)
     )
-    return effective_thresholds(assessment) if assessment else Thresholds()
+    return effective_thresholds(assessment) if assessment else current_thresholds()
 
 
 async def _turns(session: AsyncSession, s: InterviewSession) -> list[InterviewTurn]:

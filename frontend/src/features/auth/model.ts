@@ -50,7 +50,7 @@ export type ResetValues = z.infer<typeof resetSchema>;
 export function homeFor(role: UserRole): string {
   if (role === 'candidate') return '/candidate/profile';
   if (role === 'hr') return '/hr';
-  return '/';
+  return '/admin';
 }
 
 /**

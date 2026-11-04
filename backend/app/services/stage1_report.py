@@ -6,7 +6,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.errors import NotFoundError
+from app.core.errors import AppError, NotFoundError
 from app.models import (
     Application,
     CodeSubmission,
@@ -164,6 +164,8 @@ async def replay(
     user: User,
 ) -> ReplayOut:
     _, s = await _session(session, company_id, application_id, user)
+    if s.data_purged_at is not None:
+        raise AppError("replay_expired", "The replay was removed after the retention period", 410)
     sub = await session.scalar(
         select(CodeSubmission).where(
             CodeSubmission.session_id == s.id, CodeSubmission.task_id == task_id

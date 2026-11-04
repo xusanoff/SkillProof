@@ -175,6 +175,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/auth/me/export': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Export Me */
+    get: operations['export_me_api_v1_auth_me_export_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/auth/me/delete': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Delete Me */
+    post: operations['delete_me_api_v1_auth_me_delete_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/v1/candidate/verified-skills': {
     parameters: {
       query?: never;
@@ -350,6 +384,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/companies/{company_id}/members/{user_id}/owner': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Make Owner */
+    post: operations['make_owner_api_v1_companies__company_id__members__user_id__owner_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/v1/companies/{company_id}/members/{user_id}': {
     parameters: {
       query?: never;
@@ -430,6 +481,23 @@ export interface paths {
     put?: never;
     /** Accept Invitation */
     post: operations['accept_invitation_api_v1_invitations__token__accept_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/companies/{company_id}/analytics': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Company Analytics */
+    get: operations['company_analytics_api_v1_companies__company_id__analytics_get'];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -1393,10 +1461,331 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/admin/overview': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Overview */
+    get: operations['overview_api_v1_admin_overview_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/admin/users': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Users */
+    get: operations['users_api_v1_admin_users_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/admin/users/{user_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update User */
+    patch: operations['update_user_api_v1_admin_users__user_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/admin/companies': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Companies */
+    get: operations['companies_api_v1_admin_companies_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/admin/companies/{company_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Company */
+    patch: operations['update_company_api_v1_admin_companies__company_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/admin/vacancies': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Vacancies */
+    get: operations['vacancies_api_v1_admin_vacancies_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/admin/vacancies/{vacancy_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Vacancy */
+    patch: operations['update_vacancy_api_v1_admin_vacancies__vacancy_id__patch'];
+    trace?: never;
+  };
+  '/api/v1/admin/thresholds': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Thresholds */
+    get: operations['thresholds_api_v1_admin_thresholds_get'];
+    /** Save Thresholds */
+    put: operations['save_thresholds_api_v1_admin_thresholds_put'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/admin/ai-usage': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Ai Usage */
+    get: operations['ai_usage_api_v1_admin_ai_usage_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** AdminCompany */
+    AdminCompany: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Name */
+      name: string;
+      /** Slug */
+      slug: string;
+      /** Is Verified */
+      is_verified: boolean;
+      /** Blocked At */
+      blocked_at: string | null;
+      /** Block Reason */
+      block_reason: string | null;
+      /** Members */
+      members: number;
+      /** Vacancies */
+      vacancies: number;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** AdminCompanyPage */
+    AdminCompanyPage: {
+      /** Items */
+      items: components['schemas']['AdminCompany'][];
+      /** Total */
+      total: number;
+      /** Page */
+      page: number;
+      /** Page Size */
+      page_size: number;
+    };
+    /** AdminCompanyUpdate */
+    AdminCompanyUpdate: {
+      /** Is Verified */
+      is_verified?: boolean | null;
+      /** Blocked */
+      blocked?: boolean | null;
+      /** Reason */
+      reason?: string | null;
+    };
+    /** AdminOverview */
+    AdminOverview: {
+      /** Candidates */
+      candidates: number;
+      /** Hr Users */
+      hr_users: number;
+      /** Companies */
+      companies: number;
+      /** Blocked Companies */
+      blocked_companies: number;
+      /** Published Vacancies */
+      published_vacancies: number;
+      /** Hidden Vacancies */
+      hidden_vacancies: number;
+      /** Applications */
+      applications: number;
+      /** Ai Calls 30D */
+      ai_calls_30d: number;
+      /** Ai Cost Usd 30D */
+      ai_cost_usd_30d: number;
+      /** Ai Calls Unpriced 30D */
+      ai_calls_unpriced_30d: number;
+    };
+    /** AdminUser */
+    AdminUser: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Email */
+      email: string;
+      /** Full Name */
+      full_name: string;
+      role: components['schemas']['UserRole'];
+      /** Is Active */
+      is_active: boolean;
+      /** Is Email Verified */
+      is_email_verified: boolean;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** AdminUserPage */
+    AdminUserPage: {
+      /** Items */
+      items: components['schemas']['AdminUser'][];
+      /** Total */
+      total: number;
+      /** Page */
+      page: number;
+      /** Page Size */
+      page_size: number;
+    };
+    /** AdminUserUpdate */
+    AdminUserUpdate: {
+      /** Is Active */
+      is_active: boolean;
+    };
+    /** AdminVacancy */
+    AdminVacancy: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Title */
+      title: string;
+      /**
+       * Company Id
+       * Format: uuid
+       */
+      company_id: string;
+      /** Company Name */
+      company_name: string;
+      status: components['schemas']['VacancyStatus'];
+      /** Hidden At */
+      hidden_at: string | null;
+      /** Hidden Reason */
+      hidden_reason: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** AdminVacancyPage */
+    AdminVacancyPage: {
+      /** Items */
+      items: components['schemas']['AdminVacancy'][];
+      /** Total */
+      total: number;
+      /** Page */
+      page: number;
+      /** Page Size */
+      page_size: number;
+    };
+    /** AdminVacancyUpdate */
+    AdminVacancyUpdate: {
+      /** Hidden */
+      hidden: boolean;
+      /** Reason */
+      reason?: string | null;
+    };
+    /** AiUsageOut */
+    AiUsageOut: {
+      /** Days */
+      days: number;
+      total: components['schemas']['UsageBucket'];
+      /** By Day */
+      by_day: components['schemas']['UsageBucket'][];
+      /** By Kind */
+      by_kind: components['schemas']['UsageBucket'][];
+      /** By Model */
+      by_model: components['schemas']['UsageBucket'][];
+      /** By Role */
+      by_role: components['schemas']['UsageBucket'][];
+    };
     /** ApplicationOut */
     ApplicationOut: {
       /**
@@ -1743,6 +2132,16 @@ export interface components {
       /** Code */
       code: string;
     };
+    /** CompanyAnalytics */
+    CompanyAnalytics: {
+      /** Days */
+      days: number;
+      total: components['schemas']['FunnelRow'];
+      /** Median Hours To Shortlist */
+      median_hours_to_shortlist: number | null;
+      /** Vacancies */
+      vacancies: components['schemas']['VacancyAnalytics'][];
+    };
     /** CompanyBrief */
     CompanyBrief: {
       /**
@@ -1865,6 +2264,11 @@ export interface components {
       /** Lines */
       lines: number[];
     };
+    /** DeleteAccountIn */
+    DeleteAccountIn: {
+      /** Password */
+      password: string;
+    };
     /**
      * EditorEventType
      * @enum {string}
@@ -1961,6 +2365,33 @@ export interface components {
        * Format: email
        */
       email: string;
+    };
+    /** FunnelRow */
+    FunnelRow: {
+      /** Applied */
+      applied: number;
+      /** Stage1 Started */
+      stage1_started: number;
+      /** Stage1 Passed */
+      stage1_passed: number;
+      /** Stage2 Started */
+      stage2_started: number;
+      /** Stage2 Passed */
+      stage2_passed: number;
+      /** Shortlisted */
+      shortlisted: number;
+      /** Hired */
+      hired: number;
+      /** Stage1 Pass Rate */
+      stage1_pass_rate: number | null;
+      /** Stage2 Pass Rate */
+      stage2_pass_rate: number | null;
+      /** Avg Stage1 Score */
+      avg_stage1_score: number | null;
+      /** Avg Stage2 Score */
+      avg_stage2_score: number | null;
+      /** Avg Overall Score */
+      avg_overall_score: number | null;
     };
     /** GenerateIn */
     GenerateIn: {
@@ -2368,6 +2799,13 @@ export interface components {
       has_assessment: boolean;
       viewer?: components['schemas']['Viewer'] | null;
       status: components['schemas']['VacancyStatus'];
+      /**
+       * Is Hidden
+       * @default false
+       */
+      is_hidden: boolean;
+      /** Hidden Reason */
+      hidden_reason?: string | null;
       /** Applications Count */
       applications_count: number;
       /** New Applications Count */
@@ -2569,6 +3007,13 @@ export interface components {
       /** Slug */
       slug: string;
       member_role: components['schemas']['MemberRole'];
+      /**
+       * Blocked
+       * @default false
+       */
+      blocked: boolean;
+      /** Block Reason */
+      block_reason?: string | null;
     };
     /** MeUpdate */
     MeUpdate: {
@@ -3607,6 +4052,30 @@ export interface components {
        */
       time_ms: number;
     };
+    /** ThresholdsIn */
+    ThresholdsIn: {
+      /** Overrides */
+      overrides: {
+        [key: string]: unknown;
+      };
+    };
+    /** ThresholdsOut */
+    ThresholdsOut: {
+      /** Defaults */
+      defaults: {
+        [key: string]: unknown;
+      };
+      /** Overrides */
+      overrides: {
+        [key: string]: unknown;
+      };
+      /** Effective */
+      effective: {
+        [key: string]: unknown;
+      };
+      /** Updated At */
+      updated_at: string | null;
+    };
     /** TimelineSignal */
     TimelineSignal: {
       /** Stage */
@@ -3684,11 +4153,43 @@ export interface components {
       /** Think Available */
       think_available: boolean;
     };
+    /** UsageBucket */
+    UsageBucket: {
+      /** Key */
+      key: string;
+      /** Calls */
+      calls: number;
+      /** Input Tokens */
+      input_tokens: number;
+      /** Output Tokens */
+      output_tokens: number;
+      /** Seconds */
+      seconds: number;
+      /** Characters */
+      characters: number;
+      /** Cost Usd */
+      cost_usd: number;
+      /** Unpriced Calls */
+      unpriced_calls: number;
+      /** Failed Calls */
+      failed_calls: number;
+    };
     /**
      * UserRole
      * @enum {string}
      */
     UserRole: 'candidate' | 'hr' | 'admin';
+    /** VacancyAnalytics */
+    VacancyAnalytics: {
+      /**
+       * Vacancy Id
+       * Format: uuid
+       */
+      vacancy_id: string;
+      /** Title */
+      title: string;
+      funnel: components['schemas']['FunnelRow'];
+    };
     /** VacancyCard */
     VacancyCard: {
       /**
@@ -4293,6 +4794,59 @@ export interface operations {
       };
     };
   };
+  export_me_api_v1_auth_me_export_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            [key: string]: unknown;
+          };
+        };
+      };
+    };
+  };
+  delete_me_api_v1_auth_me_delete_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DeleteAccountIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
   list_verified_skills_api_v1_candidate_verified_skills_get: {
     parameters: {
       query?: never;
@@ -4715,6 +5269,36 @@ export interface operations {
       };
     };
   };
+  make_owner_api_v1_companies__company_id__members__user_id__owner_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        company_id: string;
+        user_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
   remove_member_api_v1_companies__company_id__members__user_id__delete: {
     parameters: {
       query?: never;
@@ -4890,6 +5474,40 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['CompanyOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  company_analytics_api_v1_companies__company_id__analytics_get: {
+    parameters: {
+      query?: {
+        days?: number;
+        vacancy_id?: string | null;
+      };
+      header?: never;
+      path: {
+        company_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CompanyAnalytics'];
         };
       };
       /** @description Validation Error */
@@ -7350,6 +7968,317 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  overview_api_v1_admin_overview_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminOverview'];
+        };
+      };
+    };
+  };
+  users_api_v1_admin_users_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        role?: components['schemas']['UserRole'] | null;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminUserPage'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_user_api_v1_admin_users__user_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        user_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AdminUserUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminUser'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  companies_api_v1_admin_companies_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        blocked?: boolean | null;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminCompanyPage'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_company_api_v1_admin_companies__company_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        company_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AdminCompanyUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminCompany'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  vacancies_api_v1_admin_vacancies_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        hidden?: boolean | null;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminVacancyPage'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  update_vacancy_api_v1_admin_vacancies__vacancy_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        vacancy_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AdminVacancyUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdminVacancy'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  thresholds_api_v1_admin_thresholds_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ThresholdsOut'];
+        };
+      };
+    };
+  };
+  save_thresholds_api_v1_admin_thresholds_put: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ThresholdsIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ThresholdsOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  ai_usage_api_v1_admin_ai_usage_get: {
+    parameters: {
+      query?: {
+        days?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AiUsageOut'];
+        };
       };
       /** @description Validation Error */
       422: {

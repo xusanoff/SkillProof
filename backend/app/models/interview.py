@@ -70,6 +70,8 @@ class InterviewSession(UUIDPk, Timestamps, Base):
     connection_id: Mapped[uuid.UUID | None] = mapped_column()
     server_seq: Mapped[int] = mapped_column(Integer, default=0)
     telemetry_pages: Mapped[int] = mapped_column(Integer, default=0)
+    # Editing telemetry and recordings are gone past the retention period.
+    data_purged_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     # Filled by the evaluation job once the stage has ended (D-087).
     evaluation_state: Mapped[EvaluationState] = mapped_column(
         str_enum(EvaluationState), default=EvaluationState.pending

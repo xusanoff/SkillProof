@@ -177,6 +177,8 @@ class VacancyPatch(BaseModel):
 
 class HrVacancy(VacancyCard):
     status: VacancyStatus
+    is_hidden: bool = False
+    hidden_reason: str | None = None
     applications_count: int
     new_applications_count: int
     updated_at: datetime

@@ -107,7 +107,16 @@ describe('PublicProfileView', () => {
 describe('TalentSearch', () => {
   const hr = makeMe({
     role: 'hr',
-    companies: [{ id: 'c-1', name: 'Najot Soft', slug: 'najot-soft', member_role: 'owner' }],
+    companies: [
+      {
+        id: 'c-1',
+        name: 'Najot Soft',
+        slug: 'najot-soft',
+        member_role: 'owner',
+        blocked: false,
+        block_reason: null,
+      },
+    ],
   });
   const renderIt = () =>
     renderWithProviders(

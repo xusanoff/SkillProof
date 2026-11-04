@@ -31,7 +31,7 @@ test('HR generates a two-stage assessment with AI and it becomes ready', async (
   const vacancy = await created.json();
 
   await page.goto(`/uz/hr/vacancies/${vacancy.id}/assessment`);
-  await expect(page.getByRole('heading', { level: 1, name: 'Assessment' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Baholash' })).toBeVisible();
   // GET 404 = nothing saved yet.
   await expect(page.getByText('Assessment hali saqlanmagan')).toBeVisible();
 

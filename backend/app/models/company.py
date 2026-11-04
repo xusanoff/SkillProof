@@ -22,6 +22,9 @@ class Company(UUIDPk, Timestamps, Base):
     country: Mapped[str | None] = mapped_column(String(2))  # ISO 3166-1 alpha-2
     city: Mapped[str | None] = mapped_column(String(120))
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Set by a platform admin: the company and its vacancies leave the public site.
+    blocked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    block_reason: Mapped[str | None] = mapped_column(String(500))
 
 
 class CompanyMember(CreatedAt, Base):

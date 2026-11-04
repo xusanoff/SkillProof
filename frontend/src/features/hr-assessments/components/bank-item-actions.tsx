@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { useErrorText } from '@/lib/forms';
-import { useApproveBankItem, useDeleteBankItem, type BankKind } from '../api';
+import { useApproveBankItem, useDeleteBankItem, type BankKind, GLOBAL_SCOPE } from '../api';
 
 /** Edit / approve / delete for a company item. Global templates are read-only (API: admin only). */
 export function BankItemActions({
@@ -45,7 +45,7 @@ export function BankItemActions({
   const busy = approve.isPending || remove.isPending;
   const error = approve.error ?? remove.error;
 
-  if (isGlobal) return <p className="text-sm text-muted">{t('readOnly')}</p>;
+  if (isGlobal && companyId !== GLOBAL_SCOPE) return <p className="text-sm text-muted">{t('readOnly')}</p>;
 
   return (
     <div className="grid gap-1.5">

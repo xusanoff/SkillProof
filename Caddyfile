@@ -1,0 +1,29 @@
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Stops an oversized upload before it reaches the app. The app has smaller limits per file.
+	request_body {
+		max_size 60MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), geolocation=(), payment=(), microphone=(self)"
+		# 'unsafe-inline' for scripts: Next.js streams inline scripts.
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' wss://{$DOMAIN}; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+		-Server
+	}
+
+	# These cannot go through the Next.js proxy: sockets it cannot upgrade, and Telegram.
+	@direct {
+		path /api/v1/interview-sessions/*/events
+		path /api/v1/interview-sessions/*/stage2/events
+		path /api/v1/telegram/webhook
+	}
+	reverse_proxy @direct api:8000
+
+	reverse_proxy web:3000
+}

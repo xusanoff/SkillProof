@@ -1,10 +1,11 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Response, UploadFile, status
+from fastapi import APIRouter, Depends, Query, Response, UploadFile, status
 
 from app.api.deps import CurrentUser, DbSession
 from app.core.config import get_settings
+from app.schemas.analytics import CompanyAnalytics
 from app.schemas.company import (
     CompanyCreate,
     CompanyOut,
@@ -15,7 +16,7 @@ from app.schemas.company import (
     InvitationPublic,
     MemberOut,
 )
-from app.services import companies
+from app.services import analytics, companies
 from app.services.email import EmailSender, get_email_sender
 from app.services.storage import Storage, get_storage
 
@@ -81,6 +82,15 @@ async def list_members(
     return await companies.list_members(session, company_id, user)
 
 
+@router.post(
+    "/companies/{company_id}/members/{user_id}/owner", status_code=status.HTTP_204_NO_CONTENT
+)
+async def make_owner(
+    company_id: uuid.UUID, user_id: uuid.UUID, user: CurrentUser, session: DbSession
+) -> None:
+    await companies.make_owner(session, company_id, user, user_id)
+
+
 @router.delete("/companies/{company_id}/members/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_member(
     company_id: uuid.UUID, user_id: uuid.UUID, user: CurrentUser, session: DbSession
@@ -128,3 +138,14 @@ async def get_invitation(token: str, session: DbSession) -> InvitationPublic:
 @router.post("/invitations/{token}/accept", response_model=CompanyOut)
 async def accept_invitation(token: str, user: CurrentUser, session: DbSession) -> CompanyOut:
     return await companies.accept_invitation(session, token, user)
+
+
+@router.get("/companies/{company_id}/analytics", response_model=CompanyAnalytics)
+async def company_analytics(
+    company_id: uuid.UUID,
+    user: CurrentUser,
+    session: DbSession,
+    days: Annotated[int, Query(ge=1, le=365)] = 90,
+    vacancy_id: uuid.UUID | None = None,
+) -> CompanyAnalytics:
+    return await analytics.company_analytics(session, company_id, user, days, vacancy_id)

@@ -29,6 +29,9 @@ export const assessmentKeys = {
 
 const PAGE_SIZE = 20;
 
+/** In place of a company id: the platform admin's global templates. */
+export const GLOBAL_SCOPE = 'global';
+
 function listQuery(f: BankFilters, pageSize: number) {
   return {
     page: f.page,
@@ -48,11 +51,17 @@ export function useQuestions(companyId: string, f: BankFilters, pageSize = PAGE_
   return useQuery({
     queryKey: [...assessmentKeys.list(companyId, 'questions', f), pageSize],
     queryFn: () =>
-      unwrap(
-        api.GET('/api/v1/companies/{company_id}/questions', {
-          params: { path: { company_id: companyId }, query: listQuery(f, pageSize) },
-        }),
-      ),
+      companyId === GLOBAL_SCOPE
+        ? unwrap(
+            api.GET('/api/v1/admin/templates/questions', {
+              params: { query: listQuery(f, pageSize) },
+            }),
+          )
+        : unwrap(
+            api.GET('/api/v1/companies/{company_id}/questions', {
+              params: { path: { company_id: companyId }, query: listQuery(f, pageSize) },
+            }),
+          ),
     placeholderData: keepPreviousData,
   });
 }
@@ -62,11 +71,15 @@ export function useTasks(companyId: string, f: BankFilters, pageSize = PAGE_SIZE
   return useQuery({
     queryKey: [...assessmentKeys.list(companyId, 'tasks', f), pageSize],
     queryFn: () =>
-      unwrap(
-        api.GET('/api/v1/companies/{company_id}/tasks', {
-          params: { path: { company_id: companyId }, query: listQuery(f, pageSize) },
-        }),
-      ),
+      companyId === GLOBAL_SCOPE
+        ? unwrap(
+            api.GET('/api/v1/admin/templates/tasks', { params: { query: listQuery(f, pageSize) } }),
+          )
+        : unwrap(
+            api.GET('/api/v1/companies/{company_id}/tasks', {
+              params: { path: { company_id: companyId }, query: listQuery(f, pageSize) },
+            }),
+          ),
     placeholderData: keepPreviousData,
   });
 }
@@ -96,19 +109,28 @@ export function useSaveQuestion(companyId: string) {
   const invalidate = useInvalidateBank(companyId);
   return useMutation({
     mutationFn: ({ id, body }: { id?: string; body: QuestionIn }) =>
-      id
-        ? unwrap(
-            api.PUT('/api/v1/companies/{company_id}/questions/{item_id}', {
-              params: { path: { company_id: companyId, item_id: id } },
-              body,
-            }),
-          )
-        : unwrap(
-            api.POST('/api/v1/companies/{company_id}/questions', {
-              params: { path: { company_id: companyId } },
-              body,
-            }),
-          ),
+      companyId === GLOBAL_SCOPE
+        ? id
+          ? unwrap(
+              api.PUT('/api/v1/admin/templates/questions/{item_id}', {
+                params: { path: { item_id: id } },
+                body,
+              }),
+            )
+          : unwrap(api.POST('/api/v1/admin/templates/questions', { body }))
+        : id
+          ? unwrap(
+              api.PUT('/api/v1/companies/{company_id}/questions/{item_id}', {
+                params: { path: { company_id: companyId, item_id: id } },
+                body,
+              }),
+            )
+          : unwrap(
+              api.POST('/api/v1/companies/{company_id}/questions', {
+                params: { path: { company_id: companyId } },
+                body,
+              }),
+            ),
     onSuccess: () => invalidate('questions'),
   });
 }
@@ -118,19 +140,28 @@ export function useSaveTask(companyId: string) {
   const invalidate = useInvalidateBank(companyId);
   return useMutation({
     mutationFn: ({ id, body }: { id?: string; body: TaskIn }) =>
-      id
-        ? unwrap(
-            api.PUT('/api/v1/companies/{company_id}/tasks/{item_id}', {
-              params: { path: { company_id: companyId, item_id: id } },
-              body,
-            }),
-          )
-        : unwrap(
-            api.POST('/api/v1/companies/{company_id}/tasks', {
-              params: { path: { company_id: companyId } },
-              body,
-            }),
-          ),
+      companyId === GLOBAL_SCOPE
+        ? id
+          ? unwrap(
+              api.PUT('/api/v1/admin/templates/tasks/{item_id}', {
+                params: { path: { item_id: id } },
+                body,
+              }),
+            )
+          : unwrap(api.POST('/api/v1/admin/templates/tasks', { body }))
+        : id
+          ? unwrap(
+              api.PUT('/api/v1/companies/{company_id}/tasks/{item_id}', {
+                params: { path: { company_id: companyId, item_id: id } },
+                body,
+              }),
+            )
+          : unwrap(
+              api.POST('/api/v1/companies/{company_id}/tasks', {
+                params: { path: { company_id: companyId } },
+                body,
+              }),
+            ),
     onSuccess: () => invalidate('tasks'),
   });
 }
@@ -140,6 +171,12 @@ export function useDeleteBankItem(companyId: string, kind: BankKind) {
   const invalidate = useInvalidateBank(companyId);
   return useMutation({
     mutationFn: (id: string) => {
+      if (companyId === GLOBAL_SCOPE) {
+        const params = { params: { path: { item_id: id } } };
+        return kind === 'questions'
+          ? unwrap(api.DELETE('/api/v1/admin/templates/questions/{item_id}', params))
+          : unwrap(api.DELETE('/api/v1/admin/templates/tasks/{item_id}', params));
+      }
       const path = { company_id: companyId, item_id: id };
       return kind === 'questions'
         ? unwrap(
@@ -158,6 +195,13 @@ export function useApproveBankItem(companyId: string, kind: BankKind) {
   const invalidate = useInvalidateBank(companyId);
   return useMutation({
     mutationFn: async ({ id, approved }: { id: string; approved: boolean }) => {
+      if (companyId === GLOBAL_SCOPE) {
+        const init = { params: { path: { item_id: id } }, body: { approved } };
+        await (kind === 'questions'
+          ? unwrap(api.POST('/api/v1/admin/templates/questions/{item_id}/approve', init))
+          : unwrap(api.POST('/api/v1/admin/templates/tasks/{item_id}/approve', init)));
+        return;
+      }
       const path = { company_id: companyId, item_id: id };
       if (kind === 'questions') {
         await unwrap(

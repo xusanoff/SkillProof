@@ -15,6 +15,7 @@ import { routing, type Locale } from '@/i18n/routing';
 import { applyServerErrors, useErrorText, useFieldError } from '@/lib/forms';
 import { useMe, useUpdateMe } from '../api';
 import type { Me } from '../model';
+import { AccountData } from './account-data';
 import { NotificationSettings } from './notification-settings';
 
 const settingsSchema = z.object({
@@ -39,6 +40,7 @@ export function SettingsPage() {
       <p className="mt-2 text-muted">{t('lead')}</p>
       {me ? <SettingsForm me={me} /> : null}
       {me ? <NotificationSettings me={me} /> : null}
+      {me ? <AccountData /> : null}
     </div>
   );
 }

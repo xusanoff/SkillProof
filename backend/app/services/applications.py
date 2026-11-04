@@ -12,6 +12,7 @@ from app.core.errors import AppError, NotFoundError, PermissionDeniedError
 from app.models import (
     Application,
     CandidateProfile,
+    Company,
     SavedVacancy,
     SessionReport,
     User,
@@ -81,7 +82,13 @@ async def apply(
     if get_settings().require_verified_email_to_apply and not user.is_email_verified:
         raise AppError("email_not_verified", "Confirm your email before applying", 403)
     v = await session.get(Vacancy, vacancy_id)
-    if v is None or v.status in (VacancyStatus.draft, VacancyStatus.archived):
+    company = await session.get(Company, v.company_id) if v is not None else None
+    if (
+        v is None
+        or v.status in (VacancyStatus.draft, VacancyStatus.archived)
+        or v.hidden_at is not None
+        or (company is not None and company.blocked_at is not None)
+    ):
         raise NotFoundError("Vacancy not found")
     if v.status is not VacancyStatus.published:
         raise AppError("vacancy_not_open", "This vacancy is no longer accepting applications", 409)

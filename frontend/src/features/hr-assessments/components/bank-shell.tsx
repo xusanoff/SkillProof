@@ -40,6 +40,7 @@ export function useBankFilters(pathname: string) {
 }
 
 export function BankShell<T extends { id: string }>({
+  showGlobalToggle = true,
   pathname,
   title,
   newLabel,
@@ -53,6 +54,7 @@ export function BankShell<T extends { id: string }>({
   onNew,
   renderItem,
 }: {
+  showGlobalToggle?: boolean;
   pathname: string;
   title: string;
   newLabel: string;
@@ -100,7 +102,7 @@ export function BankShell<T extends { id: string }>({
         {editor}
       </div>
 
-      <BankFiltersBar key={filters.q} filters={filters} onChange={setFilters} />
+      <BankFiltersBar showGlobalToggle={showGlobalToggle} key={filters.q} filters={filters} onChange={setFilters} />
 
       {list.isError && !list.data ? (
         <ErrorState

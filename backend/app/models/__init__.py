@@ -22,12 +22,14 @@ from app.models.interview import (
     RulesAcceptance,
 )
 from app.models.notification import Notification
+from app.models.platform import AiUsage, PlatformSetting
 from app.models.report import ApplicationNote, HrOverride, SessionReport
 from app.models.user import AuthToken, User
 from app.models.vacancy import Application, SavedVacancy, Vacancy, VacancySkill
 from app.models.verified_skill import VerifiedSkill
 
 __all__ = [
+    "AiUsage",
     "Application",
     "ApplicationNote",
     "Assessment",
@@ -48,6 +50,7 @@ __all__ = [
     "InterviewSession",
     "InterviewTurn",
     "Notification",
+    "PlatformSetting",
     "PracticalTask",
     "ProfessionArea",
     "Question",

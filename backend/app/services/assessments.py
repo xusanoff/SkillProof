@@ -10,8 +10,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ai.llm_client import LLMClient
 from app.ai.question_generator import VacancyContext, generate_questions, generate_task
-from app.core.config import get_settings
 from app.core.errors import AppError, NotFoundError
+from app.core.live_thresholds import current_thresholds
 from app.core.thresholds import Thresholds
 from app.models import (
     Assessment,
@@ -59,7 +59,7 @@ def effective_thresholds(a: Assessment | AssessmentIn) -> Thresholds:
     ):
         if s2.get(key) is not None:
             overrides["stage2"][target] = s2[key]
-    return get_settings().thresholds.with_overrides(overrides)
+    return current_thresholds().with_overrides(overrides)
 
 
 def _usable(model: type[Question] | type[PracticalTask], company_id: uuid.UUID) -> Any:

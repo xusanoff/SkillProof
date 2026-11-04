@@ -11,6 +11,7 @@ from app.ai.code_reviewer import ReviewOutcome, review_code
 from app.ai.integrity.stage1 import Event, TaskInput, detect, suspicion
 from app.ai.llm_client import LLMClient
 from app.core.config import get_settings
+from app.core.live_thresholds import current_thresholds
 from app.core.thresholds import Thresholds
 from app.models import (
     Application,
@@ -52,7 +53,7 @@ async def _thresholds(
     if snapshot:
         return Thresholds.model_validate(snapshot)
     assessment = await session.scalar(select(Assessment).where(Assessment.vacancy_id == vacancy_id))
-    return effective_thresholds(assessment) if assessment else Thresholds()
+    return effective_thresholds(assessment) if assessment else current_thresholds()
 
 
 def _unchanged(sub: CodeSubmission, task: PracticalTask) -> bool:

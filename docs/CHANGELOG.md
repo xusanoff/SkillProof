@@ -1,5 +1,14 @@
 # Changelog
 
+## Phase 10 — Admin, analytics, hardening, deployment (2026-11-04)
+- Admin panel: users, company and vacancy moderation, global templates, global thresholds, AI usage and cost (D-163…D-165). New table `ai_usage`, written for every LLM, STT and TTS call.
+- Company analytics: funnel, pass rates, average scores, median time to shortlist (D-167).
+- Privacy: daily retention job, account export and deletion (D-160…D-162).
+- Security review with fixes: `docs/SECURITY_REVIEW.md`. Production refuses to start on mock services (D-166).
+- Production setup: `docker-compose.prod.yml`, `Caddyfile`, `scripts/backup.sh`, `scripts/restore.sh`, `docs/DEPLOY.md`.
+- Fixed two e2e specs left stale by the Phase 9 Uzbek translation changes.
+- Billing stays out of scope. Details: `docs/reports/phase-10/REPORT.md`.
+
 ## Phase 9 — Notifications, translation, mobile and accessibility (2026-11-04)
 - Outbox `notifications`, email (console or SMTP) and Telegram delivery with retries, per-channel settings (D-150…D-154). Guide: `docs/NOTIFICATIONS.md`.
 - Translation review: 12 backend errors had no text, Russian terms made consistent, leftover English removed from Uzbek.

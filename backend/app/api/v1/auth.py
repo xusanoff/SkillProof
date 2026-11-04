@@ -1,11 +1,12 @@
-from typing import Annotated
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, Request, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Request, Response, status
 
 from app.api.deps import ACCESS_COOKIE, REFRESH_COOKIE, CurrentUser, DbSession, client_ip
 from app.core.config import get_settings
 from app.core.rate_limit import RateLimiter, get_rate_limiter
 from app.schemas.auth import (
+    DeleteAccountIn,
     ForgotPasswordIn,
     LoginIn,
     Me,
@@ -15,7 +16,9 @@ from app.schemas.auth import (
     TokenIn,
 )
 from app.services import auth as auth_service
-from app.services.email import EmailSender, get_email_sender
+from app.services import privacy
+from app.services.email import EmailSender, get_email_sender, send_best_effort
+from app.services.storage import Storage, get_storage
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -121,10 +124,17 @@ async def resend_verification(
 
 @router.post("/password/forgot", status_code=status.HTTP_202_ACCEPTED)
 async def forgot_password(
-    data: ForgotPasswordIn, request: Request, session: DbSession, limiter: Limiter, sender: Sender
+    data: ForgotPasswordIn,
+    request: Request,
+    background: BackgroundTasks,
+    session: DbSession,
+    limiter: Limiter,
+    sender: Sender,
 ) -> None:
     await limiter.check("forgot", client_ip(request), get_settings().rate_limit_password)
-    await auth_service.forgot_password(session, data.email, sender)
+    message = await auth_service.forgot_password(session, data.email)
+    if message is not None:
+        background.add_task(send_best_effort, sender, message)
 
 
 @router.post("/password/reset", status_code=status.HTTP_204_NO_CONTENT)
@@ -133,3 +143,26 @@ async def reset_password(
 ) -> None:
     await limiter.check("reset", client_ip(request), get_settings().rate_limit_password)
     await auth_service.reset_password(session, data.token, data.password)
+
+
+@router.get("/me/export")
+async def export_me(
+    request: Request, user: CurrentUser, session: DbSession, limiter: Limiter
+) -> dict[str, Any]:
+    await limiter.check("export", str(user.id), get_settings().rate_limit_export)
+    return await privacy.export_account(session, user)
+
+
+@router.post("/me/delete", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_me(
+    data: DeleteAccountIn,
+    request: Request,
+    response: Response,
+    user: CurrentUser,
+    session: DbSession,
+    limiter: Limiter,
+    storage: Annotated[Storage, Depends(get_storage)],
+) -> None:
+    await limiter.check("delete_account", str(user.id), get_settings().rate_limit_password)
+    await privacy.delete_account(session, storage, user, data.password)
+    _clear_session_cookies(response)

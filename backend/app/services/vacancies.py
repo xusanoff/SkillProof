@@ -88,9 +88,18 @@ def tsquery_text(q: str) -> str | None:
     return " & ".join(f"{t}:*" for t in tokens) or None
 
 
+def _on_public_site() -> list[ColumnElement[bool]]:
+    """Open to everyone: published, not hidden by an admin, company not blocked."""
+    return [
+        Vacancy.status == VacancyStatus.published,
+        Vacancy.hidden_at.is_(None),
+        ~exists().where(Company.id == Vacancy.company_id, Company.blocked_at.is_not(None)),
+    ]
+
+
 def _filters(p: SearchParams) -> tuple[list[ColumnElement[bool]], dict[str, ColumnElement[bool]]]:
     """Returns (plain conditions, facet conditions keyed by facet name)."""
-    plain: list[ColumnElement[bool]] = [Vacancy.status == VacancyStatus.published]
+    plain: list[ColumnElement[bool]] = _on_public_site()
     if p.q and (tsq := tsquery_text(p.q)):
         company_match = exists().where(
             Company.id == Vacancy.company_id, Company.name.ilike(f"%{p.q.strip()}%")
@@ -346,8 +355,14 @@ async def public_detail(
     member = await _is_member(session, v.company_id, viewer)
     # Closed vacancies stay readable (links in old applications keep working); drafts and
     # archived ones only for the company's own HR.
-    if v.status not in (VacancyStatus.published, VacancyStatus.closed) and not member:
-        raise NotFoundError("Vacancy not found")
+    if not member:
+        company = await session.get(Company, v.company_id)
+        if (
+            v.status not in (VacancyStatus.published, VacancyStatus.closed)
+            or v.hidden_at is not None
+            or (company is not None and company.blocked_at is not None)
+        ):
+            raise NotFoundError("Vacancy not found")
     return await _detail(session, v, viewer, with_count=member)
 
 
@@ -384,7 +399,7 @@ async def suggest(session: AsyncSession, q: str) -> list[dict[str, str | None]]:
     starts_first = case((Vacancy.title.ilike(f"{_escape_like(q)}%"), 0), else_=1)
     titles = await session.execute(
         select(Vacancy.title, func.min(starts_first))
-        .where(Vacancy.status == VacancyStatus.published, Vacancy.title.ilike(pattern))
+        .where(*_on_public_site(), Vacancy.title.ilike(pattern))
         .group_by(Vacancy.title)
         .order_by(func.min(starts_first), func.count().desc())
         .limit(5)
@@ -396,8 +411,11 @@ async def suggest(session: AsyncSession, q: str) -> list[dict[str, str | None]]:
         select(Company)
         .where(
             Company.name.ilike(pattern),
+            Company.blocked_at.is_(None),
             exists().where(
-                Vacancy.company_id == Company.id, Vacancy.status == VacancyStatus.published
+                Vacancy.company_id == Company.id,
+                Vacancy.status == VacancyStatus.published,
+                Vacancy.hidden_at.is_(None),
             ),
         )
         .order_by(Company.name)
@@ -555,6 +573,11 @@ async def update(
                 409,
             )
         if new_status is VacancyStatus.published:
+            company = await session.get(Company, v.company_id)
+            if company is not None and company.blocked_at is not None:
+                raise AppError("company_blocked", "This company is blocked by the platform", 403)
+            if v.hidden_at is not None:
+                raise AppError("vacancy_hidden", "This vacancy is hidden by the platform", 403)
             if not v.description.strip():
                 raise AppError("description_required", "Add a description before publishing", 409)
             v.published_at = v.published_at or _now()
@@ -628,6 +651,8 @@ async def hr_list(
         HrVacancy(
             **by_id[v.id].model_dump(),
             status=v.status,
+            is_hidden=v.hidden_at is not None,
+            hidden_reason=v.hidden_reason,
             applications_count=total_apps,
             new_applications_count=new_apps,
             updated_at=v.updated_at,

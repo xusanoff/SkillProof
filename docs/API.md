@@ -277,3 +277,31 @@ Rules and reasons: D-130…D-133. No response names the company or application a
 - `HrReport` adds `reused_skills: [{skill_id, name, stage (stage1|stage2), percent, verified_at, valid_until}]`; `per_skill[].reused` lists the stages taken from a verified skill. `CandidateResults.per_skill[].reused` is a boolean.
 
 `Me` also has `notify_email`, `notify_telegram`, `telegram_linked`, `telegram_available` (Phase 9).
+
+## Phase 10
+
+Admin (role `admin`; 401 without a session, 403 for other roles):
+
+| Method | Path | Notes |
+| ------ | ---- | ----- |
+| GET | `/api/v1/admin/overview` | counts, AI cost for 30 days |
+| GET | `/api/v1/admin/users` | `q, role, page, size` |
+| PATCH | `/api/v1/admin/users/{id}` | `{is_active}`. Own account: `409 cannot_change_self` |
+| GET | `/api/v1/admin/companies` | `q, blocked, page, size` |
+| PATCH | `/api/v1/admin/companies/{id}` | `{is_verified?, blocked?, reason?}` |
+| GET | `/api/v1/admin/vacancies` | `q, hidden, page, size`; no drafts |
+| PATCH | `/api/v1/admin/vacancies/{id}` | `{hidden, reason?}` |
+| GET | `/api/v1/admin/thresholds` | `{defaults, overrides, effective, updated_at}` |
+| PUT | `/api/v1/admin/thresholds` | `{overrides}`. Bad value: `422 invalid_thresholds` with `details.fields` |
+| GET | `/api/v1/admin/ai-usage` | `days` (1–365): total, by day, kind, model, role |
+
+Others:
+
+| Method | Path | Auth | Notes |
+| ------ | ---- | ---- | ----- |
+| GET | `/api/v1/companies/{id}/analytics` | member | `days` (1–365), `vacancy_id?`. Withdrawn applications not counted |
+| POST | `/api/v1/companies/{id}/members/{user_id}/owner` | owner | → 204. Adds an owner; nobody loses the role |
+| GET | `/api/v1/auth/me/export` | user | JSON. 3 per hour |
+| POST | `/api/v1/auth/me/delete` | user | `{password}` → 204. `403 invalid_password`, `409 sole_company_owner`, `409 last_admin` |
+
+New on existing responses: `MeCompany.blocked`, `block_reason`; `HrVacancy.is_hidden`, `hidden_reason`. Publishing: `403 company_blocked`, `403 vacancy_hidden`. Replay after retention: `410 replay_expired`. API docs are closed outside `local` and `test`.

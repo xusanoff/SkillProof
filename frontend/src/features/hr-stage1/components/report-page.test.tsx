@@ -74,7 +74,16 @@ function setup(status: number, body: unknown) {
   server.use(http.get(URL, () => HttpResponse.json(body as Record<string, unknown>, { status })));
   const me = makeMe({
     role: 'hr',
-    companies: [{ id: CID, name: 'Acme', slug: 'acme', member_role: 'owner' }],
+    companies: [
+      {
+        id: CID,
+        name: 'Acme',
+        slug: 'acme',
+        member_role: 'owner',
+        blocked: false,
+        block_reason: null,
+      },
+    ],
   });
   server.use(http.get(`${API}/api/v1/auth/me`, () => HttpResponse.json(me)));
   const { queryClient } = renderWithProviders(

@@ -1,3 +1,7 @@
+overrides:
+  # monaco-editor pins a version with known XSS holes (critical, high).
+  dompurify: '>=3.4.17'
+
 allowBuilds:
   sharp: false
   unrs-resolver: false

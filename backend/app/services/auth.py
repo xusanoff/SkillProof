@@ -21,7 +21,7 @@ from app.models import AuthToken, Company, CompanyMember, User
 from app.models.enums import TokenPurpose, UserRole
 from app.schemas.auth import Me, MeCompany, MeUpdate, RegisterIn
 from app.services import audit
-from app.services.email import EmailSender, render, send_best_effort
+from app.services.email import EmailMessage, EmailSender, render, send_best_effort
 
 
 @dataclass(frozen=True)
@@ -167,10 +167,12 @@ async def resend_verification(session: AsyncSession, user: User, sender: EmailSe
     await session.commit()
 
 
-async def forgot_password(session: AsyncSession, email: str, sender: EmailSender) -> None:
+async def forgot_password(session: AsyncSession, email: str) -> EmailMessage | None:
+    """Returns the mail for the caller to send after responding: a slow mail server must not
+    reveal through timing which addresses have an account."""
     user = await session.scalar(select(User).where(User.email == email.lower()))
     if user is None or not user.is_active:
-        return  # same response either way: no account enumeration
+        return None  # same response either way: no account enumeration
     settings = get_settings()
     await _revoke_all(session, user.id, TokenPurpose.password_reset)
     raw = await _issue_token(
@@ -180,8 +182,8 @@ async def forgot_password(session: AsyncSession, email: str, sender: EmailSender
         timedelta(minutes=settings.password_reset_minutes),
     )
     link = f"{settings.frontend_url}/{user.locale}/reset-password?token={raw}"
-    await send_best_effort(sender, render("reset_password", user.locale, user.email, link=link))
     await session.commit()
+    return render("reset_password", user.locale, user.email, link=link)
 
 
 async def reset_password(session: AsyncSession, raw: str, password: str) -> None:
@@ -207,12 +209,29 @@ async def update_me(session: AsyncSession, user: User, data: MeUpdate) -> User:
 
 async def build_me(session: AsyncSession, user: User) -> Me:
     rows = await session.execute(
-        select(Company.id, Company.name, Company.slug, CompanyMember.member_role)
+        select(
+            Company.id,
+            Company.name,
+            Company.slug,
+            CompanyMember.member_role,
+            Company.blocked_at,
+            Company.block_reason,
+        )
         .join(CompanyMember, CompanyMember.company_id == Company.id)
         .where(CompanyMember.user_id == user.id)
         .order_by(Company.name)
     )
-    companies = [MeCompany(id=r[0], name=r[1], slug=r[2], member_role=r[3]) for r in rows]
+    companies = [
+        MeCompany(
+            id=r[0],
+            name=r[1],
+            slug=r[2],
+            member_role=r[3],
+            blocked=r[4] is not None,
+            block_reason=r[5],
+        )
+        for r in rows
+    ]
     settings = get_settings()
     return Me(
         id=user.id,

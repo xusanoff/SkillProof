@@ -44,7 +44,8 @@
       "search": "Qidiruv",
       "profile": "Profil",
       "skills": "Tasdiqlangan ko'nikmalar",
-      "talent": "Iste'dod qidiruvi"
+      "talent": "Iste'dod qidiruvi",
+      "adminPanel": "Boshqaruv"
     }
   },
   "locale": {
@@ -189,7 +190,15 @@
     "sandbox_unavailable": "Kodni hozir ishga tushirib bo'lmaydi. Qayta urinib ko'ring.",
     "session_not_active": "Intervyuning bu bosqichi tugagan.",
     "stage2_not_available": "Bu ariza uchun 2-bosqich mavjud emas.",
-    "task_not_current": "Bu topshiriq hozirgisi emas."
+    "task_not_current": "Bu topshiriq hozirgisi emas.",
+    "company_blocked": "Bu kompaniya platforma tomonidan bloklangan.",
+    "vacancy_hidden": "Bu vakansiya platforma tomonidan yashirilgan.",
+    "cannot_change_self": "O'z hisobingizni o'chirib qo'ya olmaysiz.",
+    "invalid_thresholds": "Chegara noma'lum yoki ruxsat etilgan oraliqda emas.",
+    "invalid_password": "Parol noto'g'ri.",
+    "last_admin": "Platformada kamida bitta admin qolishi kerak.",
+    "sole_company_owner": "Avval kompaniyani boshqa egaga topshiring.",
+    "replay_expired": "Saqlash muddati tugagani uchun qayta ko'rish o'chirilgan."
   },
   "errorPage": {
     "title": "Nimadir noto'g'ri ketdi",
@@ -383,7 +392,15 @@
     "telegramWaiting": "Telegramda Start tugmasini bosing. Havola 15 daqiqa ishlaydi.",
     "telegramLinked": "Telegram ulangan.",
     "telegramDisconnect": "Uzish",
-    "telegramNotLinked": "Telegram ulanmagan."
+    "telegramNotLinked": "Telegram ulanmagan.",
+    "dataTitle": "Ma'lumotlaringiz",
+    "dataLead": "Ma'lumotlaringiz nusxasini yuklab oling yoki hisobingizni o'chiring.",
+    "dataExport": "Ma'lumotlarni yuklab olish",
+    "deleteAccount": "Hisobni o'chirish",
+    "deleteTitle": "Hisobni butunlay o'chirasizmi?",
+    "deleteBody": "Arizalaringiz, natijalaringiz va yozuvlaringiz o'chiriladi. Buni qaytarib bo'lmaydi.",
+    "deletePassword": "Parolingiz",
+    "deleteConfirm": "Butunlay o'chirish"
   },
   "validation": {
     "required": "Bu maydonni to'ldiring.",
@@ -470,7 +487,10 @@
       "candidates": "Nomzodlar",
       "questions": "Savollar",
       "tasks": "Topshiriqlar",
-      "talent": "Iste'dod qidiruvi"
+      "talent": "Iste'dod qidiruvi",
+      "analytics": "Analitika",
+      "blockedTitle": "Kompaniya bloklangan",
+      "blockedBody": "Kompaniya va uning vakansiyalari saytda ko'rinmaydi."
     },
     "home": {
       "metaTitle": "Ish beruvchi kabineti",
@@ -544,7 +564,37 @@
       "pendingEmpty": "Hozircha kutilayotgan taklif yo'q.",
       "pendingMeta": "Taklif qildi: {by} · {expires} gacha amal qiladi",
       "revoke": "Bekor qilish",
-      "revokeAria": "{email} uchun taklifni bekor qilish"
+      "revokeAria": "{email} uchun taklifni bekor qilish",
+      "makeOwner": "Ega qilish",
+      "makeOwnerAria": "{name}ni kompaniya egasi qilish",
+      "makeOwnerTitle": "{name} ham kompaniya egasi bo'lsinmi?",
+      "makeOwnerBody": "U ham jamoa va kompaniyani to'liq boshqara oladi. Siz ham ega bo'lib qolasiz."
+    },
+    "analytics": {
+      "title": "Analitika",
+      "range": "Davr",
+      "days": "{count} kun",
+      "loadFailed": "Analitikani yuklab bo'lmadi.",
+      "empty": "Bu davrda ariza yo'q.",
+      "stage1PassRate": "1-bosqichdan o'tish",
+      "stage2PassRate": "2-bosqichdan o'tish",
+      "timeToShortlist": "Saralashgacha vaqt (mediana)",
+      "hours": "{hours} soat",
+      "avgStage1": "O'rtacha ball, 1-bosqich",
+      "avgStage2": "O'rtacha ball, 2-bosqich",
+      "avgOverall": "O'rtacha umumiy ball",
+      "funnel": "Voronka",
+      "byVacancy": "Vakansiyalar bo'yicha",
+      "vacancy": "Vakansiya",
+      "steps": {
+        "applied": "Ariza berdi",
+        "stage1_started": "1-bosqichni boshladi",
+        "stage1_passed": "1-bosqichdan o'tdi",
+        "stage2_started": "2-bosqichni boshladi",
+        "stage2_passed": "2-bosqichdan o'tdi",
+        "shortlisted": "Saralandi",
+        "hired": "Ishga olindi"
+      }
     }
   },
   "invitation": {
@@ -805,7 +855,8 @@
       "deleted": "«{title}» o'chirildi.",
       "assessment": "Baholash"
     },
-    "hasAssessment": "Assessment bor"
+    "hasAssessment": "Assessment bor",
+    "hiddenByPlatform": "Platforma yashirgan"
   },
   "vacancyForm": {
     "formLabel": "Vakansiya ma'lumotlari",
@@ -1793,5 +1844,107 @@
     "total": "{count} ta nomzod",
     "openProfile": "Profilni ochish",
     "experience": "Tajriba: {years} yil"
+  },
+  "admin": {
+    "nav": {
+      "label": "Boshqaruv bo'limlari",
+      "overview": "Umumiy",
+      "users": "Foydalanuvchilar",
+      "companies": "Kompaniyalar",
+      "vacancies": "Vakansiyalar",
+      "questions": "Savol shablonlari",
+      "tasks": "Topshiriq shablonlari",
+      "thresholds": "Chegaralar",
+      "aiUsage": "AI sarfi"
+    },
+    "list": {
+      "search": "Qidirish",
+      "searchButton": "Qidirish",
+      "loadFailed": "Ro'yxatni yuklab bo'lmadi.",
+      "empty": "Hech narsa topilmadi.",
+      "total": "Jami: {count}"
+    },
+    "confirm": {
+      "reason": "Sabab (kompaniyaga ko'rinadi)"
+    },
+    "overview": {
+      "title": "Boshqaruv paneli",
+      "loadFailed": "Ma'lumotni yuklab bo'lmadi.",
+      "candidates": "Nomzodlar",
+      "hrUsers": "HR foydalanuvchilar",
+      "companies": "Kompaniyalar",
+      "blocked": "Bloklangan: {count}",
+      "vacancies": "Faol vakansiyalar",
+      "hidden": "Yashirilgan: {count}",
+      "applications": "Arizalar",
+      "aiCost": "AI sarfi, 30 kun",
+      "aiCalls": "{calls} ta chaqiruv",
+      "aiUnpriced": "{calls} ta chaqiruv, {unpriced} tasining narxi noma'lum"
+    },
+    "users": {
+      "title": "Foydalanuvchilar",
+      "verified": "Pochta tasdiqlangan",
+      "notVerified": "Pochta tasdiqlanmagan",
+      "inactive": "Faol emas",
+      "deactivate": "O'chirib qo'yish",
+      "activate": "Faollashtirish",
+      "deactivateTitle": "Foydalanuvchini o'chirib qo'yasizmi?",
+      "activateTitle": "Foydalanuvchini faollashtirasizmi?",
+      "deactivateBody": "U darhol tizimdan chiqadi va qayta kira olmaydi. Ma'lumotlari o'chmaydi.",
+      "activateBody": "U yana tizimga kira oladi."
+    },
+    "companies": {
+      "title": "Kompaniyalar",
+      "members": "A'zolar: {count}",
+      "vacancies": "Vakansiyalar: {count}",
+      "verified": "Tasdiqlangan",
+      "blocked": "Bloklangan",
+      "verify": "Tasdiqlash",
+      "unverify": "Tasdiqni bekor qilish",
+      "block": "Bloklash",
+      "unblock": "Blokdan chiqarish",
+      "blockTitle": "Kompaniyani bloklaysizmi?",
+      "unblockTitle": "Blokdan chiqarasizmi?",
+      "blockBody": "Kompaniya va uning vakansiyalari saytdan yo'qoladi, yangi vakansiya chiqara olmaydi. Boshlangan intervyular davom etadi.",
+      "unblockBody": "Kompaniya va uning vakansiyalari saytga qaytadi."
+    },
+    "vacancies": {
+      "title": "Vakansiyalar",
+      "hidden": "Yashirilgan",
+      "hide": "Yashirish",
+      "show": "Qaytarish",
+      "hideTitle": "Vakansiyani yashirasizmi?",
+      "showTitle": "Vakansiyani qaytarasizmi?",
+      "hideBody": "Vakansiya saytdan yo'qoladi, unga ariza berib bo'lmaydi. Kompaniya uni ko'rishda davom etadi.",
+      "showBody": "Vakansiya saytga qaytadi."
+    },
+    "thresholds": {
+      "title": "Global chegaralar",
+      "lead": "Barcha baholashlar uchun standart qiymatlar. O'zgarish 30 soniyada kuchga kiradi va faqat yangi sessiyalarga ta'sir qiladi.",
+      "loadFailed": "Chegaralarni yuklab bo'lmadi.",
+      "default": "Standart: {value}",
+      "changed": "o'zgartirilgan",
+      "saved": "Saqlandi."
+    },
+    "aiUsage": {
+      "title": "AI sarfi",
+      "range": "Davr",
+      "days": "{count} kun",
+      "loadFailed": "Ma'lumotni yuklab bo'lmadi.",
+      "empty": "Bu davrda AI chaqiruvlari yo'q.",
+      "unpricedNote": "{count} ta chaqiruvning narxi noma'lum, jami summaga kirmagan. Narxlar AI_PRICES sozlamasida beriladi.",
+      "total": "Jami",
+      "byKind": "Turi bo'yicha",
+      "byModel": "Model bo'yicha",
+      "byRole": "Vazifa bo'yicha",
+      "byDay": "Kunlar bo'yicha",
+      "key": "Nomi",
+      "calls": "Chaqiruv",
+      "tokens": "Token",
+      "seconds": "Soniya",
+      "failed": "Xato",
+      "cost": "Narx",
+      "unknown": "Noma'lum"
+    }
   }
 }

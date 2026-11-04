@@ -4,7 +4,7 @@ import { Code2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { NeedsCompany, useActiveCompany } from '@/features/companies';
-import { useTasks } from '../api';
+import { GLOBAL_SCOPE, useTasks } from '../api';
 import { emptyTaskValues, toTaskValues, type TaskOut } from '../model';
 import { useSkillName } from './bank-fields';
 import { BankItemActions } from './bank-item-actions';
@@ -22,15 +22,20 @@ import { TaskForm } from './task-form';
 export function TaskBank() {
   const { active } = useActiveCompany();
   if (!active) return <NeedsCompany />;
-  return <Bank companyId={active.id} />;
+  return <Bank companyId={active.id} pathname="/hr/tasks" />;
+}
+
+/** The same bank for the platform admin: global templates, usable by every company. */
+export function TemplateTaskBank() {
+  return <Bank companyId={GLOBAL_SCOPE} pathname="/admin/tasks" />;
 }
 
 type Editing = { item?: TaskOut } | null;
 
-function Bank({ companyId }: { companyId: string }) {
+function Bank({ companyId, pathname }: { companyId: string; pathname: string }) {
   const t = useTranslations('hrBank');
   const tt = useTranslations('hrBank.task');
-  const { filters, setFilters } = useBankFilters('/hr/tasks');
+  const { filters, setFilters } = useBankFilters(pathname);
   const list = useTasks(companyId, filters);
   const [editing, setEditing] = useState<Editing>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -38,7 +43,8 @@ function Bank({ companyId }: { companyId: string }) {
 
   return (
     <BankShell
-      pathname="/hr/tasks"
+      showGlobalToggle={companyId !== GLOBAL_SCOPE}
+      pathname={pathname}
       title={tt('title')}
       newLabel={tt('new')}
       icon={Code2}

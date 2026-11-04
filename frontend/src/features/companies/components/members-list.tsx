@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useFormat } from '@/lib/format';
 import { useErrorText } from '@/lib/forms';
-import { useMembers, useRemoveMember } from '../api';
+import { useMakeOwner, useMembers, useRemoveMember } from '../api';
 import type { Member } from '../model';
 
 export function MembersList({
@@ -35,6 +35,7 @@ export function MembersList({
   const errorText = useErrorText();
   const members = useMembers(companyId);
   const remove = useRemoveMember(companyId);
+  const makeOwner = useMakeOwner(companyId);
   const [removeError, setRemoveError] = useState<string | null>(null);
 
   return (
@@ -67,6 +68,11 @@ export function MembersList({
               isSelf={m.user_id === currentUserId}
               canRemove={isOwner && m.user_id !== currentUserId}
               removing={remove.isPending && remove.variables === m.user_id}
+              canMakeOwner={isOwner && m.member_role !== 'owner'}
+              onMakeOwner={() => {
+                setRemoveError(null);
+                makeOwner.mutate(m.user_id, { onError: (e) => setRemoveError(errorText(e)) });
+              }}
               onRemove={() => {
                 setRemoveError(null);
                 remove.mutate(m.user_id, { onError: (e) => setRemoveError(errorText(e)) });
@@ -83,12 +89,16 @@ function MemberRow({
   member,
   isSelf,
   canRemove,
+  canMakeOwner,
+  onMakeOwner,
   removing,
   onRemove,
 }: {
   member: Member;
   isSelf: boolean;
   canRemove: boolean;
+  canMakeOwner: boolean;
+  onMakeOwner: () => void;
   removing: boolean;
   onRemove: () => void;
 }) {
@@ -109,6 +119,28 @@ function MemberRow({
         {t(`roles.${member.member_role}`)}
       </span>
       <span className="w-28 text-sm text-muted tabular-nums">{format.date(member.joined_at)}</span>
+      {canMakeOwner ? (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="min-h-11 px-3"
+              aria-label={t('makeOwnerAria', { name: member.full_name })}
+            >
+              {t('makeOwner')}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogTitle>{t('makeOwnerTitle', { name: member.full_name })}</AlertDialogTitle>
+            <AlertDialogDescription>{t('makeOwnerBody')}</AlertDialogDescription>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{tc('cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={onMakeOwner}>{t('makeOwner')}</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      ) : null}
       {canRemove ? (
         <AlertDialog>
           <AlertDialogTrigger asChild>

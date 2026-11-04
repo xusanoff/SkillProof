@@ -169,3 +169,11 @@ The owner asked for hh.uz's information architecture: same structure, layouts an
 | D-152 | 2026-11-04 | Email goes only to confirmed addresses: anyone can register with someone else's email. Candidates who never confirm get no email. |
 | D-153 | 2026-11-04 | Telegram is linked by a one-time deep link (15 min, private chats only). A webhook with a secret header receives it, so production needs a public HTTPS URL. A 403 from Telegram unlinks the chat. |
 | D-154 | 2026-11-04 | SMTP through stdlib `smtplib` in a thread with mandatory STARTTLS: low volume, no new dependency. Emails sent during a request (verification, password reset, company invitation) are best effort, so a mail outage is logged and does not fail the request. |
+| D-160 | 2026-11-04 | The account export leaves out integrity signals and HR notes: they are a company's assessment, and the signals would teach how to get around them. Whether this meets the law of each market needs a lawyer. |
+| D-161 | 2026-11-04 | Account deletion removes the person's applications and results through foreign keys, so the company loses them too. A sole company owner must hand over first, and the last admin cannot leave. |
+| D-162 | 2026-11-04 | Retention removes editing telemetry and recordings. Scores, reports, final code and transcripts stay as the hiring record. |
+| D-163 | 2026-11-04 | Global thresholds live in `platform_settings`; each process keeps a copy and reloads it every 30 seconds, because the many callers are synchronous. Running sessions keep their snapshot. |
+| D-164 | 2026-11-04 | AI cost is an estimate from `AI_PRICES`. A call without a price stores no cost and is shown as unknown, not as free. No prices are built in, because they change. |
+| D-165 | 2026-11-04 | Moderation hides, it does not delete. A blocked company or hidden vacancy leaves the public site and takes no applications; the company still sees its own data and the reason. Interviews already started continue. |
+| D-166 | 2026-11-04 | `ENVIRONMENT=production` refuses to start with a mock LLM, STT, TTS, stub sandbox or console email: a mock would produce invented scores in real hiring. |
+| D-167 | 2026-11-04 | Time to shortlist comes from the audit log, so it covers past data with no new column. Only moves through the HR status endpoint count. |

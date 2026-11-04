@@ -83,6 +83,20 @@ export function useMembers(id: string) {
   });
 }
 
+export function useMakeOwner(id: string) {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: string) =>
+      unwrap(
+        api.POST('/api/v1/companies/{company_id}/members/{user_id}/owner', {
+          params: { path: { company_id: id, user_id: userId } },
+        }),
+      ),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: companyKeys.members(id) }),
+  });
+}
+
 export function useRemoveMember(id: string) {
   const api = useApi();
   const queryClient = useQueryClient();

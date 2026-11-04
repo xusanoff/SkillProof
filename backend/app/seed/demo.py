@@ -45,6 +45,7 @@ DEMO_PASSWORD = "Demo-parol-2026"
 # ".local" addresses are rejected by the validator, so login was impossible (fixed in Phase 2).
 DEMO_HR_EMAIL = "demo.hr@example.com"
 DEMO_CANDIDATE_EMAIL = "demo.candidate@example.com"
+DEMO_ADMIN_EMAIL = "demo.admin@example.com"
 _OLD_DEMO_DOMAIN = "@skillproof.local"
 
 COMPANIES = [
@@ -466,6 +467,7 @@ async def seed(bulk: int = 0) -> None:
     now = datetime.now(UTC)
     async with SessionLocal() as session:
         skills_by_name = {s.name: s for s in await session.scalars(select(Skill))}
+        await _user(session, DEMO_ADMIN_EMAIL, "Demo Admin", UserRole.admin)
         demo_hr = await _user(session, DEMO_HR_EMAIL, "Dilnoza Rahimova", UserRole.hr)
         candidate = await _user(session, DEMO_CANDIDATE_EMAIL, "Aziz Karimov", UserRole.candidate)
         if await session.get(CandidateProfile, candidate.id) is None:
@@ -553,6 +555,7 @@ async def seed(bulk: int = 0) -> None:
             await session.commit()
     await engine.dispose()
     print(f"seed: {created} demo vacancies, {bulk} bulk vacancies")
+    print(f"demo admin: {DEMO_ADMIN_EMAIL}")
     print(
         f"demo HR: {DEMO_HR_EMAIL} / candidate: {DEMO_CANDIDATE_EMAIL} / password: {DEMO_PASSWORD}"
     )

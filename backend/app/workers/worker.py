@@ -88,8 +88,27 @@ async def deliver_notifications(ctx: dict[str, Any]) -> None:
         await deliver_due(session, get_email_sender(), get_telegram_sender())
 
 
+async def purge_expired_data(ctx: dict[str, Any]) -> None:
+    from app.core.db import SessionLocal
+    from app.services.privacy import purge_expired
+    from app.services.storage import get_storage
+
+    async with SessionLocal() as session:
+        purged = await purge_expired(session, get_storage())
+    logger.info("retention_purge", extra={"sessions": purged})
+
+
+async def reload_live_thresholds(ctx: dict[str, Any]) -> None:
+    from app.core.db import SessionLocal
+    from app.core.live_thresholds import reload_thresholds
+
+    async with SessionLocal() as session:
+        await reload_thresholds(session)
+
+
 async def startup(ctx: dict[str, Any]) -> None:
     configure_logging(get_settings().log_level)
+    await reload_live_thresholds(ctx)
     logger.info("worker_started")
 
 
@@ -106,6 +125,8 @@ class WorkerSettings:
         cron(sweep_stage2, second={5, 20, 35, 50}),
         cron(sweep_reports, second={10, 25, 40, 55}),
         cron(deliver_notifications, second={12, 42}),
+        cron(reload_live_thresholds, second={22, 52}),
+        cron(purge_expired_data, hour={3}, minute={17}, second={0}),
     ]
     job_timeout = 600
     on_startup = startup

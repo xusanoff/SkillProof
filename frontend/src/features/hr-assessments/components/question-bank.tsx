@@ -4,7 +4,7 @@ import { CircleHelp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { NeedsCompany, useActiveCompany } from '@/features/companies';
-import { useQuestions } from '../api';
+import { GLOBAL_SCOPE, useQuestions } from '../api';
 import { emptyQuestionValues, toQuestionValues, type QuestionOut } from '../model';
 import { useSkillName } from './bank-fields';
 import { BankItemActions } from './bank-item-actions';
@@ -22,15 +22,20 @@ import { QuestionForm } from './question-form';
 export function QuestionBank() {
   const { active } = useActiveCompany();
   if (!active) return <NeedsCompany />;
-  return <Bank companyId={active.id} />;
+  return <Bank companyId={active.id} pathname="/hr/questions" />;
+}
+
+/** The same bank for the platform admin: global templates, usable by every company. */
+export function TemplateQuestionBank() {
+  return <Bank companyId={GLOBAL_SCOPE} pathname="/admin/questions" />;
 }
 
 type Editing = { item?: QuestionOut } | null;
 
-function Bank({ companyId }: { companyId: string }) {
+function Bank({ companyId, pathname }: { companyId: string; pathname: string }) {
   const t = useTranslations('hrBank');
   const tq = useTranslations('hrBank.question');
-  const { filters, setFilters } = useBankFilters('/hr/questions');
+  const { filters, setFilters } = useBankFilters(pathname);
   const list = useQuestions(companyId, filters);
   const [editing, setEditing] = useState<Editing>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -38,7 +43,8 @@ function Bank({ companyId }: { companyId: string }) {
 
   return (
     <BankShell
-      pathname="/hr/questions"
+      showGlobalToggle={companyId !== GLOBAL_SCOPE}
+      pathname={pathname}
       title={tq('title')}
       newLabel={tq('new')}
       icon={CircleHelp}
