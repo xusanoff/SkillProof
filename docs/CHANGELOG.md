@@ -1,5 +1,10 @@
 # Changelog
 
+## Real LLM provider (in progress, 2026-11-04)
+- `openai_compatible` provider, tested with DeepSeek V4.1 Flash on NVIDIA (D-170, D-171). Golden set: all 28 cases passed, one of them on a rerun after a timeout.
+- Too slow for the live interview so far (calls of 50–90 s against a 3 s target). Not switched on in the stack yet.
+- Live interview no longer waits for the model (D-172); saved questions and shared bank audio (D-173). Migration `question cache`; threshold `stage2.live_llm_timeout_s`.
+
 ## Phase 10 — Admin, analytics, hardening, deployment (2026-11-04)
 - Admin panel: users, company and vacancy moderation, global templates, global thresholds, AI usage and cost (D-163…D-165). New table `ai_usage`, written for every LLM, STT and TTS call.
 - Company analytics: funnel, pass rates, average scores, median time to shortlist (D-167).

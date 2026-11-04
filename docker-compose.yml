@@ -23,6 +23,8 @@ x-api-env: &api-env
   LLM_MODEL: ${LLM_MODEL:-mock-1}
   LLM_BASE_URL: ${LLM_BASE_URL:-}
   LLM_API_KEY: ${LLM_API_KEY:-}
+  LLM_EXTRA_BODY: ${LLM_EXTRA_BODY:-{}}
+  LLM_TIMEOUT_S: ${LLM_TIMEOUT_S:-120}
   SANDBOX_PROVIDER: ${SANDBOX_PROVIDER:-judge0}
   JUDGE0_URL: http://judge0-server:2358
   JUDGE0_AUTHN_TOKEN: ${JUDGE0_AUTHN_TOKEN:-dev-only-judge0-token}

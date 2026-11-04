@@ -43,3 +43,20 @@ class AiUsage(UUIDPk, CreatedAt, Base):
     outcome: Mapped[str] = mapped_column(String(16), default="ok")
     # Empty when no price is configured for this model: unknown is not the same as free.
     cost_usd: Mapped[float | None] = mapped_column(Float)
+
+
+class QuestionCache(CreatedAt, Base):
+    """Interview question wording (`text`) or spoken bank questions (`audio`), by input hash.
+
+    Holds no link to a person. Removed by the retention job after a stretch without use.
+    """
+
+    __tablename__ = "question_cache"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(8))
+    value: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    hits: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    last_used_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )

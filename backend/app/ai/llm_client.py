@@ -49,6 +49,10 @@ class LLMResult[T: BaseModel]:
     errors: list[str] = field(default_factory=list)
 
 
+class LLMProviderError(Exception):
+    """The provider could not answer: outage, rate limit, rejected key. Never holds the key."""
+
+
 class LLMProvider(Protocol):
     async def complete(self, request: LLMRequest, schema: type[BaseModel]) -> LLMRawResponse: ...
 
@@ -83,7 +87,26 @@ class LLMClient:
         model = "unknown"
         for attempt in (1, 2):
             started = time.perf_counter()
-            raw = await self.provider.complete(current, schema)
+            try:
+                raw = await self.provider.complete(current, schema)
+            except LLMProviderError as exc:
+                # A human reviews it: an outage must not count against a candidate.
+                errors.append(f"provider: {exc}")
+                settings = get_settings()
+                await usage.record(
+                    usage.Call(
+                        kind="llm",
+                        provider=settings.llm_provider,
+                        model=settings.llm_model,
+                        role=request.role,
+                        latency_ms=round((time.perf_counter() - started) * 1000),
+                        outcome="error",
+                    )
+                )
+                logger.warning("llm_unavailable", extra={"role": request.role, "error": str(exc)})
+                return LLMResult(
+                    None, "needs_review", model, request.prompt_version, attempt, errors
+                )
             model = raw.model
             try:
                 output = schema.model_validate_json(raw.text)
@@ -143,7 +166,10 @@ def build_provider(settings: Settings) -> LLMProvider:
         from app.ai.mock_handlers import build_mock_provider
 
         return build_mock_provider()
-    # Real providers are added once the provider decision is made (spec §1.1).
+    if settings.llm_provider == "openai_compatible":
+        from app.ai.openai_compatible import OpenAICompatibleProvider
+
+        return OpenAICompatibleProvider(settings)
     raise NotImplementedError(f"LLM provider '{settings.llm_provider}' is not implemented yet")
 
 

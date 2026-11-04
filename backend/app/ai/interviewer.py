@@ -3,15 +3,20 @@ only words it, and code checks every question. A bank question is read as writte
 involved. When a generated question keeps failing, a fixed template or the next move replaces it,
 so the interview never stalls on the model."""
 
+import asyncio
 import logging
 import re
 from dataclasses import dataclass, field
 from typing import Any
 
+from pydantic import ValidationError
+
+from app.ai import question_cache
 from app.ai.guardrails import check_grade, check_question, injection_lines, scrub_answer, terms
 from app.ai.llm_client import LLMClient
 from app.ai.prompting import build_request
 from app.ai.schemas import AnswerGrade, InterviewerOutput
+from app.core.config import get_settings
 from app.core.thresholds import Stage2Thresholds
 
 logger = logging.getLogger(__name__)
@@ -20,6 +25,8 @@ VERSION = "v1"
 ROLE = "interviewer"
 EVALUATOR_ROLE = "answer_evaluator"
 MAX_ATTEMPTS = 2
+MAX_BACKGROUND = 8
+_background: set[asyncio.Task[InterviewerOutput | None]] = set()
 MIN_DIFFICULTY, MAX_DIFFICULTY = 1, 5
 
 OWN_CODE_RUBRIC: dict[str, Any] = {
@@ -151,10 +158,11 @@ def pick_lines(code: str, used: set[int]) -> list[int]:
     return [-max(fresh)[1]] if fresh else []
 
 
-async def _word(
+async def _generate(
     llm: LLMClient,
     language: str,
     blocks: dict[str, Any],
+    key: str,
     *,
     secrets: list[str],
     topic_terms: set[str],
@@ -170,20 +178,96 @@ async def _word(
             return None
         if out is None or out.insufficient_evidence:
             return None
-        check = check_question(
-            out.question,
+        check = _check(out, language, secrets, topic_terms, valid_lines, t)
+        if not check:
+            await question_cache.put(key, "text", out.model_dump())
+            return out
+        blocks = {**blocks, "rejected_because": check}
+    return None
+
+
+def _check(
+    out: InterviewerOutput,
+    language: str,
+    secrets: list[str],
+    topic_terms: set[str],
+    valid_lines: int | None,
+    t: Stage2Thresholds,
+) -> list[str]:
+    check = check_question(
+        out.question,
+        language,
+        secrets=secrets,
+        topic_terms=topic_terms,
+        max_chars=t.question_max_chars,
+        max_sentences=t.question_max_sentences,
+    )
+    if valid_lines is not None and any(not 1 <= n <= valid_lines for n in out.lines):
+        check.issues.append("line_not_in_code")
+    return list(check.issues)
+
+
+async def _from_cache(
+    key: str,
+    language: str,
+    secrets: list[str],
+    topic_terms: set[str],
+    valid_lines: int | None,
+    t: Stage2Thresholds,
+) -> InterviewerOutput | None:
+    value = await question_cache.get(key)
+    if value is None:
+        return None
+    try:
+        out = InterviewerOutput.model_validate(value)
+    except ValidationError:
+        return None
+    # The limits may have changed since it was saved.
+    return None if _check(out, language, secrets, topic_terms, valid_lines, t) else out
+
+
+async def _word(
+    llm: LLMClient,
+    language: str,
+    blocks: dict[str, Any],
+    *,
+    secrets: list[str],
+    topic_terms: set[str],
+    valid_lines: int | None,
+    t: Stage2Thresholds,
+) -> InterviewerOutput | None:
+    """A saved question, or a new one if it comes in time.
+
+    A late one keeps running in the background and is saved for the next identical request,
+    while this interview moves on: the candidate never waits for a slow provider.
+    """
+    key = question_cache.make_key(
+        ROLE, VERSION, get_settings().llm_model, language, blocks, secrets
+    )
+    cached = await _from_cache(key, language, secrets, topic_terms, valid_lines, t)
+    if cached is not None:
+        return cached
+    task = asyncio.create_task(
+        _generate(
+            llm,
             language,
+            blocks,
+            key,
             secrets=secrets,
             topic_terms=topic_terms,
-            max_chars=t.question_max_chars,
-            max_sentences=t.question_max_sentences,
+            valid_lines=valid_lines,
+            t=t,
         )
-        if valid_lines is not None and any(not 1 <= n <= valid_lines for n in out.lines):
-            check.issues.append("line_not_in_code")
-        if check.ok:
-            return out
-        blocks = {**blocks, "rejected_because": check.issues}
-    return None
+    )
+    _background.add(task)
+    task.add_done_callback(_background.discard)
+    try:
+        return await asyncio.wait_for(asyncio.shield(task), t.live_llm_timeout_s)
+    except TimeoutError:
+        logger.info("interviewer_late", extra={"kept_running": len(_background) <= MAX_BACKGROUND})
+        if len(_background) > MAX_BACKGROUND:
+            task.cancel()  # a provider this slow must not collect an unbounded queue
+        return None
 
 
 async def own_code_question(

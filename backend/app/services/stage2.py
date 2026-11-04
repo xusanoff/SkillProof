@@ -2,6 +2,7 @@
 writes: speech and model calls run with no lock held, and `preparing_since` says who is building the
 next turn (D-091). A crash between two steps leaves a state the next read simply continues from."""
 
+import asyncio
 import logging
 import uuid
 from dataclasses import dataclass
@@ -14,7 +15,7 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.ai import interviewer
+from app.ai import interviewer, question_cache
 from app.ai.guardrails import has_thinking_phrase, is_help_request, is_injection
 from app.ai.integrity.stage1 import Event, suspicion
 from app.ai.integrity.stage2 import TurnInput, detect
@@ -324,14 +325,22 @@ async def _grade_last(
         source = parent or turn
     question = await session.get(Question, source.question_id) if source.question_id else None
     rubric = question.rubric if question is not None else interviewer.OWN_CODE_RUBRIC
-    outcome = await interviewer.grade_answer(
-        llm,
-        lang,
-        question=turn.question_text,
-        rubric=rubric,
-        reference=question.reference_answer if question is not None else None,
-        answer=answer,
-    )
+    try:
+        outcome = await asyncio.wait_for(
+            interviewer.grade_answer(
+                llm,
+                lang,
+                question=turn.question_text,
+                rubric=rubric,
+                reference=question.reference_answer if question is not None else None,
+                answer=answer,
+            ),
+            _thresholds(s).stage2.live_llm_timeout_s,
+        )
+    except TimeoutError:
+        # The final evaluation scores it later, so the candidate loses nothing.
+        logger.info("live_grade_late", extra={"session_id": str(s.id)})
+        return
     if outcome is None:
         return
     grade = outcome.grade
@@ -496,13 +505,35 @@ async def _plan_next(
         assert dropped < 3
 
 
+async def _shared_audio(tts: TTSProvider, storage: Storage, text: str, language: str) -> str:
+    """Bank questions repeat word for word across interviews, so they are spoken once."""
+    key = question_cache.make_key("tts", get_settings().tts_provider, language, text)
+    saved = await question_cache.get(key)
+    if saved is not None:
+        try:
+            await storage.read(saved["storage_key"])
+            return str(saved["storage_key"])
+        except (OSError, KeyError):
+            pass  # the file is gone: speak it again
+    speech = await tts.synthesize(text, language)
+    extension = _TTS_EXTENSIONS.get(speech.content_type, ".wav")
+    stored = await storage.save(question_cache.AUDIO_PREFIX, extension, speech.audio)
+    await question_cache.put(key, "audio", {"storage_key": stored})
+    return stored
+
+
 async def _synthesize(
-    tts: TTSProvider, storage: Storage, s: InterviewSession, text: str
+    tts: TTSProvider, storage: Storage, s: InterviewSession, text: str, *, shared: bool = False
 ) -> str | None:
-    """No audio is not an error: the question is on screen and the client skips playback."""
+    """No audio is not an error: the question is on screen and the client skips playback.
+
+    `shared` only for bank questions: other wording can quote this candidate's code or answer.
+    """
     if s.config["mode"] != "voice":
         return None
     try:
+        if shared:
+            return await _shared_audio(tts, storage, text, s.config["language"])
         speech = await tts.synthesize(text, s.config["language"])
         extension = _TTS_EXTENSIONS.get(speech.content_type, ".wav")
         return await storage.save(f"interviews/{s.id}/questions", extension, speech.audio)
@@ -534,7 +565,13 @@ async def _prepare(
     await session.commit()
     try:
         fields, difficulty = await _plan_next(session, s, llm)
-        audio = await _synthesize(tts, storage, s, fields["question_text"]) if fields else None
+        audio = (
+            await _synthesize(
+                tts, storage, s, fields["question_text"], shared=fields["kind"] == "bank"
+            )
+            if fields
+            else None
+        )
         await session.commit()  # the grade stands whatever happens to the rest
         now = _now()
         s = await _own(session, session_id, user, lock=True)

@@ -8,6 +8,7 @@ from typing import Any
 from sqlalchemy import delete, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.ai.question_cache import AUDIO_PREFIX
 from app.core.errors import AppError
 from app.core.live_thresholds import current_thresholds
 from app.core.security import verify_password
@@ -21,6 +22,7 @@ from app.models import (
     InterviewSession,
     InterviewTurn,
     Notification,
+    QuestionCache,
     RulesAcceptance,
     SessionReport,
     User,
@@ -35,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 _PURGE_BATCH = 200
 _NOTIFICATION_DAYS = 90
+_CACHE_DAYS = 90
 
 
 def _now() -> datetime:
@@ -44,6 +47,8 @@ def _now() -> datetime:
 async def _delete_files(storage: Storage, keys: list[str]) -> None:
     """After the commit: an orphaned file is a smaller problem than a row pointing at nothing."""
     for key in keys:
+        if key.startswith(f"{AUDIO_PREFIX}/"):
+            continue  # a spoken bank question, shared between interviews and about nobody
         try:
             await storage.delete(key)
         except Exception as exc:
@@ -93,6 +98,9 @@ async def purge_expired(session: AsyncSession, storage: Storage) -> int:
         await _delete_files(storage, keys)
         purged += len(rows)
 
+    stale = QuestionCache.last_used_at < _now() - timedelta(days=_CACHE_DAYS)
+    audio = await session.scalars(delete(QuestionCache).where(stale).returning(QuestionCache.value))
+    cached_files = [str(v["storage_key"]) for v in audio if "storage_key" in v]
     await session.execute(
         delete(Notification).where(
             Notification.created_at < _now() - timedelta(days=_NOTIFICATION_DAYS),
@@ -106,6 +114,11 @@ async def purge_expired(session: AsyncSession, storage: Storage) -> int:
         )
     )
     await session.commit()
+    for key in cached_files:
+        try:
+            await storage.delete(key)
+        except Exception as exc:
+            logger.error("file_not_deleted", extra={"error": type(exc).__name__})
     return purged
 
 

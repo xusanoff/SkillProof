@@ -37,6 +37,9 @@ seed:          ## Demo companies, vacancies and accounts (local only, idempotent
 ai-eval:       ## Golden dataset for AI prompts (real provider if LLM_PROVIDER is set)
 	cd backend && $(UV) run python -m tests.ai_eval.run
 
+ai-eval-real:  ## Golden dataset on the real provider from the root .env (uses free API quota)
+	set -a; . ./.env; set +a; cd backend && LLM_PROVIDER=openai_compatible $(UV) run python -m tests.ai_eval.run
+
 bench-search:  ## Spec §9: search < 300 ms at 10k vacancies (uses a separate DB)
 	$(COMPOSE) exec -T postgres psql -U skillproof -c "DROP DATABASE IF EXISTS skillproof_bench" -c "CREATE DATABASE skillproof_bench"
 	cd backend && DATABASE_URL=postgresql+asyncpg://skillproof:skillproof@localhost:5432/skillproof_bench $(UV) run alembic upgrade head

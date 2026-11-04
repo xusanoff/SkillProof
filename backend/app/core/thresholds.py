@@ -43,6 +43,11 @@ class Stage2Thresholds(_Group):
     question_max_sentences: int = Field(2, ge=1)
     question_max_playback_s: int = Field(60, ge=1, description="Timer starts by then regardless")
     answer_upload_grace_s: int = Field(20, ge=0, description="Past the answer limit, for uploads")
+    live_llm_timeout_s: float = Field(
+        4,
+        ge=0.1,
+        description="A live interview call past this is dropped: the interview goes on without it",
+    )
     preparing_stale_s: int = Field(90, ge=5, description="A stuck next-turn claim expires")
 
 

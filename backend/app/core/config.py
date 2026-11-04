@@ -1,7 +1,7 @@
 """Application settings. Every value comes from environment variables (see .env.example)."""
 
 from functools import lru_cache
-from typing import Literal, Self
+from typing import Any, Literal, Self
 
 from pydantic import BaseModel, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -176,6 +176,9 @@ class Settings(BaseSettings):
     llm_model: str = "mock-1"
     llm_base_url: str | None = None
     llm_api_key: SecretStr | None = None
+    llm_timeout_s: float = 120.0
+    # Provider-specific fields, e.g. switching off reasoning, which can use up max_tokens.
+    llm_extra_body: dict[str, Any] = Field(default_factory=dict)
     stt_provider: SpeechProvider = "mock"
     tts_provider: SpeechProvider = "mock"
 

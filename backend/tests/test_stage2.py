@@ -1,13 +1,18 @@
+import asyncio
 import json
+import time
 import uuid
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Any
 
 import pytest
 import websockets
 from fastapi import FastAPI
+from pydantic import BaseModel
 from sqlalchemy import select, update
 
+from app.ai import interviewer, question_cache
 from app.ai.guardrails import check_question, leaks
 from app.ai.integrity.stage1 import Event
 from app.ai.integrity.stage2 import TurnInput, detect
@@ -24,13 +29,16 @@ from app.ai.interviewer import (
 )
 from app.ai.llm_client import LLMClient, LLMRawResponse, LLMRequest
 from app.ai.mock_handlers import build_mock_provider
+from app.ai.speech import SpeechAudio
 from app.api.deps import ACCESS_COOKIE
 from app.api.v1.interview import llm_dep
 from app.core.db import SessionLocal
 from app.core.thresholds import IntegrityThresholds, Stage2Thresholds
 from app.models import EditorEvent, Evaluation, IntegritySignal, InterviewSession, InterviewTurn
 from app.models.enums import EditorEventType as E
-from app.services import stage2
+from app.models.platform import QuestionCache
+from app.services import privacy, stage2
+from app.services.storage import LocalStorage
 from tests.conftest import SignUp
 from tests.test_interview import (
     QUESTION,
@@ -779,3 +787,128 @@ def test_flags_focus_and_pastes_become_signals() -> None:
     }
     away = [Event(1000, E.focus_lost), Event(100_000, E.focus_gained)]
     assert _found([], events=away)
+
+
+class _SlowWording:
+    """An interviewer model that answers late, like the NVIDIA trial API."""
+
+    def __init__(self, delay: float) -> None:
+        self.delay = delay
+        self.calls = 0
+
+    async def complete(self, request: LLMRequest, schema: type[BaseModel]) -> LLMRawResponse:
+        self.calls += 1
+        await asyncio.sleep(self.delay)
+        return LLMRawResponse(
+            json.dumps({"question": "3-qatorda bu sikl nima uchun kerak?", "lines": [3]}),
+            model="slow",
+        )
+
+
+CODE = (
+    "def f(items):\n    out = []\n    for item in items:\n        out.append(item)\n    return out"
+)
+
+
+async def _own_code(provider: _SlowWording, limit_s: float) -> tuple[str, list[int]]:
+    return await interviewer.own_code_question(
+        LLMClient(provider),
+        "uz",
+        title="Sikl",
+        statement="Ro'yxatni nusxalang",
+        code=CODE,
+        skills=["Python"],
+        used_lines=set(),
+        t=Stage2Thresholds(live_llm_timeout_s=limit_s),
+    )
+
+
+async def test_a_slow_model_never_holds_up_the_interview_and_is_saved_for_next_time() -> None:
+    provider = _SlowWording(0.4)
+    started = time.perf_counter()
+    text, _ = await _own_code(provider, 0.1)
+    assert time.perf_counter() - started < 0.35
+    assert text == interviewer.OWN_CODE_TEMPLATE["uz"].format(line=3)  # the ready-made wording
+
+    await asyncio.gather(*interviewer._background)  # the late answer finishes in the background
+
+    started = time.perf_counter()
+    text, lines = await _own_code(provider, 0.1)
+    assert time.perf_counter() - started < 0.35
+    assert (text, lines) == ("3-qatorda bu sikl nima uchun kerak?", [3])
+    assert provider.calls == 1  # no second call
+
+
+async def test_a_different_input_does_not_get_a_saved_question() -> None:
+    provider = _SlowWording(0)
+    await _own_code(provider, 1)
+    await interviewer.own_code_question(
+        LLMClient(provider),
+        "uz",
+        title="Sikl",
+        statement="Ro'yxatni nusxalang",
+        code=CODE + "\n# boshqa nomzod",
+        skills=["Python"],
+        used_lines=set(),
+        t=Stage2Thresholds(live_llm_timeout_s=1),
+    )
+    assert provider.calls == 2
+
+
+async def test_a_saved_question_is_checked_again_against_current_limits() -> None:
+    provider = _SlowWording(0)
+    await _own_code(provider, 1)
+    text, _ = await interviewer.own_code_question(
+        LLMClient(_SlowWording(5)),
+        "uz",
+        title="Sikl",
+        statement="Ro'yxatni nusxalang",
+        code=CODE,
+        skills=["Python"],
+        used_lines=set(),
+        t=Stage2Thresholds(live_llm_timeout_s=0.1, question_max_chars=20),
+    )
+    assert text == interviewer.OWN_CODE_TEMPLATE["uz"].format(line=3)
+
+
+async def test_a_bank_question_is_spoken_once_and_survives_retention(tmp_path: Path) -> None:
+    class CountingTts:
+        calls = 0
+
+        async def synthesize(self, text: str, language: str) -> SpeechAudio:
+            type(self).calls += 1
+            return SpeechAudio(b"RIFF", "audio/wav", text, language, "mock")
+
+    storage = LocalStorage(str(tmp_path))
+    tts = CountingTts()
+    first = await stage2._shared_audio(tts, storage, "Dekorator nima?", "uz")
+    second = await stage2._shared_audio(tts, storage, "Dekorator nima?", "uz")
+    assert first == second and CountingTts.calls == 1
+    await stage2._shared_audio(tts, storage, "Dekorator nima?", "ru")
+    assert CountingTts.calls == 2
+
+    await privacy._delete_files(storage, [first])
+    assert (tmp_path / first).exists()  # shared: one person leaving must not remove it
+
+    (tmp_path / first).unlink()
+    await stage2._shared_audio(tts, storage, "Dekorator nima?", "uz")
+    assert CountingTts.calls == 3  # a lost file is spoken again
+
+
+async def test_stale_cache_entries_and_their_files_are_removed(tmp_path: Path) -> None:
+    storage = LocalStorage(str(tmp_path))
+    key = await storage.save(question_cache.AUDIO_PREFIX, ".wav", b"RIFF")
+    await question_cache.put("old", "audio", {"storage_key": key})
+    await question_cache.put("new", "text", {"question": "?"})
+    async with SessionLocal() as db:
+        await db.execute(
+            update(QuestionCache)
+            .where(QuestionCache.key == "old")
+            .values(last_used_at=datetime.now(UTC) - timedelta(days=91))
+        )
+        await db.commit()
+        await privacy.purge_expired(db, storage)
+    async with SessionLocal() as db:
+        assert await db.get(QuestionCache, "old") is None
+        assert await db.get(QuestionCache, "new") is not None
+    assert not (tmp_path / key).exists()
