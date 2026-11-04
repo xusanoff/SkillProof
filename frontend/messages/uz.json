@@ -42,7 +42,9 @@
       "company": "Kompaniya",
       "team": "Jamoa",
       "search": "Qidiruv",
-      "profile": "Profil"
+      "profile": "Profil",
+      "skills": "Tasdiqlangan ko'nikmalar",
+      "talent": "Iste'dod qidiruvi"
     }
   },
   "locale": {
@@ -171,7 +173,10 @@
     "email_not_verified": "Ariza berish uchun avval pochtangizni tasdiqlang.",
     "generation_in_progress": "Bu vakansiya uchun AI yaratish allaqachon ishlayapti. Tugashini kuting.",
     "queue_unavailable": "AI navbati hozir mavjud emas. Birozdan keyin qayta urinib ko'ring.",
-    "unknown_items": "Tanlangan savol yoki topshiriqlardan biri topilmadi. Sahifani yangilab, qayta tanlang."
+    "unknown_items": "Tanlangan savol yoki topshiriqlardan biri topilmadi. Sahifani yangilab, qayta tanlang.",
+    "report_not_ready": "Hisobot hali tayyor emas, shuning uchun o'zgartirib bo'lmaydi. Birozdan keyin urinib ko'ring.",
+    "invalid_override": "Tanlangan maydon uchun bu qiymat mumkin emas.",
+    "not_disqualified": "Bu ariza chetlatilmagan."
   },
   "errorPage": {
     "title": "Nimadir noto'g'ri ketdi",
@@ -440,7 +445,8 @@
       "vacancies": "Vakansiyalar",
       "candidates": "Nomzodlar",
       "questions": "Savollar",
-      "tasks": "Topshiriqlar"
+      "tasks": "Topshiriqlar",
+      "talent": "Iste'dod qidiruvi"
     },
     "home": {
       "metaTitle": "Ish beruvchi kabineti",
@@ -654,7 +660,8 @@
     "applyHint": "Ariza 2 bosqichli ko'nikma suhbati bilan tasdiqlanadi.",
     "similarTitle": "O'xshash vakansiyalar",
     "metaTitle": "{title} — {company}",
-    "metaFallback": "Vakansiya"
+    "metaFallback": "Vakansiya",
+    "interviewNote": "SkillProof'da har bir ariza 2 bosqichli ko'nikma suhbati bilan tasdiqlanadi: amaliy topshiriq va og'zaki suhbat. Ariza yuborgach, suhbatni «Arizalarim» bo'limidan boshlaysiz."
   },
   "apply": {
     "title": "Vakansiyaga ariza",
@@ -710,7 +717,10 @@
     "findVacancies": "Vakansiyalarni ko'rish",
     "interviewStart": "Intervyuni boshlash",
     "interviewResume": "Intervyuni davom ettirish",
-    "interviewResult": "Natijani ko'rish"
+    "interviewResult": "Natijani ko'rish",
+    "interviewStage2Start": "2-bosqichni boshlash",
+    "interviewStage2Open": "Og'zaki suhbatni ochish",
+    "viewResults": "Natijalarim"
   },
   "saved": {
     "title": "Saqlanganlar",
@@ -820,21 +830,19 @@
   },
   "hrCandidates": {
     "title": "Nomzodlar",
-    "lead": "Vakansiyalaringizga kelgan arizalar. Eng yangilari yuqorida.",
+    "lead": "Nomzodlar test natijasi bo'yicha saralangan, eng yaxshisi yuqorida. O'tmaganlar va chetlatilganlar alohida yorliqda.",
     "vacancyFilter": "Vakansiya",
     "allVacancies": "Barcha vakansiyalar",
-    "tabsLabel": "Ariza holati",
+    "tabsLabel": "Nomzodlar ro'yxati",
     "tabs": {
-      "applied": "Yangi",
-      "shortlisted": "Tanlanganlar",
-      "rejected": "Rad etilganlar"
+      "ranked": "Reyting",
+      "excluded": "O'tmagan / chetlatilgan"
     },
     "empty": {
-      "applied": "Yangi arizalar yo'q",
-      "shortlisted": "Tanlangan nomzodlar yo'q",
-      "rejected": "Rad etilgan nomzodlar yo'q"
+      "ranked": "Reytingda hali nomzod yo'q",
+      "excluded": "O'tmagan yoki chetlatilgan nomzodlar yo'q"
     },
-    "emptyBody": "Boshqa vakansiya yoki holatni tanlang.",
+    "emptyBody": "Boshqa vakansiya, holat yoki minimal ballni tanlang.",
     "total": "Jami: {count}",
     "location": "Joylashuv",
     "experience": "Tajriba",
@@ -850,24 +858,36 @@
     "actions": {
       "shortlisted": "Taklif qilish",
       "rejected": "Rad etish",
-      "applied": "Yangilarga qaytarish"
+      "applied": "Yangilarga qaytarish",
+      "hired": "Ishga olish"
     },
     "resume": "Rezyumeni yuklab olish",
     "noResume": "Rezyume yuklanmagan",
-    "scoresLabel": "Suhbat natijalari",
-    "scoresTitle": "Ball va shubha darajasi",
-    "scoresLater": "Ikki bosqichli suhbat natijalari keyingi bosqichda shu yerda chiqadi.",
-    "stage1": {
-      "label": "1-bosqich",
-      "title": "1-bosqich",
+    "statusFilter": "Holat",
+    "allStatuses": "Barcha holatlar",
+    "minScore": "Minimal ball, %",
+    "excludedLead": "Bu nomzodlar bosqichdan o'tmagan, chetlatilgan yoki 2-bosqich chegarasidan past ball olgan. Ular reytingga kirmaydi.",
+    "scores": {
+      "label": "Suhbat natijalari",
+      "overall": "Umumiy",
+      "stage1": "1-bosqich",
+      "stage2": "2-bosqich",
       "level": {
         "low": "Past",
         "medium": "O'rta",
         "high": "Yuqori"
       },
       "evaluating": "Baholanmoqda",
-      "notStarted": "1-bosqich boshlanmagan",
-      "open": "Hisobot va replay"
+      "notStarted": "Suhbat boshlanmagan",
+      "recommendationLabel": "Tavsiya",
+      "recommendation": {
+        "strong_yes": "Albatta ha",
+        "yes": "Ha",
+        "maybe": "Ehtimol",
+        "no": "Yo'q"
+      },
+      "needsReview": "Ko'rib chiqish kerak",
+      "open": "Hisobotni ochish"
     }
   },
   "hrBank": {
@@ -1145,8 +1165,6 @@
       "browserHint": "Zamonaviy Chrome, Edge, Firefox yoki Safari ning yangi versiyasidan foydalaning.",
       "fullscreenHint": "To'liq ekran tavsiya etiladi, lekin majburiy emas.",
       "enterFullscreen": "To'liq ekranga o'tish",
-      "micTitle": "Mikrofon testi",
-      "micStub": "Mikrofon testi hali mavjud emas: u 2-bosqich (ovozli suhbat) bilan keyingi versiyada qo'shiladi. Hozir 1-bosqich uchun mikrofon kerak emas.",
       "browserBlocked": "Brauzeringiz kerakli imkoniyatlarni qo'llamaydi. Boshqa brauzerda oching.",
       "continue": "Davom etish"
     },
@@ -1204,7 +1222,8 @@
       "inactiveBody": "Yozishda davom eting, aks holda intervyu avtomatik tugaydi.",
       "inactiveCountdown": "{s} soniya qoldi.",
       "backToFullscreen": "To'liq ekranga qaytish",
-      "fullscreenLeft": "To'liq ekrandan chiqdingiz. Bu qayd etiladi. Davom etishingiz mumkin, lekin to'liq ekranga qaytish tavsiya etiladi."
+      "fullscreenLeft": "To'liq ekrandan chiqdingiz. Bu qayd etiladi. Davom etishingiz mumkin, lekin to'liq ekranga qaytish tavsiya etiladi.",
+      "coveredBody": "Tasdiqlangan ko'nikmalaringiz 1-bosqichdagi barcha topshiriqlarni qoplaydi. Topshiriqlar ko'rsatilmaydi. Davom etish uchun tasdiqlang."
     },
     "ended": {
       "completed": {
@@ -1228,7 +1247,10 @@
         "body": "Muharrirga tashqaridan katta hajmdagi matn qo'yildi. Boshlashdan oldin qabul qilgan qoidaga ko'ra 1-bosqich shu yerda tugaydi."
       },
       "ruleRef": "Siz qabul qilgan qoidalar versiyasi: {version}. Ish beruvchi qarorni ko'rib chiqishi mumkin.",
-      "back": "Arizalarimga qaytish"
+      "back": "Arizalarimga qaytish",
+      "stage2Title": "Keyingi: 2-bosqich",
+      "stage2Body": "AI bilan og'zaki suhbat: asosan o'zingiz yozgan kod haqida. Boshlashdan oldin mikrofonni sinaysiz.",
+      "stage2Start": "2-bosqichga o'tish"
     },
     "result": {
       "title": "1-bosqich natijasi",
@@ -1238,11 +1260,23 @@
       "threshold": "O'tish chegarasi: {value}%",
       "passed": "1-bosqichdan o'tdingiz",
       "notPassed": "Bu safar o'tish chegarasiga yetmadi",
-      "nextStage2": "2-bosqich (ovozli suhbat) tez orada. Hozircha boshqa harakat talab qilinmaydi.",
+      "nextStage2": "2-bosqich (AI bilan og'zaki suhbat) sizni kutmoqda.",
       "notPassedBody": "Natija o'tish chegarasidan past bo'ldi, shuning uchun ariza keyingi bosqichga o'tmadi. Quyidagi izohlar keyingi urinishlarda foydali bo'lishi mumkin.",
       "hidden": "Yashirin testlar: {passed} / {total}",
       "strengths": "Kuchli tomonlar",
-      "weaknesses": "Rivojlantirish mumkin"
+      "weaknesses": "Rivojlantirish mumkin",
+      "coveredByVerified": "Bu bosqich topshiriqlari tasdiqlangan ko'nikmalaringiz bilan qoplangan, shuning uchun ko'rsatadigan narsa yo'q."
+    },
+    "reuse": {
+      "title": "Tasdiqlangan ko'nikmalardan foydalanish",
+      "lead": "Sizda bu vakansiyaga mos tasdiqlangan ko'nikmalar bor. Ular qoplagan qismlarni o'tkazib yuborishingiz mumkin.",
+      "score": "{score}%",
+      "validUntil": "{date} gacha amal qiladi",
+      "covers": "Ko'nikmalaringiz qoplaydi: {tasksTotal} ta topshiriqdan {tasksSkipped} tasi, {questionsTotal} ta savoldan {questionsSkipped} tasi.",
+      "toggle": "Tasdiqlangan ko'nikmalarim qoplagan qismlarni o'tkazib yuborish",
+      "hintOn": "Yoqilgan: qoplangan topshiriq va savollar o'tkazib yuboriladi, natijasi tasdiqlangan ko'nikmalardan olinadi.",
+      "hintOff": "O'chirilgan: barcha topshiriq va savollarni topshirasiz.",
+      "final": "Tanlov bir marta qilinadi. Keyin bu ariza uchun uni o'zgartirib bo'lmaydi."
     }
   },
   "hrReplay": {
@@ -1368,6 +1402,372 @@
         "error": "xato",
         "timeout": "vaqt tugadi"
       }
+    },
+    "noTasks": "1-bosqichda topshiriq yechilmagan: barchasi nomzodning tasdiqlangan ko'nikmalari bilan qoplangan."
+  },
+  "voice": {
+    "mic": {
+      "title": "Mikrofon testi",
+      "lead": "{s} soniya gapirib yozing, so'ng yozuvni eshiting. Shunda mikrofoningiz ishlashini bilasiz.",
+      "record": "{s} soniya yozish",
+      "recording": "Yozilmoqda…",
+      "again": "Qayta yozish",
+      "playback": "Test yozuvi",
+      "hearing": "Ovozingiz eshitilmoqda.",
+      "speakNow": "Gapiring, masalan: «Salom, bu mikrofon testi».",
+      "ok": "Mikrofon ishlayapti. Yozuvni eshitib, ovozingiz aniq ekanini tekshiring.",
+      "silent": "Yozuvda ovoz deyarli eshitilmadi. Mikrofon yoqilganini tekshiring yoki qayta urinib ko'ring.",
+      "denied": "Mikrofonga ruxsat berilmadi. Brauzer manzil qatoridagi ruxsatni yoqing yoki matn bilan davom eting.",
+      "unavailable": "Mikrofon topilmadi yoki brauzer yozishni qo'llamaydi. Matn bilan davom eting."
     }
+  },
+  "stage2": {
+    "intro": {
+      "title": "2-bosqich: AI bilan og'zaki suhbat",
+      "lead": "AI intervyuer sizdan, asosan 1-bosqichda yozgan kodingiz haqida so'raydi. O'z kodingizni tushuntirish qiyin emas.",
+      "point1": "Savol ekranda yoziladi va ovoz bilan o'qiladi. Eshitgach, javob bering.",
+      "point2": "Har savolga javob berish vaqti cheklangan; taymer ekranda ko'rinadi.",
+      "point3": "Savol tushunarsiz bo'lsa, «O'ylab olay» tugmasi bir marta vaqtni uzaytiradi.",
+      "point4": "Uzoq jim qolsangiz, ogohlantirish chiqadi; uzoq davom etsa, suhbat tugaydi.",
+      "recordedTitle": "Ovozingiz yoziladi va saqlanadi",
+      "recordedBody": "Javoblaringiz ovozi yozib olinadi va ish beruvchi ko'rib chiqishi uchun saqlanadi. Davom etsangiz, shunga rozilik bildirasiz.",
+      "textOffer": "Mikrofon ishlamayapti. Javoblaringizni matn bilan yozib davom etishingiz mumkin.",
+      "start": "Suhbatni boshlash",
+      "starting": "Boshlanmoqda…",
+      "startText": "Mikrofonsiz, matn bilan davom etish",
+      "testFirst": "Boshlash uchun avval mikrofonni sinab ko'ring.",
+      "textNote": "Matn bilan davom etsangiz, ish beruvchi bu haqida xabar topadi. Matn rejimida tashqaridan nusxa qo'yib bo'lmaydi.",
+      "coveredLead": "Tasdiqlangan ko'nikmalaringiz barcha savollarni qoplaydi, javob berish shart emas. Mikrofon kerak emas.",
+      "finish": "Suhbatni yakunlash"
+    },
+    "room": {
+      "title": "Og'zaki suhbat",
+      "ownCode": "Sizning kodingiz",
+      "ownCodeLabel": "Sizning kodingiz, faqat o'qish uchun",
+      "markedLine": "savol shu qator haqida",
+      "inactiveTitle": "Harakatsizlik ogohlantirishi",
+      "inactiveBody": "Javob berishda davom eting, aks holda suhbat avtomatik tugaydi.",
+      "inactiveCountdown": "{s} soniya qoldi.",
+      "supersededTitle": "Suhbat boshqa oynada davom etmoqda",
+      "supersededBody": "Bu suhbat boshqa brauzer oynasida ochilgan. Shu oynani yoping va u yerda davom eting.",
+      "offline": "Aloqa uzildi. Qayta ulanmoqda.",
+      "answerTimer": "Javob vaqti",
+      "totalTimer": "Umumiy vaqt",
+      "answered": "Javob berilgan: {n} / {total}",
+      "progress": "Suhbat bosqichi",
+      "followUp": "Aniqlashtiruvchi savol",
+      "followUpNote": "Bu oldingi javobingizga qo'shimcha savol. U asosiy savollar sonidan tashqarida.",
+      "questionN": "{n}-savol, jami {total} ta",
+      "yourAnswer": "Javobingiz",
+      "noPaste": "Tashqaridan nusxa qo'yish o'chirilgan: javobni o'zingiz yozing.",
+      "charCount": "{n} / {max} belgi",
+      "send": "Javobni yuborish",
+      "sending": "Yuborilmoqda…",
+      "sendFailed": "Javob yuborilmadi",
+      "retry": "Qayta yuborish",
+      "answerKept": "Javobingiz saqlanib turibdi.",
+      "think": "O'ylab olay",
+      "fallback": "Ovozda muammo bormi? Matnga o'tish",
+      "fallbackTitle": "Matn rejimiga o'tasizmi?",
+      "fallbackBody": "Bu qaytarib bo'lmaydi: qolgan savollarga matn bilan javob berasiz. Ish beruvchi sizning matn rejimiga o'tganingizni ko'radi.",
+      "fallbackConfirm": "Ha, matnga o'tish",
+      "preparing": "Keyingi savol tayyorlanmoqda. Iltimos, kuting.",
+      "micProblemTitle": "Mikrofon ishlamadi",
+      "micDenied": "Mikrofonga ruxsat berilmagan. Brauzerda ruxsatni yoqing yoki matnga o'ting.",
+      "micUnavailable": "Mikrofon topilmadi yoki yozib bo'lmadi. Matnga o'tishingiz mumkin.",
+      "autoplayBlocked": "Brauzer savolni o'zi o'ynata olmadi. Savolni eshitish tugmasini bosing.",
+      "hintLabel": "Sinov rejimi: nima deganingizni yozing",
+      "hintHelp": "Sinov muhitida ovoz matnga o'girilmaydi, shuning uchun aytganingizni shu yerga yozing.",
+      "startAnswer": "Javob berishni boshlash",
+      "finish": "Javobni tugatish",
+      "playQuestion": "Savolni eshitish",
+      "replay": "Savolni qayta eshitish",
+      "playing": "Savol o'qilmoqda…",
+      "recording": "Yozilmoqda. Javob bering.",
+      "hearing": "Ovozingiz eshitilmoqda."
+    },
+    "ended": {
+      "completed": {
+        "title": "Suhbat tugadi",
+        "body": "Javoblaringiz qabul qilindi."
+      },
+      "expired": {
+        "title": "Vaqt tugadi",
+        "body": "Suhbat uchun ajratilgan vaqt tugadi. Berilgan javoblaringiz saqlangan."
+      },
+      "inactivity": {
+        "title": "Suhbat tugadi: harakatsizlik",
+        "body": "Siz uzoq vaqt javob bermadingiz va qoidalarga ko'ra suhbat avtomatik tugadi."
+      },
+      "abandoned": {
+        "title": "Suhbat to'xtatildi",
+        "body": "Aloqa ruxsat etilgan vaqtdan ko'proq uzilib qolgani uchun suhbat to'xtatildi."
+      },
+      "disqualified": {
+        "title": "Suhbat tugadi",
+        "body": "Suhbat qoidalarga ko'ra to'xtatildi."
+      },
+      "resultsLater": "Javoblaringiz saqlandi. Baholash tugagach, natijalar «Arizalarim» bo'limida chiqadi; sizdan boshqa narsa talab qilinmaydi.",
+      "ruleRef": "Siz qabul qilgan qoidalar versiyasi: {version}. Ish beruvchi qarorni ko'rib chiqishi mumkin.",
+      "back": "Arizalarimga qaytish",
+      "viewResults": "Natijalarimni ko'rish"
+    }
+  },
+  "hrReport": {
+    "title": "Nomzod hisoboti",
+    "back": "Nomzodlarga qaytish",
+    "evaluating": {
+      "title": "Baholanmoqda",
+      "body": "Yakuniy baholash davom etmoqda. Sahifa bir necha soniyada o'zi yangilanadi."
+    },
+    "failed": {
+      "title": "Baholash bajarilmadi",
+      "body": "Tizim yakuniy baholashni tugata olmadi. Javoblar va kodni o'zingiz ko'rib chiqing; ballar bo'lmasligi mumkin."
+    },
+    "stage": {
+      "stage1": "1-bosqich",
+      "stage2": "2-bosqich"
+    },
+    "signals": {
+      "long_silence": "{turn}-savoldan oldin uzoq sukut: {silenceS} s",
+      "long_silence_then_fluent": "{turn}-savoldan oldin uzoq sukut ({silenceS} s), keyin {words} so'zli ravon javob",
+      "repeated_long_silences": "Javoblardan oldin uzoq sukut: {count} marta",
+      "cannot_explain_own_code": "O'z kodini tushuntira olmadi: o'z kodi bo'yicha javoblar o'rtacha {ownCodePercent}%, 1-bosqich esa {stage1Percent}%",
+      "reading_style": "Uzun, tekis, o'qib berilgandek javoblar ({answers} ta javob)",
+      "asked_for_answer": "Suhbatdoshdan javobni so'radi ({turn}-savol)",
+      "text_paste_blocked": "Matn maydoniga qo'yish bloklandi ({count} marta)",
+      "voice_fallback": "Ovozdan matnga o'tdi"
+    },
+    "scores": {
+      "title": "Ballar",
+      "disqualifiedTitle": "Nomzod chetlatilgan",
+      "disqualified": {
+        "external_paste": "Tashqi paste: nomzod qabul qilgan qoidaga ko'ra chegaradan katta tashqi matn qo'ygan.",
+        "inactivity": "Harakatsizlik: nomzod qabul qilingan chegaradan uzoq hech narsa qilmagan.",
+        "abandoned": "Aloqa qayta tiklanmagani uchun to'xtatilgan.",
+        "other": "Sabab ko'rsatilmagan."
+      },
+      "overall": "Umumiy",
+      "stage1": "1-bosqich",
+      "stage2": "2-bosqich",
+      "noOverall": "Umumiy ball yo'q: suhbat oxirigacha yetmagan.",
+      "perSkill": "Ko'nikmalar bo'yicha",
+      "skillDetail": "1-bosqich {stage1} · 2-bosqich {stage2}",
+      "noSkills": "Ko'nikmalar bo'yicha ball yo'q.",
+      "reusedTitle": "Tasdiqlangan ko'nikmalardan olingan",
+      "reusedLine": "{name}, {stage}: {percent}, {verified} da tasdiqlangan, {until} gacha amal qiladi",
+      "reusedBadge": "Tasdiqlangan ko'nikmadan: {stages}"
+    },
+    "points": {
+      "title": "Kuchli tomonlar va bo'shliqlar",
+      "unavailableTitle": "AI xulosasi mavjud emas",
+      "unavailableBody": "AI tekshirilgan xulosa bermadi. Ballar to'g'ri; javoblar va kodni odam ko'rib chiqishi kerak.",
+      "strengths": "Kuchli tomonlar",
+      "gaps": "Bo'shliqlar",
+      "none": "Hech narsa qayd etilmagan.",
+      "task": "{n}-topshiriq",
+      "turn": "{n}-savol",
+      "lines": "{lines}-qatorlar",
+      "model": "Yozgan: {model}, prompt {version}",
+      "reusedBody": "Yozma xulosa, kuchli tomonlar va kamchiliklar yo'q: bu hisobotdagi barcha ko'nikmalar tasdiqlangan ko'nikmalardan olingan, shuning uchun yangi baholash o'tkazilmagan."
+    },
+    "recommendation": {
+      "title": "Tavsiya",
+      "strong_yes": "Albatta ha",
+      "yes": "Ha",
+      "maybe": "Ehtimol",
+      "no": "Yo'q",
+      "aid": "Tavsiya — yordamchi belgi. Qaror sizniki."
+    },
+    "stage2": {
+      "title": "2-bosqich: og'zaki suhbat",
+      "threshold": "o'tish chegarasi {value}%",
+      "passed": "o'tdi",
+      "notPassed": "o'tmadi",
+      "question": "{n}-savol",
+      "followUp": "aniqlashtiruvchi",
+      "percent": "Ball",
+      "transcript": "Matn (transkript)",
+      "noAnswer": "Javob yo'q.",
+      "audio": "Javob yozuvi",
+      "criteria": "Mezonlar",
+      "flags": "Belgilar",
+      "needsReview": "Ko'rib chiqish kerak",
+      "noTurns": "Savollar berilmagan.",
+      "flag": {
+        "thinking_phrase": "o'ylash uchun vaqt so'radi",
+        "help_request": "yordam so'radi",
+        "injection_attempt": "baholovchiga qaratilgan ko'rsatma",
+        "stt_failed": "nutq aniqlanmadi"
+      }
+    },
+    "actions": {
+      "title": "Amallar",
+      "shortlisted": "Taklif qilish",
+      "rejected": "Rad etish",
+      "hired": "Ishga olish",
+      "applied": "Yangilarga qaytarish",
+      "noActions": "Holatni o'zgartirib bo'lmaydi."
+    },
+    "override": {
+      "open": "Natijani o'zgartirish",
+      "title": "Natijani o'zgartirish",
+      "lead": "O'zgarish izohingiz bilan tarixda saqlanadi. Shubha foizini o'zgartirib bo'lmaydi.",
+      "field": "Nimani o'zgartirasiz",
+      "fields": {
+        "stage1_score": "1-bosqich bali",
+        "stage2_score": "2-bosqich bali",
+        "overall_score": "Umumiy ball",
+        "recommendation": "Tavsiya",
+        "disqualification": "Chetlatish"
+      },
+      "value": "Yangi qiymat",
+      "valuePercent": "Yangi ball, %",
+      "valueHint": "0 dan 100 gacha.",
+      "pick": "Tanlang…",
+      "liftHint": "Chetlatish bekor qilinadi va nomzod u to'xtagan bosqichdan davom etadi.",
+      "comment": "Izoh",
+      "commentHint": "Majburiy, kamida 3 ta belgi. Boshqa HR a'zolari ko'radi.",
+      "errors": {
+        "required": "Qiymat kiriting.",
+        "range": "0 dan 100 gacha son kiriting.",
+        "short": "Kamida 3 ta belgi yozing.",
+        "long": "Izoh juda uzun (2000 belgigacha)."
+      },
+      "save": "O'zgartirishni saqlash",
+      "saving": "Saqlanmoqda…",
+      "saved": "O'zgartirish saqlandi."
+    },
+    "history": {
+      "title": "O'zgartirishlar tarixi",
+      "empty": "Hali o'zgartirishlar yo'q.",
+      "lifted": "bekor qilingan",
+      "none": "yo'q",
+      "disqualified": "chetlatilgan",
+      "unknownActor": "Noma'lum"
+    },
+    "notes": {
+      "title": "Eslatmalar",
+      "private": "Faqat kompaniyangizga ko'rinadi.",
+      "label": "Yangi eslatma",
+      "empty": "Avval eslatma yozing.",
+      "add": "Eslatma qo'shish",
+      "adding": "Qo'shilmoqda…",
+      "none": "Hali eslatma yo'q.",
+      "unknownAuthor": "Noma'lum"
+    }
+  },
+  "candidateResults": {
+    "title": "Mening natijalarim",
+    "back": "Arizalarimga qaytish",
+    "notReady": {
+      "title": "Natijalar hali tayyor emas",
+      "body": "Suhbatni tugatib, baholash yakunlangach, natijalar shu yerda chiqadi."
+    },
+    "pending": {
+      "title": "Natijalaringiz tayyorlanmoqda",
+      "body": "Bu biroz vaqt oladi. Sahifa o'zi yangilanadi."
+    },
+    "failed": {
+      "title": "Batafsil fikr-mulohaza kechikmoqda",
+      "body": "Fikr-mulohazani hozircha tayyorlay olmadik. Sizdan hech narsa talab qilinmaydi; keyinroq qayta kiring."
+    },
+    "disqualified": {
+      "title": "Suhbat erta tugadi",
+      "external_paste": "Suhbat tugadi: tashqaridan katta matn qo'yildi, siz qabul qilgan qoidalar buni ruxsat etmaydi.",
+      "inactivity": "Suhbat tugadi: siz qabul qilgan qoidalar ruxsat etgan vaqtdan uzoq faollik bo'lmadi.",
+      "abandoned": "Suhbat tugadi: aloqa o'z vaqtida qayta tiklanmadi.",
+      "other": "Suhbat siz qabul qilgan qoidalarga ko'ra erta tugadi."
+    },
+    "scores": {
+      "title": "Ballaringiz",
+      "overall": "Umumiy",
+      "stage1": "1-bosqich: amaliy topshiriq",
+      "stage2": "2-bosqich: og'zaki suhbat",
+      "perSkill": "Ko'nikmalar bo'yicha",
+      "reusedBadge": "Tasdiqlangan ko'nikmadan"
+    },
+    "tasks": {
+      "title": "Amaliy topshiriqlar",
+      "tests": "Yashirin testlardan o'tgani: {passed} / {total}",
+      "review": "kod tahlili {value}",
+      "strengths": "Yaxshi chiqqani",
+      "weaknesses": "Nimani yaxshilash mumkin"
+    },
+    "answers": {
+      "title": "Og'zaki javoblar",
+      "question": "{n}-savol"
+    },
+    "feedback": {
+      "title": "Fikr-mulohaza",
+      "missing": "Batafsil fikr-mulohaza hozircha mavjud emas.",
+      "mistakes": "Xatolar",
+      "mistakesLead": "Shu o'rinlar eng ko'p ball yo'qotdirdi. Ular rivojlanishingizga yordam berish uchun yozilgan.",
+      "learnNext": "Keyin nimani o'rganish kerak"
+    },
+    "verified": {
+      "title": "Tasdiqlangan ko'nikmalardan natija",
+      "body": "Bu natija tasdiqlangan ko'nikmalaringizdan olingan, shuning uchun topshiriq, javob va fikr-mulohaza yo'q."
+    }
+  },
+  "verifiedSkills": {
+    "title": "Tasdiqlangan ko'nikmalar",
+    "lead": "Platformada isbotlagan ko'nikmalaringiz. Keyingi arizalarda vaqtingizni tejashi mumkin.",
+    "level": {
+      "basic": "Boshlang'ich",
+      "intermediate": "O'rta",
+      "advanced": "Yuqori"
+    },
+    "score": "{score}%",
+    "validUntil": "{date} gacha amal qiladi",
+    "expired": "{date} da muddati tugagan",
+    "privacy": {
+      "title": "Boshqalar nimani ko'radi",
+      "body": "Ommaviy qilgan ko'nikmalaringiz ismingiz bilan birga ommaviy sahifada va ish beruvchilarning iste'dod qidiruvida ko'rinadi. Yoqmaguningizcha ko'nikma yopiq qoladi. Ish beruvchilar ko'nikma qaysi kompaniya va arizadan kelganini ko'rmaydi."
+    },
+    "profile": {
+      "title": "Ommaviy profilingiz yoqilgan",
+      "body": "Ommaviy sahifada {count} ta ommaviy ko'nikma ko'rinadi.",
+      "open": "Ommaviy profilni ochish"
+    },
+    "public": {
+      "label": "Bu ko'nikmani ommaviy ko'rsatish",
+      "hint": "Ommaviy sahifangizda va iste'dod qidirayotgan ish beruvchilarga ko'rinadi.",
+      "expiredHint": "Bu ko'nikmaning muddati tugagan, ko'rsatilmaydi. Yangilash uchun qayta tasdiqlang."
+    },
+    "empty": {
+      "title": "Hozircha tasdiqlangan ko'nikma yo'q",
+      "body": "Suhbatning ikkala bosqichidan toza o'tib, ko'nikma bo'yicha kamida 60% to'plasangiz, tasdiqlangan ko'nikma olasiz. U bir yil amal qiladi.",
+      "link": "Arizalarimga o'tish"
+    },
+    "publicPage": {
+      "metaTitle": "{name}: tasdiqlangan ko'nikmalar",
+      "metaFallback": "Profil topilmadi",
+      "experience": "Tajriba: {years} yil",
+      "skills": "Tasdiqlangan ko'nikmalar",
+      "note": "Ko'nikmalar SkillProof'da kod topshiriqlari va suhbat orqali tasdiqlangan."
+    }
+  },
+  "talent": {
+    "title": "Iste'dod qidiruvi",
+    "lead": "Tanlagan barcha ko'nikmalari ommaviy va amaldagi tasdiqlangan bo'lgan, ish izlayotgan nomzodlarni toping.",
+    "skills": "Ko'nikmalar",
+    "addSkill": "Ko'nikma qo'shish",
+    "skillsFull": "Ko'pi bilan {max} ta ko'nikma",
+    "chosen": "Tanlangan ko'nikmalar",
+    "skillUnnamed": "Ko'nikma",
+    "remove": "{name} ni olib tashlash",
+    "minScore": "Min. ball, %",
+    "start": {
+      "title": "Boshlash uchun ko'nikmalarni tanlang",
+      "body": "Kamida bitta ko'nikma qo'shing. Natijada faqat tanlangan barcha ko'nikmalarga ega nomzodlar chiqadi."
+    },
+    "none": {
+      "title": "Nomzod topilmadi",
+      "body": "Kamroq ko'nikma tanlang yoki minimal ballni pasaytiring."
+    },
+    "total": "{count} ta nomzod",
+    "openProfile": "Profilni ochish",
+    "experience": "Tajriba: {years} yil"
   }
 }

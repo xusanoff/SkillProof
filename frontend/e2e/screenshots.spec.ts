@@ -7,7 +7,7 @@ import {
   type APIResponse,
   type Page,
 } from '@playwright/test';
-import { makeInterviewVacancy, ok } from './interview-setup';
+import { makeInterviewVacancy, ok, submitStage1, waitForStage2 } from './interview-setup';
 import { settle } from './utils';
 
 /**
@@ -1081,5 +1081,363 @@ test.describe('phase 5', () => {
     await expect(h.page.locator('[data-marker="paste"]').first()).toBeVisible({ timeout: 30_000 });
     await shoot(h.page, '06-hr-stage1-report-disqualified-uz-desktop');
     await h.context.close();
+  });
+});
+
+// ---------------------------------------------------------------- Phase 6
+test.describe('phase 6', () => {
+  test.skip(PHASE !== '6', 'phase 6 set');
+  test.skip(!DEMO.hr || !DEMO.candidate || !DEMO.password, 'set DEMO_* env vars');
+  test.describe.configure({ mode: 'serial', timeout: 420_000 });
+
+  type State = Awaited<ReturnType<APIRequestContext['storageState']>>;
+  let candState: State;
+  let hrCtx: APIRequestContext;
+  let companyId = '';
+  const vacancyIds: string[] = [];
+  const apps: Record<'voice' | 'text', string> = { voice: '', text: '' };
+
+  test.beforeAll(async ({ playwright }) => {
+    test.setTimeout(420_000);
+    hrCtx = await playwright.request.newContext({ baseURL: BASE_URL });
+    const me = await ok(
+      await hrCtx.post(`${API}/auth/login`, { data: { email: DEMO.hr, password: DEMO.password } }),
+      'hr login',
+    );
+    companyId = me.companies[0].id;
+    const cand = await playwright.request.newContext({ baseURL: BASE_URL });
+    await ok(
+      await cand.post(`${API}/auth/login`, {
+        data: { email: DEMO.candidate, password: DEMO.password },
+      }),
+      'candidate login',
+    );
+    const stamp = Date.now();
+    for (const [n, mode] of (['voice', 'text'] as const).entries()) {
+      const vid = await makeInterviewVacancy(hrCtx, companyId, stamp, 30 + n, {
+        mode,
+        question_count: 3,
+      });
+      vacancyIds.push(vid);
+      const a = await ok(
+        await cand.post(`${API}/vacancies/${vid}/apply`, { data: { cover_note: 'Screenshot' } }),
+        'apply',
+      );
+      apps[mode] = a.id;
+      await submitStage1(cand, a.id);
+    }
+    await waitForStage2(cand, apps.voice);
+    await waitForStage2(cand, apps.text);
+    candState = await cand.storageState();
+    await cand.dispose();
+  });
+
+  test.afterAll(async () => {
+    for (const id of vacancyIds) {
+      await hrCtx
+        .patch(`${API}/companies/${companyId}/vacancies/${id}`, { data: { status: 'archived' } })
+        .catch(() => {});
+    }
+    await hrCtx.dispose();
+  });
+
+  async function as(browser: import('@playwright/test').Browser, viewport = DESKTOP) {
+    const context = await browser.newContext({
+      viewport,
+      colorScheme: 'light',
+      reducedMotion: 'reduce',
+      storageState: candState,
+      permissions: ['microphone'],
+      ...(viewport === MOBILE ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {}),
+    });
+    return { context, page: await context.newPage() };
+  }
+  const end = (page: Page) => page.getByRole('heading', { level: 1, name: 'Suhbat tugadi' });
+  const question = (page: Page) => page.locator('#q-h + p');
+
+  test('voice: start, mic test, room, own code, mobile', async ({ browser }) => {
+    const d = await as(browser);
+    await d.page.goto('/uz/candidate/applications');
+    await expect(d.page.getByRole('link', { name: '2-bosqichni boshlash' }).first()).toBeVisible();
+    await shoot(d.page, '01-applications-stage2-uz-desktop');
+    await d.page.goto(`/uz/candidate/interview/${apps.voice}`);
+    await expect(d.page.getByRole('button', { name: "2-bosqichga o'tish" })).toBeVisible();
+    await shoot(d.page, '02-stage1-end-start-stage2-uz-desktop');
+    await d.page.getByRole('button', { name: "2-bosqichga o'tish" }).click();
+    await d.page.getByRole('button', { name: '4 soniya yozish' }).click();
+    await expect(d.page.getByText(/Mikrofon ishlayapti|Yozuvda ovoz deyarli/)).toBeVisible({
+      timeout: 15_000,
+    });
+    await shoot(d.page, '03-intro-mic-test-uz-desktop');
+    await d.page.getByRole('button', { name: 'Suhbatni boshlash' }).click();
+    await expect(d.page.getByRole('button', { name: 'Javobni tugatish' })).toBeVisible({
+      timeout: 60_000,
+    });
+    await expect(d.page.getByText('Ovozingiz eshitilmoqda.')).toBeVisible({ timeout: 20_000 });
+    await d.page
+      .getByLabel('Sinov rejimi: nima deganingizni yozing')
+      .fill('Generator qiymatlarni birma-bir beradi.');
+    const code = d.page.locator('#own-code-h');
+    await shoot(
+      d.page,
+      (await code.count()) ? '04-room-own-code-voice-uz-desktop' : '04-room-voice-uz-desktop',
+    );
+
+    // Phone, same interview (reload path: replay and "start answering").
+    const m = await as(browser, MOBILE);
+    await m.page.goto(`/uz/candidate/interview/${apps.voice}`);
+    await expect(question(m.page)).toBeVisible({ timeout: 30_000 });
+    await shoot(m.page, '05-room-voice-uz-mobile');
+    await m.context.close();
+    await d.context.close();
+  });
+
+  test('text: room, inactivity warning, end', async ({ browser }) => {
+    const d = await as(browser);
+    d.page.on('dialog', (x) => void x.accept());
+    await d.page.goto(`/uz/candidate/interview/${apps.text}`);
+    await d.page.getByRole('button', { name: "2-bosqichga o'tish" }).click();
+    await d.page.getByRole('button', { name: /matn bilan davom etish/ }).click();
+    const box = d.page.getByRole('textbox', { name: 'Javobingiz' });
+    await expect(box).toBeVisible({ timeout: 60_000 });
+    await shoot(d.page, '06-room-text-uz-desktop');
+    // The question is on screen and nothing happens: the warning comes at warning_s.
+    await expect(d.page.getByRole('alert').filter({ hasText: 'Harakatsizlik' })).toBeVisible({
+      timeout: 90_000,
+    });
+    await shoot(d.page, '07-inactivity-warning-uz-desktop');
+    for (let i = 0; i < 20; i++) {
+      await expect(end(d.page).or(box)).toBeVisible({ timeout: 90_000 });
+      if (await end(d.page).isVisible()) break;
+      const q = (await question(d.page).textContent()) ?? '';
+      await box.fill(`Javob ${i + 1}: generator xotirani tejaydi.`);
+      await d.page.getByRole('button', { name: 'Javobni yuborish' }).click();
+      await expect(end(d.page).or(question(d.page).filter({ hasNotText: q }))).toBeVisible({
+        timeout: 90_000,
+      });
+    }
+    await expect(end(d.page)).toBeVisible();
+    await shoot(d.page, '08-end-uz-desktop');
+    await d.context.close();
+
+    const m = await as(browser, MOBILE);
+    await m.page.goto(`/uz/candidate/interview/${apps.text}`);
+    await expect(end(m.page)).toBeVisible();
+    await shoot(m.page, '09-end-uz-mobile');
+    await m.context.close();
+  });
+});
+
+// ---------------------------------------------------------------- Phase 7
+test.describe('phase 7', () => {
+  test.skip(PHASE !== '7', 'phase 7 set');
+  test.skip(!DEMO.hr || !DEMO.candidate || !DEMO.password, 'set DEMO_* env vars');
+  test.describe.configure({ mode: 'serial', timeout: 120_000 });
+
+  type State = Awaited<ReturnType<APIRequestContext['storageState']>>;
+  let hrState: State;
+  let candState: State;
+  let companyId = '';
+  let hrAppId = '';
+  let hrVacancyId = '';
+  let candAppId = '';
+
+  test.beforeAll(async ({ playwright }) => {
+    const hrCtx = await playwright.request.newContext({ baseURL: BASE_URL });
+    const me = await ok(
+      await hrCtx.post(`${API}/auth/login`, { data: { email: DEMO.hr, password: DEMO.password } }),
+      'hr login',
+    );
+    companyId = me.companies[0].id;
+    // The best scored application that already has a finished report.
+    const list = await ok(
+      await hrCtx.get(`${API}/companies/${companyId}/applications?tab=ranked&sort=score`),
+      'hr list',
+    );
+    const best = list.items.find((a: { report_state: string | null }) => a.report_state === 'done');
+    hrAppId = best?.id ?? '';
+    hrVacancyId = best?.vacancy.id ?? '';
+    hrState = await hrCtx.storageState();
+
+    const cand = await playwright.request.newContext({ baseURL: BASE_URL });
+    await ok(
+      await cand.post(`${API}/auth/login`, {
+        data: { email: DEMO.candidate, password: DEMO.password },
+      }),
+      'candidate login',
+    );
+    const mine = await ok(await cand.get(`${API}/candidate/applications`), 'candidate list');
+    const withResults = [
+      'evaluated',
+      'stage1_failed',
+      'stage1_disqualified',
+      'stage2_disqualified',
+      'shortlisted',
+      'rejected',
+      'hired',
+    ];
+    candAppId =
+      mine.items.find((a: { status: string }) => withResults.includes(a.status))?.id ?? '';
+    candState = await cand.storageState();
+  });
+
+  async function as(browser: import('@playwright/test').Browser, state: State, viewport = DESKTOP) {
+    const context = await browser.newContext({
+      viewport,
+      colorScheme: 'light',
+      reducedMotion: 'reduce',
+      storageState: state,
+      ...(viewport === MOBILE ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {}),
+    });
+    return { context, page: await context.newPage() };
+  }
+
+  test('HR ranking and the candidate report', async ({ browser }) => {
+    const d = await as(browser, hrState);
+    await d.page.goto(`/uz/hr/candidates?tab=ranked&vacancy=${hrVacancyId}`);
+    await expect(d.page.getByRole('heading', { level: 1, name: 'Nomzodlar' })).toBeVisible();
+    await settle(d.page);
+    await shoot(d.page, '01-hr-ranking-uz-desktop');
+    await d.page.goto(`/uz/hr/candidates?tab=excluded&vacancy=${hrVacancyId}`);
+    await expect(d.page.getByRole('link', { name: "O'tmagan / chetlatilgan" })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await settle(d.page);
+    await shoot(d.page, '02-hr-excluded-uz-desktop');
+    test.skip(!hrAppId, 'no application with a finished report in the seed');
+    await d.page.goto(`/uz/hr/candidates/${hrAppId}`);
+    await expect(d.page.getByRole('region', { name: 'AI yordami shubhasi' })).toBeVisible();
+    await settle(d.page);
+    await shoot(d.page, '03-hr-report-uz-desktop');
+    await d.context.close();
+    const m = await as(browser, hrState, MOBILE);
+    await m.page.goto(`/uz/hr/candidates/${hrAppId}`);
+    await expect(m.page.getByRole('region', { name: 'AI yordami shubhasi' })).toBeVisible();
+    await shoot(m.page, '04-hr-report-uz-mobile');
+    await m.context.close();
+  });
+
+  test('candidate results', async ({ browser }) => {
+    test.skip(!candAppId, 'no candidate application with results in the seed');
+    const d = await as(browser, candState);
+    await d.page.goto(`/uz/candidate/applications/${candAppId}/results`);
+    await expect(
+      d.page.getByRole('heading', { level: 1, name: 'Mening natijalarim' }),
+    ).toBeVisible();
+    await settle(d.page);
+    await shoot(d.page, '05-candidate-results-uz-desktop');
+    await d.context.close();
+    const m = await as(browser, candState, MOBILE);
+    await m.page.goto(`/uz/candidate/applications/${candAppId}/results`);
+    await expect(
+      m.page.getByRole('heading', { level: 1, name: 'Mening natijalarim' }),
+    ).toBeVisible();
+    await shoot(m.page, '06-candidate-results-uz-mobile');
+    await m.context.close();
+  });
+});
+
+// ---------------------------------------------------------------- Phase 8
+test.describe('phase 8', () => {
+  test.skip(PHASE !== '8', 'phase 8 set');
+  test.skip(!DEMO.hr || !DEMO.candidate || !DEMO.password, 'set DEMO_* env vars');
+  test.describe.configure({ mode: 'serial', timeout: 120_000 });
+
+  type State = Awaited<ReturnType<APIRequestContext['storageState']>>;
+  let hrState: State;
+  let candState: State;
+  let candidateId = '';
+  let skillId = '';
+  let skillName = '';
+  let hasPublic = false;
+
+  test.beforeAll(async ({ playwright }) => {
+    const cand = await playwright.request.newContext({ baseURL: BASE_URL });
+    const me = await ok(
+      await cand.post(`${API}/auth/login`, {
+        data: { email: DEMO.candidate, password: DEMO.password },
+      }),
+      'candidate login',
+    );
+    candidateId = me.id;
+    // Show the first valid skill publicly, so the profile page and the HR search have something.
+    const skills = await ok(await cand.get(`${API}/candidate/verified-skills`), 'verified skills');
+    const first = skills.find((s: { is_valid: boolean }) => s.is_valid);
+    if (first) {
+      await ok(
+        await cand.patch(`${API}/candidate/verified-skills/${first.id}`, {
+          data: { is_public: true },
+        }),
+        'make public',
+      );
+      skillId = first.skill_id;
+      skillName = first.name;
+      hasPublic = true;
+    }
+    candState = await cand.storageState();
+
+    const hr = await playwright.request.newContext({ baseURL: BASE_URL });
+    await ok(
+      await hr.post(`${API}/auth/login`, { data: { email: DEMO.hr, password: DEMO.password } }),
+      'hr login',
+    );
+    hrState = await hr.storageState();
+  });
+
+  async function as(browser: import('@playwright/test').Browser, state: State, viewport = DESKTOP) {
+    const context = await browser.newContext({
+      viewport,
+      colorScheme: 'light',
+      reducedMotion: 'reduce',
+      storageState: state,
+      ...(viewport === MOBILE ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {}),
+    });
+    return { context, page: await context.newPage() };
+  }
+
+  test('candidate verified skills and the public profile', async ({ browser }) => {
+    const d = await as(browser, candState);
+    await d.page.goto('/uz/candidate/skills');
+    await expect(
+      d.page.getByRole('heading', { level: 1, name: "Tasdiqlangan ko'nikmalar" }),
+    ).toBeVisible();
+    await settle(d.page);
+    await shoot(d.page, '01-candidate-skills-uz-desktop');
+    if (hasPublic) {
+      await d.page.goto(`/uz/profiles/${candidateId}`);
+      await expect(d.page.getByRole('heading', { level: 1 })).toBeVisible();
+      await settle(d.page);
+      await shoot(d.page, '02-public-profile-uz-desktop');
+    }
+    await d.context.close();
+    const m = await as(browser, candState, MOBILE);
+    await m.page.goto('/uz/candidate/skills');
+    await expect(
+      m.page.getByRole('heading', { level: 1, name: "Tasdiqlangan ko'nikmalar" }),
+    ).toBeVisible();
+    await shoot(m.page, '03-candidate-skills-uz-mobile');
+    await m.context.close();
+  });
+
+  test('HR talent search', async ({ browser }) => {
+    test.skip(!hasPublic, 'the demo candidate has no valid verified skill');
+    const d = await as(browser, hrState);
+    await d.page.goto('/uz/hr/talent');
+    await expect(
+      d.page.getByRole('heading', { level: 1, name: "Iste'dod qidiruvi" }),
+    ).toBeVisible();
+    await settle(d.page);
+    await shoot(d.page, '04-hr-talent-empty-uz-desktop');
+    await d.page.goto(`/uz/hr/talent?skill=${skillId}:${encodeURIComponent(skillName)}`);
+    await expect(d.page.getByRole('link', { name: /Profilni ochish/ }).first()).toBeVisible();
+    await settle(d.page);
+    await shoot(d.page, '05-hr-talent-results-uz-desktop');
+    await d.context.close();
+    const m = await as(browser, hrState, MOBILE);
+    await m.page.goto(`/uz/hr/talent?skill=${skillId}:${encodeURIComponent(skillName)}`);
+    await expect(m.page.getByRole('link', { name: /Profilni ochish/ }).first()).toBeVisible();
+    await shoot(m.page, '06-hr-talent-results-uz-mobile');
+    await m.context.close();
   });
 });

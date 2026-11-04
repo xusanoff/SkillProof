@@ -1,5 +1,23 @@
 # Changelog
 
+## Phase 8 — Verified skill profile (2026-11-03)
+- `verified_skills`: earned from clean machine results only, 365-day validity, private by default (D-130…D-133).
+- Reuse on new applications, chosen by the candidate when Stage 1 starts: covered tasks and questions are skipped, mandatory questions stay. A stage can be covered entirely.
+- HR talent search by verified skill and min score; public profile with badges; candidate skills page; reused results marked in reports. Demo seed: a second vacancy sharing Python.
+- Details: `docs/reports/phase-8/REPORT.md`.
+
+## Phase 7 — Evaluation, reports, HR dashboard, candidate results (2026-11-03)
+- Final Stage 2 evaluation (double-check, `needs_review`, MCQ without a model), `report_writer.v1`, `feedback_writer.v1` with evidence and leak checks, session report for every finished or stopped application. Golden dataset covers all evaluator roles.
+- HR: ranked and excluded tabs, min score filter, full report with suspicion across both stages, overrides with history, private notes, hire, answer audio. Candidate: results page with mistakes and what to learn next.
+- Migration `session reports`; thresholds group `report`.
+
+## Phase 6 — Stage 2: oral AI interview (2026-11-02)
+- `interview_turns`, interviewer state machine (own code, mandatory, skill weights, follow-ups, adaptive difficulty), `interviewer.v1`, a minimal `answer_evaluator.v1`, output filter with fallbacks.
+- Stage 2 API and socket, timers per §7.1b, reconnect, audio storage; voice → text fallback; Stage 2 signals (`docs/INTEGRITY.md`).
+- Frontend: Stage 2 room (voice, text, own-code panel, inactivity warning), real microphone test, cabinet links, phone layout.
+- Demo seed: a vacancy with a ready assessment. `stage2_mode` on the interview state. Live e2e logins wait on `429`.
+- Tests: 186 backend, 221 frontend unit/component, 28 mock e2e, 6 live e2e. Real LLM/STT/TTS not exercised yet.
+
 ## Phase 5 — Stage 1 evaluation, integrity signals, gate, replay (2026-11-02)
 - Evaluation job (15 s sweep): hidden tests, `code_reviewer.v1` with guardrails and double-check, weighted score, gate to Stage 2; retries when the sandbox is down; an LLM failure never fails a candidate.
 - Stage 1 signal detectors and suspicion score (`docs/INTEGRITY.md`); evaluator-injection lines removed before the model sees the code.

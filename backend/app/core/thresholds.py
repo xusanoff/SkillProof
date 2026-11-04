@@ -36,6 +36,14 @@ class Stage2Thresholds(_Group):
     min_own_code_questions: int = Field(2, ge=0)
     max_follow_ups_per_question: int = Field(1, ge=0)
     max_follow_ups_total: int = Field(4, ge=0)
+    difficulty_up_percent: float = Field(75, ge=0, le=100, description="At or above → harder")
+    difficulty_down_percent: float = Field(40, ge=0, le=100, description="Below → easier")
+    follow_up_max_percent: float = Field(85, ge=0, le=100, description="Above → no follow-up")
+    question_max_chars: int = Field(300, ge=20)
+    question_max_sentences: int = Field(2, ge=1)
+    question_max_playback_s: int = Field(60, ge=1, description="Timer starts by then regardless")
+    answer_upload_grace_s: int = Field(20, ge=0, description="Past the answer limit, for uploads")
+    preparing_stale_s: int = Field(90, ge=5, description="A stuck next-turn claim expires")
 
 
 class IntegrityThresholds(_Group):
@@ -66,6 +74,15 @@ class IntegrityThresholds(_Group):
     focus_many_count: int = Field(5, ge=1)
     # Stage 2 signals (§7.3)
     long_silence_s: float = Field(8, ge=0)
+    long_silence_repeat_count: int = Field(3, ge=2)
+    fluent_answer_min_words: int = Field(40, ge=1)
+    own_code_low_percent: float = Field(50, ge=0, le=100)
+    own_code_stage1_high_percent: float = Field(70, ge=0, le=100)
+    own_code_min_answers: int = Field(2, ge=1)
+    reading_min_words: int = Field(60, ge=1)
+    reading_max_filler_ratio: float = Field(0.005, ge=0, le=1)
+    reading_max_pace_cv: float = Field(0.08, ge=0)
+    reading_min_answers: int = Field(3, ge=2)
     # Suspicion labels (§7.4)
     suspicion_medium_from: float = Field(30, ge=0, le=100)
     suspicion_high_from: float = Field(70, ge=0, le=100)
@@ -96,8 +113,41 @@ class PrivacyThresholds(_Group):
     retention_days: int = Field(180, ge=1)
 
 
+class ReportThresholds(_Group):
+    stage1_weight: float = Field(50, ge=0, le=100, description="Share of Stage 1 in overall %")
+    stage2_weight: float = Field(50, ge=0, le=100, description="Share of Stage 2 in overall %")
+    strong_yes_from: float = Field(85, ge=0, le=100)
+    yes_from: float = Field(70, ge=0, le=100)
+    maybe_from: float = Field(50, ge=0, le=100)
+
+    @model_validator(mode="after")
+    def _valid(self) -> Self:
+        if self.stage1_weight + self.stage2_weight != 100:
+            raise ValueError("stage1_weight + stage2_weight must equal 100")
+        if not self.maybe_from <= self.yes_from <= self.strong_yes_from:
+            raise ValueError("recommendation bands must not overlap")
+        return self
+
+
+class VerifiedSkillThresholds(_Group):
+    """Global only: a company's assessment settings never change what counts as verified."""
+
+    validity_days: int = Field(365, ge=1, le=3650)
+    min_percent: float = Field(60, ge=0, le=100, description="Min skill % to become verified")
+    intermediate_from: float = Field(70, ge=0, le=100)
+    advanced_from: float = Field(85, ge=0, le=100)
+
+    @model_validator(mode="after")
+    def _valid(self) -> Self:
+        if not self.min_percent <= self.intermediate_from <= self.advanced_from:
+            raise ValueError("verified skill levels must not overlap")
+        return self
+
+
 class Thresholds(_Group):
     stage1: Stage1Thresholds = Field(default_factory=Stage1Thresholds)
+    report: ReportThresholds = Field(default_factory=ReportThresholds)
+    verified: VerifiedSkillThresholds = Field(default_factory=VerifiedSkillThresholds)
     stage2: Stage2Thresholds = Field(default_factory=Stage2Thresholds)
     integrity: IntegrityThresholds = Field(default_factory=IntegrityThresholds)
     evaluation: EvaluationThresholds = Field(default_factory=EvaluationThresholds)

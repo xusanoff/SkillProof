@@ -1,5 +1,5 @@
 import uuid
-from typing import Annotated
+from typing import Annotated, Literal
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, Query, Response, status
@@ -30,7 +30,8 @@ from app.schemas.vacancy import (
     VacancyPage,
     VacancyPatch,
 )
-from app.services import applications, vacancies
+from app.schemas.verified_skill import PublicProfile, TalentPage
+from app.services import applications, vacancies, verified_skills
 from app.services.storage import Storage, get_storage
 
 router = APIRouter(tags=["job board"])
@@ -54,6 +55,26 @@ async def list_regions(
 async def list_profession_areas(session: DbSession) -> list[ProfessionAreaOut]:
     rows = await vacancies.profession_areas(session)
     return [ProfessionAreaOut(slug=a.slug, names=a.names) for a in rows]
+
+
+@router.get("/profiles/{candidate_id}", response_model=PublicProfile)
+async def public_profile(candidate_id: uuid.UUID, session: DbSession) -> PublicProfile:
+    return await verified_skills.public_profile(session, candidate_id)
+
+
+@router.get("/companies/{company_id}/talent", response_model=TalentPage)
+async def search_talent(
+    company_id: uuid.UUID,
+    user: CurrentUser,
+    session: DbSession,
+    skill_id: Annotated[list[uuid.UUID] | None, Query(max_length=10)] = None,
+    min_score: Annotated[float | None, Query(ge=0, le=100)] = None,
+    page: Page = 1,
+    page_size: PageSize = 20,
+) -> TalentPage:
+    return await verified_skills.search_talent(
+        session, company_id, user, skill_id or [], min_score, page, page_size
+    )
 
 
 @router.get("/skills", response_model=list[SkillOut])
@@ -232,11 +253,14 @@ async def hr_applications(
     session: DbSession,
     vacancy_id: uuid.UUID | None = None,
     status: ApplicationStatus | None = None,
+    tab: Literal["ranked", "excluded"] | None = None,
+    min_score: Annotated[float | None, Query(ge=0, le=100)] = None,
+    sort: Literal["recent", "score"] = "recent",
     page: Page = 1,
     page_size: PageSize = 20,
 ) -> HrApplicationPage:
     return await applications.hr_list(
-        session, company_id, user, vacancy_id, status, page, page_size
+        session, company_id, user, vacancy_id, status, page, page_size, tab, min_score, sort
     )
 
 

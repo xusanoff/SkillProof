@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 from urllib.parse import quote
 
@@ -6,11 +7,24 @@ from fastapi import APIRouter, Depends, Response, UploadFile, status
 from app.api.deps import CurrentUser, DbSession
 from app.core.config import get_settings
 from app.schemas.candidate import CandidateProfileOut, CandidateProfileUpdate
-from app.services import candidates
+from app.schemas.verified_skill import VerifiedSkillOut, VerifiedSkillUpdate
+from app.services import candidates, verified_skills
 from app.services.storage import Storage, get_storage
 
 router = APIRouter(prefix="/candidate", tags=["candidate"])
 StorageDep = Annotated[Storage, Depends(get_storage)]
+
+
+@router.get("/verified-skills", response_model=list[VerifiedSkillOut])
+async def list_verified_skills(user: CurrentUser, session: DbSession) -> list[VerifiedSkillOut]:
+    return await verified_skills.list_own(session, user)
+
+
+@router.patch("/verified-skills/{verified_id}", response_model=VerifiedSkillOut)
+async def update_verified_skill(
+    verified_id: uuid.UUID, data: VerifiedSkillUpdate, user: CurrentUser, session: DbSession
+) -> VerifiedSkillOut:
+    return await verified_skills.set_public(session, user, verified_id, data.is_public)
 
 
 @router.get("/profile", response_model=CandidateProfileOut)

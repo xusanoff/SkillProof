@@ -10,6 +10,7 @@ import { ApiError } from '@/lib/api';
 import { useErrorText } from '@/lib/forms';
 import { useAcceptRules, useInterviewState } from '../api';
 import type { InterviewState, RulesLang } from '../model';
+import { ReuseChoice } from './reuse-choice';
 import en from '../rules/en.json';
 import ru from '../rules/ru.json';
 import uz from '../rules/uz.json';
@@ -17,7 +18,17 @@ import uz from '../rules/uz.json';
 const RULES = { uz, ru, en } as const;
 
 /** Rules in the INTERVIEW language (`InterviewState.language`), with the version being accepted. */
-export function RulesStep({ state, lang }: { state: InterviewState; lang: RulesLang }) {
+export function RulesStep({
+  state,
+  lang,
+  reuse = true,
+  onReuseChange,
+}: {
+  state: InterviewState;
+  lang: RulesLang;
+  reuse?: boolean;
+  onReuseChange?: (value: boolean) => void;
+}) {
   const r = RULES[lang];
   const t = useTranslations('interview.rules');
   const errorText = useErrorText();
@@ -52,6 +63,9 @@ export function RulesStep({ state, lang }: { state: InterviewState; lang: RulesL
       <p className="text-sm text-muted tabular-nums">
         {r.version}: {state.rules_version}
       </p>
+      {state.reuse && onReuseChange ? (
+        <ReuseChoice offer={state.reuse} reuse={reuse} onChange={onReuseChange} />
+      ) : null}
       <div className="grid gap-2">
         <label className="flex min-h-11 items-start gap-3">
           <Checkbox

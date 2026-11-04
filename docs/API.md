@@ -205,3 +205,70 @@ Do not send `run`: the server records it. Activity (§7.1b) is `insert`, `delete
 `HrApplication` gains `suspicion_percent`, `suspicion_label`, `disqualification_reason`.
 
 Signal types and their `evidence`: `docs/INTEGRITY.md`.
+
+## Interview, Stage 2 (Phase 6) — the application's candidate only (others → 404)
+`GET /api/v1/applications/{id}/interview` now also returns `stage2_available`, `stage2_session_id`, `stage2_status`, `stage2_mode` (`voice`|`text`). Rules acceptance is shared with Stage 1. Every route below returns `Stage2SessionOut`, except audio.
+
+| Method | Path | Notes |
+|---|---|---|
+| POST | `/api/v1/applications/{id}/interview/stage2/start` | 201. Idempotent. `409 stage2_not_available` unless the application is `stage2_pending`; `409 rules_not_accepted` |
+| GET | `/api/v1/interview-sessions/{sid}/stage2` | Current state. Also resumes: builds the next question if it is missing. While `preparing: true`, call again in about 2 s |
+| POST | `/api/v1/interview-sessions/{sid}/stage2/turns/{tid}/answer` | Multipart: `text` (text mode), or `audio` + optional `transcript_hint`, `silence_ms` (voice mode). A retry on a closed turn returns the current state. `422 audio_required`, `invalid_audio`, `answer_too_long`; `413 audio_too_large` |
+| GET | `/api/v1/interview-sessions/{sid}/stage2/turns/{tid}/question-audio` | The question's audio (`has_audio: true` only) |
+| POST | `/api/v1/interview-sessions/{sid}/stage2/fallback-text` | Voice → text, one way, when voice fails. Recorded as `voice_fallback` |
+| WS | `/api/v1/interview-sessions/{sid}/stage2/events` | Same protocol as the Stage 1 socket: `?page=`, `{"type":"events","sent_t_ms","events":[…]}`, `state` replies with `ack_seq`, close codes 4401/4403/4404/4409. `current_task_index` here = the current turn's `order`: when it changes, refetch the state |
+
+`Stage2SessionOut`: `id, application_id, status, reason, mode (voice|text), can_fall_back_to_text, transcript_hint_needed, language, started_at, expires_at, server_now, question_count, answered_count, answer_limit_s, warning_s, limit_s, audio_max_bytes, answer_max_chars, preparing, current_turn`.
+
+`current_turn` (`TurnOut`, null when none is open): `id, order, kind (own_code|bank|follow_up), is_follow_up, text, has_audio, code ({language, code, lines} for questions on the candidate's own code, else null), asked, answer_deadline, think_available`.
+
+`transcript_hint_needed: true` means the mock STT is active, so it cannot hear: show a box for what was said and send it as `transcript_hint`. Real providers ignore this field.
+
+**Socket events** (`payload.turn_id` = current turn; events naming another turn are stored but move no clock):
+- `question_played`: audio finished, or the text was shown when there is no audio. Answer clocks start. The server starts them anyway after `question_max_playback_s`.
+- `speech_activity` (VAD, at most every ~3 s while speaking), `typing_activity` (text box, same pace, no content): activity for the 60/90 s timer. The first one is the answer's start.
+- `think`: the "let me think" button. Resets the timer once per question.
+- `focus_lost`, `focus_gained`, `visibility_hidden`, `visibility_visible`, `fullscreen_exit`, `paste_external_blocked` (no payload needed). Anything else is dropped.
+
+Application status: `stage2_pending` → `stage2_in_progress` → stays there after the session ends until Phase 7's evaluator (`evaluated`), or `stage2_disqualified` (`reason`: `inactivity`, `abandoned`). Session `status`: `completed`, `expired` (time ran out, answers kept), `disqualified`, `abandoned`.
+
+## Reports, ranking, overrides, results (Phase 7)
+The worker (`sweep_reports`, about every 15 s) runs the final Stage 2 evaluation and writes the report when Stage 2 ends, or when an application stops early (`stage1_failed`, `stage1_disqualified`, `stage2_disqualified`). `stage2_in_progress` → `evaluated`.
+
+**HR list:** `GET /api/v1/companies/{cid}/applications` gains `tab` (`ranked`|`excluded`), `min_score` (0–100), `sort` (`recent` default | `score`: best first, unscored last). `excluded` = failed or disqualified, or `evaluated` with Stage 2 below its threshold. `HrApplication` gains `final_score, stage1_score, stage2_score, recommendation, needs_review, report_state (pending|done|failed|null)`. `PATCH …/applications/{aid}` also accepts `status: hired`.
+
+| Method | Path | Response |
+|---|---|---|
+| GET | `/api/v1/companies/{cid}/applications/{aid}/report` | `HrReport`. Works before the report exists (`state: null`) |
+| POST | `/api/v1/companies/{cid}/applications/{aid}/overrides` | `HrReport`. `{field, value, comment (3–2000)}`. `409 report_not_ready`, `422 invalid_override`, `409 not_disqualified` |
+| GET | `/api/v1/companies/{cid}/applications/{aid}/notes` | `[{id, text, author_name, created_at}]`, newest first. Private to the company |
+| POST | `/api/v1/companies/{cid}/applications/{aid}/notes` | 201 note. `{text (1–4000)}` |
+| GET | `/api/v1/companies/{cid}/applications/{aid}/stage2/turns/{tid}/answer-audio` | Audio bytes (audited). `404` if none |
+| GET | `/api/v1/applications/{aid}/results` | `CandidateResults`, the application's candidate only (others → 404) |
+
+Everything under `/companies/…`: company members only, others → 404.
+
+`HrReport = {application_id, candidate_name, vacancy_title, status, state: pending|done|failed|null, needs_review, stage1_score, stage2_score, overall_score, per_skill: [{skill_id, name, percent, stage1_percent, stage2_percent}], summary, strengths: Point[], gaps: Point[], recommendation: strong_yes|yes|maybe|no|null, suspicion_percent, suspicion_label, disqualification_reason, reasons: [{stage, type, severity, at_ms, evidence}] (top 5), signals: [{id, stage, type, severity, at_ms, evidence, created_at}], stage2: null|HrStage2, overrides: [{id, field, old_value, new_value, comment, actor_name, created_at}] (newest first), model, prompt_version}`
+`Point = {text, ref (task_N|turn_N, N = order), quote (answers), lines, excerpt (the cited code, from the stored code)}`
+`HrStage2 = {session_id, status, mode, evaluation_state, disqualification_reason, pass_threshold, passed, turns: [{id, order, kind, is_follow_up, question_text, transcript, answer_source, has_answer_audio, response_latency_ms, silence_ms, flags, percent, needs_review, criteria: [{key, score, rationale, quote}], rationale, confidence, model, prompt_version}]}`
+Stage 1 detail and replay stay on `/stage1` and `/stage1/replay/{task_id}`.
+
+`recommendation` and `overall_score` are `null` for an application stopped before the end. `summary` empty with `needs_review: true`: the writer gave no checked result; scores are still valid. `state: failed`: the job gave up, a person has to look.
+
+**Overrides.** `field`: `stage1_score`, `stage2_score`, `overall_score` (`value` 0–100), `recommendation` (`value` as above), `disqualification` (`value: null` lifts it). A stage score recalculates overall, unless overall was overridden. Effects: `stage1_score` at or above the pass mark on a `stage1_failed` application → `stage2_pending`; `stage2_score` moves the application between tabs; lifting Stage 1 → `stage2_pending`; lifting Stage 2 → `evaluated`, scored on what was answered. Suspicion cannot be overridden and is unchanged by any of these. Later report rewrites keep overrides.
+
+`CandidateResults = {application_id, vacancy_title, status, state: not_ready|pending|done|failed, disqualification_reason, stage1_score, stage2_score, overall_score, per_skill: [{name, percent}], tasks: [{title, hidden_passed, hidden_total, code_review_percent, strengths, weaknesses}], answers: [{order, question_text, percent}], mistakes: [{text, about}], learn_next: [{topic, reason}]}`. Never holds suspicion, signals, recommendation, reference answers, or hidden test names and inputs. Disqualified: `disqualification_reason` is the only integrity fact; word it neutrally.
+
+## Phase 8: verified skills
+
+Rules and reasons: D-130…D-133. No response names the company or application a result came from.
+
+- `GET /candidate/verified-skills` → `[{id, skill_id, name, score, level (basic|intermediate|advanced), verified_at, valid_until, is_public (default false), is_valid}]`. Expired rows stay in this list with `is_valid: false`.
+- `PATCH /candidate/verified-skills/{id}` `{is_public}` → the same row. Someone else's row → `404`.
+- `GET /profiles/{candidate_id}` (no auth) → `PublicProfile = {candidate_id, full_name, headline, country, city, experience_years, skills: [{skill_id, name, score, level, verified_at, valid_until}]}`. Only public, valid skills. `404` when there are none.
+- `GET /companies/{id}/talent?skill_id=…&skill_id=…&min_score=&page=&page_size=` (company member) → `{items: PublicProfile[], total, page, page_size}`. Open-to-work candidates holding every requested skill publicly and validly, each at `min_score` or above. Best average on the requested skills first. Skills to choose from: `GET /skills?q=`.
+- `GET /applications/{id}/interview` adds `reuse: null | {skills: [{skill_id, name, score, level, valid_until, tasks_skipped, questions_skipped}], tasks_total, tasks_skipped, questions_total, questions_skipped}`. Present only before Stage 1 starts and only when something can be skipped.
+- `POST /applications/{id}/interview/stage1` takes an optional body `{reuse: bool = false}`. Nothing is skipped unless `reuse` is true. The choice is final for this application and covers both stages.
+- All tasks covered: the response has `status: completed`, `tasks: []`, `result.passed`, and the application moves to `stage2_pending`.
+- `POST …/interview/stage2/start` with all questions covered: `status: completed`, `current_turn: null`. The report follows from the worker, as after any Stage 2 (poll `GET /applications/{id}/results`).
+- `HrReport` adds `reused_skills: [{skill_id, name, stage (stage1|stage2), percent, verified_at, valid_until}]`; `per_skill[].reused` lists the stages taken from a verified skill. `CandidateResults.per_skill[].reused` is a boolean.

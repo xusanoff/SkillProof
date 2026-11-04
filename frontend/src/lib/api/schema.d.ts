@@ -175,6 +175,40 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/candidate/verified-skills': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Verified Skills */
+    get: operations['list_verified_skills_api_v1_candidate_verified_skills_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/candidate/verified-skills/{verified_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Verified Skill */
+    patch: operations['update_verified_skill_api_v1_candidate_verified_skills__verified_id__patch'];
+    trace?: never;
+  };
   '/api/v1/candidate/profile': {
     parameters: {
       query?: never;
@@ -428,6 +462,40 @@ export interface paths {
     };
     /** List Profession Areas */
     get: operations['list_profession_areas_api_v1_profession_areas_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/profiles/{candidate_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Public Profile */
+    get: operations['public_profile_api_v1_profiles__candidate_id__get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/companies/{company_id}/talent': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Search Talent */
+    get: operations['search_talent_api_v1_companies__company_id__talent_get'];
     put?: never;
     post?: never;
     delete?: never;
@@ -1116,6 +1184,180 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/companies/{company_id}/applications/{application_id}/report': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Hr Report */
+    get: operations['hr_report_api_v1_companies__company_id__applications__application_id__report_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/companies/{company_id}/applications/{application_id}/overrides': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Hr Override */
+    post: operations['hr_override_api_v1_companies__company_id__applications__application_id__overrides_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/companies/{company_id}/applications/{application_id}/notes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Hr Notes */
+    get: operations['hr_notes_api_v1_companies__company_id__applications__application_id__notes_get'];
+    put?: never;
+    /** Hr Add Note */
+    post: operations['hr_add_note_api_v1_companies__company_id__applications__application_id__notes_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/applications/{application_id}/results': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Candidate Results */
+    get: operations['candidate_results_api_v1_applications__application_id__results_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/applications/{application_id}/interview/stage2/start': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Start Stage2 */
+    post: operations['start_stage2_api_v1_applications__application_id__interview_stage2_start_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/interview-sessions/{session_id}/stage2': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get Stage2
+     * @description Also resumes: if the last answer has no next question yet, this builds it.
+     */
+    get: operations['get_stage2_api_v1_interview_sessions__session_id__stage2_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/interview-sessions/{session_id}/stage2/turns/{turn_id}/answer': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Answer Turn */
+    post: operations['answer_turn_api_v1_interview_sessions__session_id__stage2_turns__turn_id__answer_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/interview-sessions/{session_id}/stage2/turns/{turn_id}/question-audio': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Question Audio */
+    get: operations['question_audio_api_v1_interview_sessions__session_id__stage2_turns__turn_id__question_audio_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/companies/{company_id}/applications/{application_id}/stage2/turns/{turn_id}/answer-audio': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Hr Answer Audio */
+    get: operations['hr_answer_audio_api_v1_companies__company_id__applications__application_id__stage2_turns__turn_id__answer_audio_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/interview-sessions/{session_id}/stage2/fallback-text': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Fall Back To Text */
+    post: operations['fall_back_to_text_api_v1_interview_sessions__session_id__stage2_fallback_text_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1295,6 +1537,17 @@ export interface components {
        */
       is_mandatory: boolean;
     };
+    /** Body_answer_turn_api_v1_interview_sessions__session_id__stage2_turns__turn_id__answer_post */
+    Body_answer_turn_api_v1_interview_sessions__session_id__stage2_turns__turn_id__answer_post: {
+      /** Text */
+      text?: string | null;
+      /** Transcript Hint */
+      transcript_hint?: string | null;
+      /** Silence Ms */
+      silence_ms?: number | null;
+      /** Audio */
+      audio?: string | null;
+    };
     /** Body_upload_logo_api_v1_companies__company_id__logo_post */
     Body_upload_logo_api_v1_companies__company_id__logo_post: {
       /** File */
@@ -1304,6 +1557,29 @@ export interface components {
     Body_upload_resume_api_v1_candidate_profile_resume_post: {
       /** File */
       file: string;
+    };
+    /** CandidateAnswer */
+    CandidateAnswer: {
+      /** Order */
+      order: number;
+      /** Question Text */
+      question_text: string;
+      /** Percent */
+      percent: number | null;
+    };
+    /** CandidateLearnItem */
+    CandidateLearnItem: {
+      /** Topic */
+      topic: string;
+      /** Reason */
+      reason: string;
+    };
+    /** CandidateMistake */
+    CandidateMistake: {
+      /** Text */
+      text: string;
+      /** About */
+      about: string;
     };
     /** CandidateProfileOut */
     CandidateProfileOut: {
@@ -1359,6 +1635,71 @@ export interface components {
        * @default true
        */
       open_to_work: boolean;
+    };
+    /**
+     * CandidateResults
+     * @description No suspicion, signals, recommendation, reference answers or hidden test details (§6.5). The
+     *     only integrity fact here is the reason for a disqualification.
+     */
+    CandidateResults: {
+      /**
+       * Application Id
+       * Format: uuid
+       */
+      application_id: string;
+      /** Vacancy Title */
+      vacancy_title: string;
+      status: components['schemas']['ApplicationStatus'];
+      /**
+       * State
+       * @enum {string}
+       */
+      state: 'not_ready' | 'pending' | 'done' | 'failed';
+      /** Disqualification Reason */
+      disqualification_reason?: string | null;
+      /** Stage1 Score */
+      stage1_score?: number | null;
+      /** Stage2 Score */
+      stage2_score?: number | null;
+      /** Overall Score */
+      overall_score?: number | null;
+      /**
+       * Per Skill
+       * @default []
+       */
+      per_skill: components['schemas']['CandidateSkill'][];
+      /**
+       * Tasks
+       * @default []
+       */
+      tasks: components['schemas']['Stage1TaskResult'][];
+      /**
+       * Answers
+       * @default []
+       */
+      answers: components['schemas']['CandidateAnswer'][];
+      /**
+       * Mistakes
+       * @default []
+       */
+      mistakes: components['schemas']['CandidateMistake'][];
+      /**
+       * Learn Next
+       * @default []
+       */
+      learn_next: components['schemas']['CandidateLearnItem'][];
+    };
+    /** CandidateSkill */
+    CandidateSkill: {
+      /** Name */
+      name: string;
+      /** Percent */
+      percent: number;
+      /**
+       * Reused
+       * @default false
+       */
+      reused: boolean;
     };
     /** CodeIn */
     CodeIn: {
@@ -1509,6 +1850,10 @@ export interface components {
       | 'visibility_visible'
       | 'idle_start'
       | 'idle_end'
+      | 'question_played'
+      | 'speech_activity'
+      | 'typing_activity'
+      | 'think'
       | 'editor_reset';
     /**
      * EmploymentType
@@ -1530,6 +1875,20 @@ export interface components {
      * @enum {string}
      */
     ExperienceLevel: 'no_experience' | 'between_1_3' | 'between_3_6' | 'more_than_6';
+    /** ExplainedSignal */
+    ExplainedSignal: {
+      /** Stage */
+      stage: string;
+      /** Type */
+      type: string;
+      severity: components['schemas']['SignalSeverity'];
+      /** At Ms */
+      at_ms: number | null;
+      /** Evidence */
+      evidence: {
+        [key: string]: unknown;
+      };
+    };
     /** FacetValue */
     FacetValue: {
       /** Value */
@@ -1660,6 +2019,21 @@ export interface components {
       suspicion_label?: string | null;
       /** Disqualification Reason */
       disqualification_reason?: string | null;
+      /** Final Score */
+      final_score?: number | null;
+      /** Stage1 Score */
+      stage1_score?: number | null;
+      /** Stage2 Score */
+      stage2_score?: number | null;
+      /** Recommendation */
+      recommendation?: string | null;
+      /**
+       * Needs Review
+       * @default false
+       */
+      needs_review: boolean;
+      /** Report State */
+      report_state?: string | null;
       /** Cover Note */
       cover_note: string | null;
       /**
@@ -1692,7 +2066,7 @@ export interface components {
        * Status
        * @enum {string}
        */
-      status: 'applied' | 'shortlisted' | 'rejected';
+      status: 'applied' | 'shortlisted' | 'rejected' | 'hired';
     };
     /** HrCandidate */
     HrCandidate: {
@@ -1721,6 +2095,60 @@ export interface components {
       currency: string | null;
       /** Has Resume */
       has_resume: boolean;
+    };
+    /** HrReport */
+    HrReport: {
+      /**
+       * Application Id
+       * Format: uuid
+       */
+      application_id: string;
+      /** Candidate Name */
+      candidate_name: string;
+      /** Vacancy Title */
+      vacancy_title: string;
+      status: components['schemas']['ApplicationStatus'];
+      state: components['schemas']['EvaluationState'] | null;
+      /** Needs Review */
+      needs_review: boolean;
+      /** Stage1 Score */
+      stage1_score: number | null;
+      /** Stage2 Score */
+      stage2_score: number | null;
+      /** Overall Score */
+      overall_score: number | null;
+      /** Per Skill */
+      per_skill: components['schemas']['SkillScore'][];
+      /**
+       * Reused Skills
+       * @default []
+       */
+      reused_skills: components['schemas']['ReusedSkillOut'][];
+      /** Summary */
+      summary: string;
+      /** Strengths */
+      strengths: components['schemas']['ReportPoint'][];
+      /** Gaps */
+      gaps: components['schemas']['ReportPoint'][];
+      /** Recommendation */
+      recommendation: string | null;
+      /** Suspicion Percent */
+      suspicion_percent: number | null;
+      /** Suspicion Label */
+      suspicion_label: string | null;
+      /** Disqualification Reason */
+      disqualification_reason: string | null;
+      /** Reasons */
+      reasons: components['schemas']['ExplainedSignal'][];
+      /** Signals */
+      signals: components['schemas']['TimelineSignal'][];
+      stage2: components['schemas']['HrStage2'] | null;
+      /** Overrides */
+      overrides: components['schemas']['OverrideOut'][];
+      /** Model */
+      model: string;
+      /** Prompt Version */
+      prompt_version: string;
     };
     /** HrStage1Report */
     HrStage1Report: {
@@ -1765,6 +2193,26 @@ export interface components {
       /** Tasks */
       tasks: components['schemas']['HrTaskReport'][];
     };
+    /** HrStage2 */
+    HrStage2: {
+      /**
+       * Session Id
+       * Format: uuid
+       */
+      session_id: string;
+      status: components['schemas']['SessionStatus'];
+      /** Mode */
+      mode: string;
+      evaluation_state: components['schemas']['EvaluationState'];
+      /** Disqualification Reason */
+      disqualification_reason: string | null;
+      /** Pass Threshold */
+      pass_threshold: number | null;
+      /** Passed */
+      passed: boolean | null;
+      /** Turns */
+      turns: components['schemas']['HrTurn'][];
+    };
     /** HrTaskReport */
     HrTaskReport: {
       /**
@@ -1806,6 +2254,50 @@ export interface components {
        * @default 0
        */
       time_ms: number;
+    };
+    /** HrTurn */
+    HrTurn: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Order */
+      order: number;
+      /** Kind */
+      kind: string;
+      /** Is Follow Up */
+      is_follow_up: boolean;
+      /** Question Text */
+      question_text: string;
+      /** Transcript */
+      transcript: string | null;
+      /** Answer Source */
+      answer_source: string | null;
+      /** Has Answer Audio */
+      has_answer_audio: boolean;
+      /** Response Latency Ms */
+      response_latency_ms: number | null;
+      /** Silence Ms */
+      silence_ms: number | null;
+      /** Flags */
+      flags: {
+        [key: string]: unknown;
+      };
+      /** Percent */
+      percent: number | null;
+      /** Needs Review */
+      needs_review: boolean;
+      /** Criteria */
+      criteria: components['schemas']['TurnCriterion'][];
+      /** Rationale */
+      rationale: string;
+      /** Confidence */
+      confidence: number | null;
+      /** Model */
+      model: string;
+      /** Prompt Version */
+      prompt_version: string;
     };
     /** HrVacancy */
     HrVacancy: {
@@ -1909,6 +2401,17 @@ export interface components {
       blocked_reason: string | null;
       warmup: components['schemas']['WarmupOut'] | null;
       session: components['schemas']['SessionOut'] | null;
+      /**
+       * Stage2 Available
+       * @default false
+       */
+      stage2_available: boolean;
+      /** Stage2 Session Id */
+      stage2_session_id?: string | null;
+      stage2_status?: components['schemas']['SessionStatus'] | null;
+      /** Stage2 Mode */
+      stage2_mode?: string | null;
+      reuse?: components['schemas']['ReuseOfferOut'] | null;
     };
     /** InvitationCompany */
     InvitationCompany: {
@@ -2055,6 +2558,64 @@ export interface components {
      * @enum {string}
      */
     MemberRole: 'owner' | 'hr';
+    /** NoteIn */
+    NoteIn: {
+      /** Text */
+      text: string;
+    };
+    /** NoteOut */
+    NoteOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Text */
+      text: string;
+      /** Author Name */
+      author_name: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** OverrideIn */
+    OverrideIn: {
+      /**
+       * Field
+       * @enum {string}
+       */
+      field:
+        'stage1_score' | 'stage2_score' | 'overall_score' | 'recommendation' | 'disqualification';
+      /** Value */
+      value?: number | string | null;
+      /** Comment */
+      comment: string;
+    };
+    /** OverrideOut */
+    OverrideOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Field */
+      field: string;
+      /** Old Value */
+      old_value: string | null;
+      /** New Value */
+      new_value: string | null;
+      /** Comment */
+      comment: string;
+      /** Actor Name */
+      actor_name: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
     /** Page[QuestionOut] */
     Page_QuestionOut_: {
       /** Items */
@@ -2085,6 +2646,26 @@ export interface components {
       names: {
         [key: string]: string;
       };
+    };
+    /** PublicProfile */
+    PublicProfile: {
+      /**
+       * Candidate Id
+       * Format: uuid
+       */
+      candidate_id: string;
+      /** Full Name */
+      full_name: string;
+      /** Headline */
+      headline: string | null;
+      /** Country */
+      country: string | null;
+      /** City */
+      city: string | null;
+      /** Experience Years */
+      experience_years: number | null;
+      /** Skills */
+      skills: components['schemas']['SkillBadge'][];
     };
     /** QuestionIn */
     QuestionIn: {
@@ -2265,6 +2846,28 @@ export interface components {
       /** Events */
       events: components['schemas']['ReplayEvent'][];
     };
+    /** ReportPoint */
+    ReportPoint: {
+      /** Text */
+      text: string;
+      /** Ref */
+      ref: string;
+      /**
+       * Quote
+       * @default
+       */
+      quote: string;
+      /**
+       * Lines
+       * @default []
+       */
+      lines: number[];
+      /**
+       * Excerpt
+       * @default
+       */
+      excerpt: string;
+    };
     /** ResetPasswordIn */
     ResetPasswordIn: {
       /** Token */
@@ -2285,6 +2888,69 @@ export interface components {
        * Format: date-time
        */
       uploaded_at: string;
+    };
+    /**
+     * ReuseOfferOut
+     * @description The choice on the rules screen: what this application can skip.
+     */
+    ReuseOfferOut: {
+      /** Skills */
+      skills: components['schemas']['ReuseSkillOut'][];
+      /** Tasks Total */
+      tasks_total: number;
+      /** Tasks Skipped */
+      tasks_skipped: number;
+      /** Questions Total */
+      questions_total: number;
+      /** Questions Skipped */
+      questions_skipped: number;
+    };
+    /** ReuseSkillOut */
+    ReuseSkillOut: {
+      /**
+       * Skill Id
+       * Format: uuid
+       */
+      skill_id: string;
+      /** Name */
+      name: string;
+      /** Score */
+      score: number;
+      /** Level */
+      level: string;
+      /**
+       * Valid Until
+       * Format: date-time
+       */
+      valid_until: string;
+      /** Tasks Skipped */
+      tasks_skipped: number;
+      /** Questions Skipped */
+      questions_skipped: number;
+    };
+    /** ReusedSkillOut */
+    ReusedSkillOut: {
+      /**
+       * Skill Id
+       * Format: uuid
+       */
+      skill_id: string;
+      /** Name */
+      name: string;
+      /** Stage */
+      stage: string;
+      /** Percent */
+      percent: number;
+      /**
+       * Verified At
+       * Format: date-time
+       */
+      verified_at: string;
+      /**
+       * Valid Until
+       * Format: date-time
+       */
+      valid_until: string;
     };
     /** ReviewOut */
     ReviewOut: {
@@ -2468,6 +3134,33 @@ export interface components {
      * @enum {string}
      */
     SignalSeverity: 'info' | 'low' | 'medium' | 'high' | 'disqualifying';
+    /**
+     * SkillBadge
+     * @description What others may see. Never which company or application it came from.
+     */
+    SkillBadge: {
+      /**
+       * Skill Id
+       * Format: uuid
+       */
+      skill_id: string;
+      /** Name */
+      name: string;
+      /** Score */
+      score: number;
+      /** Level */
+      level: string;
+      /**
+       * Verified At
+       * Format: date-time
+       */
+      verified_at: string;
+      /**
+       * Valid Until
+       * Format: date-time
+       */
+      valid_until: string;
+    };
     /** SkillOut */
     SkillOut: {
       /**
@@ -2481,6 +3174,27 @@ export interface components {
       slug: string;
       /** Category */
       category: string;
+    };
+    /** SkillScore */
+    SkillScore: {
+      /**
+       * Skill Id
+       * Format: uuid
+       */
+      skill_id: string;
+      /** Name */
+      name: string;
+      /** Percent */
+      percent: number;
+      /** Stage1 Percent */
+      stage1_percent?: number | null;
+      /** Stage2 Percent */
+      stage2_percent?: number | null;
+      /**
+       * Reused
+       * @default []
+       */
+      reused: string[];
     };
     /** SkillTag */
     SkillTag: {
@@ -2559,6 +3273,64 @@ export interface components {
       /** Pass Threshold */
       pass_threshold?: number | null;
     };
+    /** Stage2SessionOut */
+    Stage2SessionOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Application Id
+       * Format: uuid
+       */
+      application_id: string;
+      status: components['schemas']['SessionStatus'];
+      /** Reason */
+      reason: string | null;
+      /** Mode */
+      mode: string;
+      /** Can Fall Back To Text */
+      can_fall_back_to_text: boolean;
+      /** Transcript Hint Needed */
+      transcript_hint_needed: boolean;
+      /** Language */
+      language: string;
+      /** Started At */
+      started_at: string | null;
+      /** Expires At */
+      expires_at: string | null;
+      /**
+       * Server Now
+       * Format: date-time
+       */
+      server_now: string;
+      /** Question Count */
+      question_count: number;
+      /** Answered Count */
+      answered_count: number;
+      /** Answer Limit S */
+      answer_limit_s: number;
+      /** Warning S */
+      warning_s: number;
+      /** Limit S */
+      limit_s: number;
+      /** Audio Max Bytes */
+      audio_max_bytes: number;
+      /** Answer Max Chars */
+      answer_max_chars: number;
+      /** Preparing */
+      preparing: boolean;
+      current_turn: components['schemas']['TurnOut'] | null;
+    };
+    /** StartStage1In */
+    StartStage1In: {
+      /**
+       * Reuse
+       * @default false
+       */
+      reuse: boolean;
+    };
     /** Suggestion */
     Suggestion: {
       /**
@@ -2582,6 +3354,17 @@ export interface components {
       evidence: {
         [key: string]: unknown;
       };
+    };
+    /** TalentPage */
+    TalentPage: {
+      /** Items */
+      items: components['schemas']['PublicProfile'][];
+      /** Total */
+      total: number;
+      /** Page */
+      page: number;
+      /** Page Size */
+      page_size: number;
     };
     /** TaskIn */
     TaskIn: {
@@ -2752,10 +3535,82 @@ export interface components {
        */
       time_ms: number;
     };
+    /** TimelineSignal */
+    TimelineSignal: {
+      /** Stage */
+      stage: string;
+      /** Type */
+      type: string;
+      severity: components['schemas']['SignalSeverity'];
+      /** At Ms */
+      at_ms: number | null;
+      /** Evidence */
+      evidence: {
+        [key: string]: unknown;
+      };
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
     /** TokenIn */
     TokenIn: {
       /** Token */
       token: string;
+    };
+    /** TurnCodeOut */
+    TurnCodeOut: {
+      /** Language */
+      language: string;
+      /** Code */
+      code: string;
+      /** Lines */
+      lines: number[];
+    };
+    /** TurnCriterion */
+    TurnCriterion: {
+      /** Key */
+      key: string;
+      /** Score */
+      score: number;
+      /** Rationale */
+      rationale: string;
+      /**
+       * Quote
+       * @default
+       */
+      quote: string;
+    };
+    /** TurnOut */
+    TurnOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Order */
+      order: number;
+      /** Kind */
+      kind: string;
+      /** Is Follow Up */
+      is_follow_up: boolean;
+      /** Text */
+      text: string;
+      /** Has Audio */
+      has_audio: boolean;
+      code: components['schemas']['TurnCodeOut'] | null;
+      /** Asked */
+      asked: boolean;
+      /** Answer Deadline */
+      answer_deadline: string | null;
+      /** Think Available */
+      think_available: boolean;
     };
     /**
      * UserRole
@@ -2997,6 +3852,44 @@ export interface components {
      * @enum {string}
      */
     VerificationStatus: 'not_checked' | 'passed' | 'flagged' | 'sandbox_pending';
+    /** VerifiedSkillOut */
+    VerifiedSkillOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /**
+       * Skill Id
+       * Format: uuid
+       */
+      skill_id: string;
+      /** Name */
+      name: string;
+      /** Score */
+      score: number;
+      /** Level */
+      level: string;
+      /**
+       * Verified At
+       * Format: date-time
+       */
+      verified_at: string;
+      /**
+       * Valid Until
+       * Format: date-time
+       */
+      valid_until: string;
+      /** Is Public */
+      is_public: boolean;
+      /** Is Valid */
+      is_valid: boolean;
+    };
+    /** VerifiedSkillUpdate */
+    VerifiedSkillUpdate: {
+      /** Is Public */
+      is_public: boolean;
+    };
     /** Viewer */
     Viewer: {
       /** Is Saved */
@@ -3316,6 +4209,61 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  list_verified_skills_api_v1_candidate_verified_skills_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VerifiedSkillOut'][];
+        };
+      };
+    };
+  };
+  update_verified_skill_api_v1_candidate_verified_skills__verified_id__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        verified_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VerifiedSkillUpdate'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VerifiedSkillOut'];
+        };
       };
       /** @description Validation Error */
       422: {
@@ -3934,6 +4882,73 @@ export interface operations {
       };
     };
   };
+  public_profile_api_v1_profiles__candidate_id__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        candidate_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PublicProfile'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  search_talent_api_v1_companies__company_id__talent_get: {
+    parameters: {
+      query?: {
+        skill_id?: string[] | null;
+        min_score?: number | null;
+        page?: number;
+        page_size?: number;
+      };
+      header?: never;
+      path: {
+        company_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['TalentPage'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
   list_skills_api_v1_skills_get: {
     parameters: {
       query?: {
@@ -4469,6 +5484,9 @@ export interface operations {
       query?: {
         vacancy_id?: string | null;
         status?: components['schemas']['ApplicationStatus'] | null;
+        tab?: ('ranked' | 'excluded') | null;
+        min_score?: number | null;
+        sort?: 'recent' | 'score';
         page?: number;
         page_size?: number;
       };
@@ -5650,7 +6668,11 @@ export interface operations {
       };
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['StartStage1In'] | null;
+      };
+    };
     responses: {
       /** @description Successful Response */
       201: {
@@ -5827,6 +6849,363 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['ReplayOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  hr_report_api_v1_companies__company_id__applications__application_id__report_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        company_id: string;
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HrReport'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  hr_override_api_v1_companies__company_id__applications__application_id__overrides_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        company_id: string;
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OverrideIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HrReport'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  hr_notes_api_v1_companies__company_id__applications__application_id__notes_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        company_id: string;
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NoteOut'][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  hr_add_note_api_v1_companies__company_id__applications__application_id__notes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        company_id: string;
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['NoteIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NoteOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  candidate_results_api_v1_applications__application_id__results_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CandidateResults'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  start_stage2_api_v1_applications__application_id__interview_stage2_start_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Stage2SessionOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  get_stage2_api_v1_interview_sessions__session_id__stage2_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Stage2SessionOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  answer_turn_api_v1_interview_sessions__session_id__stage2_turns__turn_id__answer_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+        turn_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: {
+      content: {
+        'multipart/form-data': components['schemas']['Body_answer_turn_api_v1_interview_sessions__session_id__stage2_turns__turn_id__answer_post'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Stage2SessionOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  question_audio_api_v1_interview_sessions__session_id__stage2_turns__turn_id__question_audio_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+        turn_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  hr_answer_audio_api_v1_companies__company_id__applications__application_id__stage2_turns__turn_id__answer_audio_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        company_id: string;
+        application_id: string;
+        turn_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  fall_back_to_text_api_v1_interview_sessions__session_id__stage2_fallback_text_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        session_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Stage2SessionOut'];
         };
       };
       /** @description Validation Error */

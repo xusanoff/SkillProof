@@ -6,6 +6,7 @@ import {
   CircleHelp,
   Code2,
   LayoutDashboard,
+  Search,
   Users,
   UsersRound,
 } from 'lucide-react';
@@ -24,6 +25,7 @@ const NAV = [
   { href: '/hr/questions', key: 'questions', icon: CircleHelp },
   { href: '/hr/tasks', key: 'tasks', icon: Code2 },
   { href: '/hr/candidates', key: 'candidates', icon: UsersRound },
+  { href: '/hr/talent', key: 'talent', icon: Search },
 ] as const;
 
 /**
@@ -38,8 +40,8 @@ export function HrShell({ children }: { children: ReactNode }) {
   if (!active) return <>{children}</>;
 
   return (
-    <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10 lg:py-10">
-      <aside className="grid content-start gap-4 lg:sticky lg:top-24">
+    <div className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10 lg:py-10">
+      <aside className="grid grid-cols-[minmax(0,1fr)] content-start gap-4 lg:sticky lg:top-24">
         {companies.length > 1 ? (
           <div className="grid gap-1.5">
             <label htmlFor="company-switcher" className="text-sm text-muted">

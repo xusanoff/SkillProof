@@ -18,13 +18,17 @@ from app.models.interview import (
     Evaluation,
     IntegritySignal,
     InterviewSession,
+    InterviewTurn,
     RulesAcceptance,
 )
+from app.models.report import ApplicationNote, HrOverride, SessionReport
 from app.models.user import AuthToken, User
 from app.models.vacancy import Application, SavedVacancy, Vacancy, VacancySkill
+from app.models.verified_skill import VerifiedSkill
 
 __all__ = [
     "Application",
+    "ApplicationNote",
     "Assessment",
     "AssessmentQuestion",
     "AuditLog",
@@ -38,16 +42,20 @@ __all__ = [
     "EditorEvent",
     "Evaluation",
     "GenerationJob",
+    "HrOverride",
     "IntegritySignal",
     "InterviewSession",
+    "InterviewTurn",
     "PracticalTask",
     "ProfessionArea",
     "Question",
     "Region",
     "RulesAcceptance",
     "SavedVacancy",
+    "SessionReport",
     "Skill",
     "User",
     "Vacancy",
     "VacancySkill",
+    "VerifiedSkill",
 ]

@@ -61,6 +61,9 @@ export function ResultPanel({ session }: { session: Session }) {
         </p>
       </div>
       <p className="max-w-prose">{passed ? t('nextStage2') : t('notPassedBody')}</p>
+      {r.tasks.length === 0 ? (
+        <p className="max-w-prose text-sm text-muted">{t('coveredByVerified')}</p>
+      ) : null}
       <ul className="grid gap-3">
         {r.tasks.map((task, i) => (
           <li key={i} className="grid gap-2 rounded-lg border border-border p-3">

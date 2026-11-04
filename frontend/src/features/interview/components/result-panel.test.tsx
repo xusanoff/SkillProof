@@ -48,7 +48,9 @@ describe('ResultPanel', () => {
     expect(screen.getByText("1-bosqichdan o'tdingiz")).toBeInTheDocument();
     expect(screen.getByText('Yashirin testlar: 3 / 4')).toBeInTheDocument();
     expect(screen.getByText('Aniq kod')).toBeInTheDocument();
-    expect(screen.getByText(/2-bosqich \(ovozli suhbat\) tez orada/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/2-bosqich \(AI bilan og.zaki suhbat\) sizni kutmoqda/),
+    ).toBeInTheDocument();
   });
   it('done and not passed: gentle wording, no Stage 2 promise', () => {
     renderWithProviders(
@@ -63,7 +65,9 @@ describe('ResultPanel', () => {
       />,
     );
     expect(screen.getByText("Bu safar o'tish chegarasiga yetmadi")).toBeInTheDocument();
-    expect(screen.queryByText(/2-bosqich \(ovozli suhbat\) tez orada/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/2-bosqich \(AI bilan og.zaki suhbat\) sizni kutmoqda/),
+    ).not.toBeInTheDocument();
     expect(screen.getByText('Chegaraviy holatlar')).toBeInTheDocument();
   });
   it('shows nothing for sessions that have no result (in progress, disqualified)', () => {
@@ -71,5 +75,13 @@ describe('ResultPanel', () => {
       <ResultPanel session={session(null, 'disqualified')} />,
     );
     expect(container).toBeEmptyDOMElement();
+  });
+  it('done with no tasks: says verified skills covered them', () => {
+    renderWithProviders(
+      <ResultPanel
+        session={session({ state: 'done', score_percent: 90, passed: true, tasks: [] })}
+      />,
+    );
+    expect(screen.getByText(/tasdiqlangan ko'nikmalaringiz bilan qoplangan/)).toBeInTheDocument();
   });
 });

@@ -8,6 +8,12 @@ import { renderWithProviders } from '@/test/render';
 import type { InterviewState } from '../model';
 import { RulesStep } from './rules-step';
 
+vi.mock(
+  '@/i18n/navigation',
+  async () => (await import('@/test/navigation-mock')).i18nNavigationMock,
+);
+vi.mock('next/navigation', async () => (await import('@/test/navigation-mock')).nextNavigationMock);
+
 const state = {
   application_id: 'a-1',
   application_status: 'applied',

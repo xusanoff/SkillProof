@@ -24,19 +24,33 @@ import { TaskWorkspace } from './task-workspace';
 import { useStage1Telemetry } from './use-stage1-telemetry';
 
 /** Intro with an explicit start (a click is also the gesture fullscreen needs), then the live run. */
-export function Stage1Step({ state }: { state: InterviewState }) {
+export function Stage1Step({
+  state,
+  reuse,
+  covered = false,
+}: {
+  state: InterviewState;
+  /** The candidate's choice; `undefined` when there was no offer (nothing is sent). */
+  reuse?: boolean;
+  /** The offer covers every task: no editor will open. */
+  covered?: boolean;
+}) {
   const t = useTranslations('interview.stage1');
   const errorText = useErrorText();
   const start = useStartStage1(state.application_id);
   const session = state.session ?? start.data ?? null;
 
+  // All tasks covered: the server already finished Stage 1, there is no editor, socket or warm-up.
+  if (session && session.status !== 'in_progress') {
+    return <StatusScreen session={session} application={state} />;
+  }
   if (session) return <Stage1Run initial={session} application={state} />;
   return (
     <section aria-labelledby="s1-h" className="mx-auto grid max-w-prose gap-5">
       <h1 id="s1-h" className="text-2xl font-semibold">
         {t('introTitle')}
       </h1>
-      <p>{t('introBody')}</p>
+      <p>{covered ? t('coveredBody') : t('introBody')}</p>
       {start.isError ? (
         <Notice tone="danger" role="alert">
           {errorText(start.error)}
@@ -48,8 +62,8 @@ export function Stage1Step({ state }: { state: InterviewState }) {
           className="min-h-11 px-6"
           disabled={start.isPending}
           onClick={() => {
-            void enterFullscreen();
-            start.mutate();
+            if (!covered) void enterFullscreen();
+            start.mutate(reuse === undefined ? undefined : { reuse });
           }}
         >
           {start.isPending ? t('starting') : t('begin')}

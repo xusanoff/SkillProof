@@ -33,6 +33,7 @@ from app.models.enums import (
 from app.sandbox.client import Limits, Sandbox, run_tests
 from app.services.assessments import effective_thresholds
 from app.services.interview import sync_session
+from app.services.verified_skills import blended
 
 logger = logging.getLogger(__name__)
 
@@ -200,6 +201,7 @@ async def _score(
         s.score_percent = round(
             (weight_h * s.hidden_tests_percent + weight_r * s.code_review_percent) / 100, 1
         )
+    s.score_percent = blended(s.score_percent, total, s.config.get("reused")) or 0.0
     s.passed = s.score_percent >= t.stage1.pass_threshold
     app.status = ApplicationStatus.stage2_pending if s.passed else ApplicationStatus.stage1_failed
 

@@ -8,6 +8,7 @@ import {
   RESULT_POLL_MS,
   type CodeIn,
   type InterviewState,
+  type StartBody,
   type Session,
 } from './model';
 
@@ -62,15 +63,20 @@ export function useStartStage1(aid: string) {
   const api = useApi();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: () =>
+    mutationFn: (body?: StartBody) =>
       unwrap(
         api.POST('/api/v1/applications/{application_id}/interview/stage1', {
           params: { path: { application_id: aid } },
+          ...(body ? { body } : {}),
         }),
       ),
     onSuccess: (session) => {
       qc.setQueryData(interviewKeys.session(session.id), session);
       qc.setQueryData<InterviewState>(interviewKeys.state(aid), (s) => (s ? { ...s, session } : s));
+      // Fully covered by verified skills: Stage 2 becomes available, the server says so.
+      if (session.status === 'completed') {
+        void qc.invalidateQueries({ queryKey: interviewKeys.state(aid) });
+      }
     },
   });
 }

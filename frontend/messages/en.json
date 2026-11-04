@@ -42,7 +42,9 @@
       "company": "Company",
       "team": "Team",
       "search": "Search",
-      "profile": "Profile"
+      "profile": "Profile",
+      "skills": "Verified skills",
+      "talent": "Talent search"
     }
   },
   "locale": {
@@ -171,7 +173,10 @@
     "email_not_verified": "Confirm your email before applying.",
     "generation_in_progress": "AI generation is already running for this vacancy. Wait for it to finish.",
     "queue_unavailable": "The AI queue is unavailable right now. Try again in a moment.",
-    "unknown_items": "One of the selected questions or tasks was not found. Refresh the page and pick again."
+    "unknown_items": "One of the selected questions or tasks was not found. Refresh the page and pick again.",
+    "report_not_ready": "The report is not ready yet, so it cannot be changed. Try again in a moment.",
+    "invalid_override": "This value is not allowed for the chosen field.",
+    "not_disqualified": "This application is not disqualified."
   },
   "errorPage": {
     "title": "Something went wrong",
@@ -440,7 +445,8 @@
       "vacancies": "Jobs",
       "candidates": "Candidates",
       "questions": "Questions",
-      "tasks": "Tasks"
+      "tasks": "Tasks",
+      "talent": "Talent search"
     },
     "home": {
       "metaTitle": "Employer dashboard",
@@ -654,7 +660,8 @@
     "applyHint": "Applications are verified with a two-stage skill interview.",
     "similarTitle": "Similar vacancies",
     "metaTitle": "{title} — {company}",
-    "metaFallback": "Vacancy"
+    "metaFallback": "Vacancy",
+    "interviewNote": "On SkillProof every application is verified with a two-stage skill interview: a practical task and an oral interview. You start it from My applications once you have applied."
   },
   "apply": {
     "title": "Apply for the vacancy",
@@ -710,7 +717,10 @@
     "findVacancies": "Browse vacancies",
     "interviewStart": "Start the interview",
     "interviewResume": "Resume the interview",
-    "interviewResult": "View the result"
+    "interviewResult": "View the result",
+    "interviewStage2Start": "Start Stage 2",
+    "interviewStage2Open": "Open the spoken interview",
+    "viewResults": "My results"
   },
   "saved": {
     "title": "Saved",
@@ -820,21 +830,19 @@
   },
   "hrCandidates": {
     "title": "Candidates",
-    "lead": "Applications to your vacancies, newest first.",
+    "lead": "Candidates ranked by test result, best first. Failed and disqualified candidates are in a separate tab.",
     "vacancyFilter": "Vacancy",
     "allVacancies": "All vacancies",
-    "tabsLabel": "Application status",
+    "tabsLabel": "Candidate list",
     "tabs": {
-      "applied": "New",
-      "shortlisted": "Shortlisted",
-      "rejected": "Rejected"
+      "ranked": "Ranking",
+      "excluded": "Failed / disqualified"
     },
     "empty": {
-      "applied": "No new applications",
-      "shortlisted": "No shortlisted candidates",
-      "rejected": "No rejected candidates"
+      "ranked": "No candidates in the ranking yet",
+      "excluded": "No failed or disqualified candidates"
     },
-    "emptyBody": "Pick another vacancy or status.",
+    "emptyBody": "Pick another vacancy, status or minimum score.",
     "total": "Total: {count}",
     "location": "Location",
     "experience": "Experience",
@@ -850,24 +858,36 @@
     "actions": {
       "shortlisted": "Shortlist",
       "rejected": "Reject",
-      "applied": "Move back to new"
+      "applied": "Move back to new",
+      "hired": "Hire"
     },
     "resume": "Download resume",
     "noResume": "No resume uploaded",
-    "scoresLabel": "Interview results",
-    "scoresTitle": "Score and suspicion level",
-    "scoresLater": "Two-stage interview results will appear here in a later release.",
-    "stage1": {
-      "label": "Stage 1",
-      "title": "Stage 1",
+    "statusFilter": "Status",
+    "allStatuses": "All statuses",
+    "minScore": "Minimum score, %",
+    "excludedLead": "These candidates failed a stage, were disqualified, or scored below the Stage 2 threshold. They are not ranked.",
+    "scores": {
+      "label": "Interview results",
+      "overall": "Overall",
+      "stage1": "Stage 1",
+      "stage2": "Stage 2",
       "level": {
         "low": "Low",
         "medium": "Medium",
         "high": "High"
       },
       "evaluating": "Being evaluated",
-      "notStarted": "Stage 1 not started",
-      "open": "Report and replay"
+      "notStarted": "Interview not started",
+      "recommendationLabel": "Recommendation",
+      "recommendation": {
+        "strong_yes": "Strong yes",
+        "yes": "Yes",
+        "maybe": "Maybe",
+        "no": "No"
+      },
+      "needsReview": "Needs review",
+      "open": "Open report"
     }
   },
   "hrBank": {
@@ -1145,8 +1165,6 @@
       "browserHint": "Use a recent version of Chrome, Edge, Firefox or Safari.",
       "fullscreenHint": "Fullscreen is recommended, not required.",
       "enterFullscreen": "Go fullscreen",
-      "micTitle": "Microphone test",
-      "micStub": "The microphone test isn't available yet: it arrives with Stage 2 (the voice conversation). Stage 1 needs no microphone.",
       "browserBlocked": "Your browser lacks required features. Open the page in another browser.",
       "continue": "Continue"
     },
@@ -1204,7 +1222,8 @@
       "inactiveBody": "Keep typing, otherwise the interview ends automatically.",
       "inactiveCountdown": "{s} seconds left.",
       "backToFullscreen": "Back to fullscreen",
-      "fullscreenLeft": "You left fullscreen. This is recorded. You can continue, but returning to fullscreen is recommended."
+      "fullscreenLeft": "You left fullscreen. This is recorded. You can continue, but returning to fullscreen is recommended.",
+      "coveredBody": "Your verified skills cover every task in Stage 1. No tasks will be shown. Confirm to continue."
     },
     "ended": {
       "completed": {
@@ -1228,7 +1247,10 @@
         "body": "A large piece of text from outside was pasted into the editor. Under the rules you accepted before starting, Stage 1 ends here."
       },
       "ruleRef": "The rules version you accepted: {version}. The employer can review the decision.",
-      "back": "Back to my applications"
+      "back": "Back to my applications",
+      "stage2Title": "Next: Stage 2",
+      "stage2Body": "A spoken interview with AI, mostly about the code you wrote. You will test your microphone first.",
+      "stage2Start": "Go to Stage 2"
     },
     "result": {
       "title": "Stage 1 result",
@@ -1238,11 +1260,23 @@
       "threshold": "Pass mark: {value}%",
       "passed": "You passed Stage 1",
       "notPassed": "The pass mark was not reached this time",
-      "nextStage2": "Stage 2 (the voice conversation) is coming soon. Nothing else is needed from you for now.",
+      "nextStage2": "Stage 2 (the spoken interview with AI) is waiting for you.",
       "notPassedBody": "The result is below the pass mark, so the application did not move on. The notes below may help next time.",
       "hidden": "Hidden tests: {passed} of {total}",
       "strengths": "Strengths",
-      "weaknesses": "Room to grow"
+      "weaknesses": "Room to grow",
+      "coveredByVerified": "The tasks of this stage were covered by your verified skills, so there are none to show."
+    },
+    "reuse": {
+      "title": "Use your verified skills",
+      "lead": "You already hold verified skills that match this job. You can skip the parts they cover.",
+      "score": "{score}%",
+      "validUntil": "valid until {date}",
+      "covers": "Covered by your skills: {tasksSkipped} of {tasksTotal} tasks, {questionsSkipped} of {questionsTotal} questions.",
+      "toggle": "Skip what my verified skills already cover",
+      "hintOn": "On: covered tasks and questions are skipped, and their results come from your verified skills.",
+      "hintOff": "Off: you take every task and question.",
+      "final": "You choose once. This choice cannot be changed later for this application."
     }
   },
   "hrReplay": {
@@ -1368,6 +1402,372 @@
         "error": "error",
         "timeout": "timed out"
       }
+    },
+    "noTasks": "No tasks were solved in Stage 1: the candidate's verified skills covered all of them."
+  },
+  "voice": {
+    "mic": {
+      "title": "Microphone test",
+      "lead": "Speak for {s} seconds, then play the recording back. That shows your microphone works.",
+      "record": "Record {s} s",
+      "recording": "Recording…",
+      "again": "Record again",
+      "playback": "Test recording",
+      "hearing": "We can hear you.",
+      "speakNow": "Say something, for example: \"Hello, this is a microphone test\".",
+      "ok": "The microphone works. Play the recording back and check your voice is clear.",
+      "silent": "The recording has almost no sound. Check the microphone is on and try again.",
+      "denied": "Microphone access was not allowed. Allow it in the browser's address bar, or continue in text.",
+      "unavailable": "No microphone found, or the browser cannot record. Continue in text."
     }
+  },
+  "stage2": {
+    "intro": {
+      "title": "Stage 2: spoken interview with AI",
+      "lead": "An AI interviewer asks questions, mostly about the code you wrote in Stage 1. Explaining your own code is easy.",
+      "point1": "Each question is shown on screen and read aloud. Listen, then answer.",
+      "point2": "Every answer has a time limit; the timer is on screen.",
+      "point3": "If you need a moment, \"Let me think\" extends the time once per question.",
+      "point4": "A long silence brings a warning; if it goes on, the interview ends.",
+      "recordedTitle": "Your voice is recorded and stored",
+      "recordedBody": "The voice in your answers is recorded and stored so the employer can review it. By continuing you agree to this.",
+      "textOffer": "The microphone is not working. You can continue by typing your answers.",
+      "start": "Start the interview",
+      "starting": "Starting…",
+      "startText": "Continue in text, without a microphone",
+      "testFirst": "Test your microphone first to start.",
+      "textNote": "If you continue in text, the employer will see that you did. Pasting from outside is disabled in text mode.",
+      "coveredLead": "Your verified skills cover every question, so there is nothing to answer. No microphone is needed.",
+      "finish": "Finish the interview"
+    },
+    "room": {
+      "title": "Spoken interview",
+      "ownCode": "Your code",
+      "ownCodeLabel": "Your code, read only",
+      "markedLine": "the question is about this line",
+      "inactiveTitle": "Inactivity warning",
+      "inactiveBody": "Keep answering, or the interview will end automatically.",
+      "inactiveCountdown": "{s} seconds left.",
+      "supersededTitle": "The interview continues in another window",
+      "supersededBody": "This interview is open in another browser window. Close this one and continue there.",
+      "offline": "Connection lost. Reconnecting.",
+      "answerTimer": "Answer time",
+      "totalTimer": "Total time",
+      "answered": "Answered: {n} of {total}",
+      "progress": "Interview progress",
+      "followUp": "Follow-up question",
+      "followUpNote": "This is a follow-up to your previous answer. It is not counted in the number of main questions.",
+      "questionN": "Question {n} of {total}",
+      "yourAnswer": "Your answer",
+      "noPaste": "Pasting from outside is turned off: write the answer yourself.",
+      "charCount": "{n} of {max} characters",
+      "send": "Send answer",
+      "sending": "Sending…",
+      "sendFailed": "The answer was not sent",
+      "retry": "Send again",
+      "answerKept": "Your answer is still here.",
+      "think": "Let me think",
+      "fallback": "Trouble with voice? Switch to text",
+      "fallbackTitle": "Switch to text mode?",
+      "fallbackBody": "This cannot be undone: you will answer the remaining questions in text. The employer will see that you switched to text.",
+      "fallbackConfirm": "Yes, switch to text",
+      "preparing": "Preparing the next question. Please wait.",
+      "micProblemTitle": "The microphone is not working",
+      "micDenied": "Microphone access is not allowed. Allow it in the browser, or switch to text.",
+      "micUnavailable": "No microphone found, or recording failed. You can switch to text.",
+      "autoplayBlocked": "The browser could not play the question by itself. Press \"Play the question\".",
+      "hintLabel": "Test mode: type what you said",
+      "hintHelp": "Speech is not transcribed in the test environment, so type what you said here.",
+      "startAnswer": "Start answering",
+      "finish": "Finish answer",
+      "playQuestion": "Play the question",
+      "replay": "Replay the question",
+      "playing": "The question is being read…",
+      "recording": "Recording. Answer now.",
+      "hearing": "We can hear you."
+    },
+    "ended": {
+      "completed": {
+        "title": "Interview finished",
+        "body": "Your answers were received."
+      },
+      "expired": {
+        "title": "Time is up",
+        "body": "The time for the interview ran out. The answers you gave are saved."
+      },
+      "inactivity": {
+        "title": "Interview ended: inactivity",
+        "body": "You did not answer for a long time, and under the rules the interview ended automatically."
+      },
+      "abandoned": {
+        "title": "Interview stopped",
+        "body": "The connection was lost for longer than allowed, so the interview was stopped."
+      },
+      "disqualified": {
+        "title": "Interview ended",
+        "body": "The interview was stopped under the rules."
+      },
+      "resultsLater": "Your answers are saved. Results appear in My applications once the evaluation is done; we will not ask anything more of you.",
+      "ruleRef": "The rules version you accepted: {version}. The employer can review the decision.",
+      "back": "Back to my applications",
+      "viewResults": "See my results"
+    }
+  },
+  "hrReport": {
+    "title": "Candidate report",
+    "back": "Back to candidates",
+    "evaluating": {
+      "title": "Being evaluated",
+      "body": "The final evaluation is running. This page refreshes itself every few seconds."
+    },
+    "failed": {
+      "title": "Evaluation failed",
+      "body": "The system could not finish the final evaluation. Review the answers and the code yourself; scores may be missing."
+    },
+    "stage": {
+      "stage1": "Stage 1",
+      "stage2": "Stage 2"
+    },
+    "signals": {
+      "long_silence": "Long silence before answer {turn}: {silenceS} s",
+      "long_silence_then_fluent": "Long silence before answer {turn} ({silenceS} s), then a fluent answer of {words} words",
+      "repeated_long_silences": "Long silences before answers: {count} times",
+      "cannot_explain_own_code": "Could not explain their own code: own-code answers average {ownCodePercent}% while Stage 1 was {stage1Percent}%",
+      "reading_style": "Long, even answers that sound read aloud ({answers} answers)",
+      "asked_for_answer": "Asked the interviewer for the answer (question {turn})",
+      "text_paste_blocked": "A paste into the text box was blocked ({count} times)",
+      "voice_fallback": "Switched from voice to text"
+    },
+    "scores": {
+      "title": "Scores",
+      "disqualifiedTitle": "Candidate disqualified",
+      "disqualified": {
+        "external_paste": "Outside paste: by the rules the candidate accepted, they pasted outside text above the limit.",
+        "inactivity": "Inactivity: the candidate did nothing for longer than the accepted limit.",
+        "abandoned": "Stopped because the connection was not restored.",
+        "other": "No reason given."
+      },
+      "overall": "Overall",
+      "stage1": "Stage 1",
+      "stage2": "Stage 2",
+      "noOverall": "There is no overall score: the interview stopped before the end.",
+      "perSkill": "By skill",
+      "skillDetail": "Stage 1 {stage1} · Stage 2 {stage2}",
+      "noSkills": "No skill scores.",
+      "reusedTitle": "Taken from verified skills",
+      "reusedLine": "{name}, {stage}: {percent}, verified {verified}, valid until {until}",
+      "reusedBadge": "From a verified skill: {stages}"
+    },
+    "points": {
+      "title": "Strengths and gaps",
+      "unavailableTitle": "AI summary unavailable",
+      "unavailableBody": "The AI did not produce a checked summary. The scores are valid; a person should read the answers and the code.",
+      "strengths": "Strengths",
+      "gaps": "Gaps",
+      "none": "Nothing recorded.",
+      "task": "Task {n}",
+      "turn": "Question {n}",
+      "lines": "Lines {lines}",
+      "model": "Written by {model}, prompt {version}",
+      "reusedBody": "There is no written summary, strengths or gaps: every skill in this report came from a verified skill, so nothing new was assessed."
+    },
+    "recommendation": {
+      "title": "Recommendation",
+      "strong_yes": "Strong yes",
+      "yes": "Yes",
+      "maybe": "Maybe",
+      "no": "No",
+      "aid": "A recommendation is an aid. The decision is yours."
+    },
+    "stage2": {
+      "title": "Stage 2: oral interview",
+      "threshold": "pass mark {value}%",
+      "passed": "passed",
+      "notPassed": "not passed",
+      "question": "Question {n}",
+      "followUp": "follow-up",
+      "percent": "Score",
+      "transcript": "Transcript",
+      "noAnswer": "No answer.",
+      "audio": "Answer recording",
+      "criteria": "Criteria",
+      "flags": "Flags",
+      "needsReview": "Needs review",
+      "noTurns": "No questions were asked.",
+      "flag": {
+        "thinking_phrase": "asked for time to think",
+        "help_request": "asked for help",
+        "injection_attempt": "instruction aimed at the evaluator",
+        "stt_failed": "speech was not recognised"
+      }
+    },
+    "actions": {
+      "title": "Actions",
+      "shortlisted": "Shortlist",
+      "rejected": "Reject",
+      "hired": "Hire",
+      "applied": "Move back to new",
+      "noActions": "No status changes are available."
+    },
+    "override": {
+      "open": "Override a result",
+      "title": "Override a result",
+      "lead": "The change is saved in the history with your comment. The suspicion percentage cannot be changed.",
+      "field": "What to change",
+      "fields": {
+        "stage1_score": "Stage 1 score",
+        "stage2_score": "Stage 2 score",
+        "overall_score": "Overall score",
+        "recommendation": "Recommendation",
+        "disqualification": "Disqualification"
+      },
+      "value": "New value",
+      "valuePercent": "New score, %",
+      "valueHint": "From 0 to 100.",
+      "pick": "Pick…",
+      "liftHint": "The disqualification will be lifted and the candidate will continue from the stage where it happened.",
+      "comment": "Comment",
+      "commentHint": "Required, at least 3 characters. Other HR members will see it.",
+      "errors": {
+        "required": "Enter a value.",
+        "range": "Enter a number from 0 to 100.",
+        "short": "Write at least 3 characters.",
+        "long": "The comment is too long (up to 2000 characters)."
+      },
+      "save": "Save override",
+      "saving": "Saving…",
+      "saved": "The override is saved."
+    },
+    "history": {
+      "title": "Override history",
+      "empty": "No overrides yet.",
+      "lifted": "lifted",
+      "none": "none",
+      "disqualified": "disqualified",
+      "unknownActor": "Unknown"
+    },
+    "notes": {
+      "title": "Notes",
+      "private": "Visible only to your company.",
+      "label": "New note",
+      "empty": "Write a note first.",
+      "add": "Add note",
+      "adding": "Adding…",
+      "none": "No notes yet.",
+      "unknownAuthor": "Unknown"
+    }
+  },
+  "candidateResults": {
+    "title": "My results",
+    "back": "Back to my applications",
+    "notReady": {
+      "title": "Results are not ready yet",
+      "body": "They appear here after you finish the interview and the evaluation is done."
+    },
+    "pending": {
+      "title": "Preparing your results",
+      "body": "This takes a little while. The page refreshes itself."
+    },
+    "failed": {
+      "title": "Detailed feedback is delayed",
+      "body": "We could not prepare your feedback yet. Nothing is needed from you; please check back later."
+    },
+    "disqualified": {
+      "title": "The interview ended early",
+      "external_paste": "The interview ended because a large block of text from outside was pasted, which the rules you accepted do not allow.",
+      "inactivity": "The interview ended because there was no activity for longer than the rules you accepted allow.",
+      "abandoned": "The interview ended because the connection was not restored in time.",
+      "other": "The interview ended early under the rules you accepted."
+    },
+    "scores": {
+      "title": "Your scores",
+      "overall": "Overall",
+      "stage1": "Stage 1: practical task",
+      "stage2": "Stage 2: oral interview",
+      "perSkill": "By skill",
+      "reusedBadge": "From a verified skill"
+    },
+    "tasks": {
+      "title": "Practical tasks",
+      "tests": "Hidden tests passed: {passed} of {total}",
+      "review": "code review {value}",
+      "strengths": "What went well",
+      "weaknesses": "What to improve"
+    },
+    "answers": {
+      "title": "Oral answers",
+      "question": "Question {n}"
+    },
+    "feedback": {
+      "title": "Feedback",
+      "missing": "Detailed feedback is not available yet.",
+      "mistakes": "Mistakes",
+      "mistakesLead": "These points cost you the most. They are here to help you improve.",
+      "learnNext": "What to learn next"
+    },
+    "verified": {
+      "title": "Result from verified skills",
+      "body": "This result comes from your verified skills, so there are no tasks, answers or feedback to show."
+    }
+  },
+  "verifiedSkills": {
+    "title": "Verified skills",
+    "lead": "Skills you proved on the platform. They can save you time in later applications.",
+    "level": {
+      "basic": "Basic",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "score": "{score}%",
+    "validUntil": "Valid until {date}",
+    "expired": "Expired on {date}",
+    "privacy": {
+      "title": "What others can see",
+      "body": "Skills you make public, together with your name, appear on a public page and in employer talent search. Skills stay private until you turn them on. Employers never see which company or application a skill came from."
+    },
+    "profile": {
+      "title": "Your public profile is on",
+      "body": "{count, plural, one {# public skill is} other {# public skills are}} visible on your public page.",
+      "open": "Open public profile"
+    },
+    "public": {
+      "label": "Show this skill publicly",
+      "hint": "Visible on your public page and to employers searching for talent.",
+      "expiredHint": "This skill has expired and is not shown. Verify it again to renew."
+    },
+    "empty": {
+      "title": "No verified skills yet",
+      "body": "You earn a verified skill by passing both stages of an interview cleanly, with a score of at least 60% on that skill. It then stays valid for a year.",
+      "link": "Go to my applications"
+    },
+    "publicPage": {
+      "metaTitle": "{name}: verified skills",
+      "metaFallback": "Profile not found",
+      "experience": "{years, plural, one {# year of experience} other {# years of experience}}",
+      "skills": "Verified skills",
+      "note": "Skills were verified on SkillProof through coding tasks and an interview."
+    }
+  },
+  "talent": {
+    "title": "Talent search",
+    "lead": "Find open-to-work candidates who hold every skill you choose as a public, valid verified skill.",
+    "skills": "Skills",
+    "addSkill": "Add a skill",
+    "skillsFull": "At most {max} skills",
+    "chosen": "Chosen skills",
+    "skillUnnamed": "Skill",
+    "remove": "Remove {name}",
+    "minScore": "Min score, %",
+    "start": {
+      "title": "Choose skills to start",
+      "body": "Add at least one skill. Results show only candidates who hold all of the skills you choose."
+    },
+    "none": {
+      "title": "No candidates found",
+      "body": "Try fewer skills or a lower minimum score."
+    },
+    "total": "{count, plural, one {# candidate} other {# candidates}}",
+    "openProfile": "Open profile",
+    "experience": "{years, plural, one {# year of experience} other {# years of experience}}"
   }
 }
