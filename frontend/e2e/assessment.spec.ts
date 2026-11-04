@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { settle } from './utils';
+import { login } from './interview-setup';
 
 /**
  * Phase 3, HR flow against the REAL stack (`make up && make seed`, mock LLM):
@@ -13,11 +14,7 @@ const PASSWORD = process.env.DEMO_PASSWORD ?? 'Demo-parol-2026';
 
 test('HR generates a two-stage assessment with AI and it becomes ready', async ({ page }) => {
   test.setTimeout(120_000);
-  const login = await page.request.post(`${API}/auth/login`, {
-    data: { email: EMAIL, password: PASSWORD },
-  });
-  expect(login.ok(), await login.text()).toBe(true);
-  const me = await login.json();
+  const me = await login(page.request, { email: EMAIL, password: PASSWORD });
   const created = await page.request.post(`${API}/companies/${me.companies[0].id}/vacancies`, {
     data: {
       title: `E2E assessment ${Date.now()}`,

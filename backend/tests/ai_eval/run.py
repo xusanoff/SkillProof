@@ -12,12 +12,23 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from app.ai.code_reviewer import review_code
-from app.ai.guardrails import detect_language, forbidden_topics
+from app.ai.guardrails import (
+    check_feedback,
+    check_report,
+    detect_language,
+    forbidden_topics,
+    is_help_request,
+    is_injection,
+    leaks,
+)
+from app.ai.interviewer import follow_up_question, grade_answer
 from app.ai.llm_client import LLMClient, build_provider
 from app.ai.mock_handlers import build_mock_provider
 from app.ai.prompting import build_request
+from app.ai.report_writer import write_feedback, write_report
 from app.ai.schemas import GeneratedQuestions, GeneratedTask, ItemVerdict
 from app.core.config import get_settings
+from app.core.thresholds import Stage2Thresholds
 
 ROOT = Path(__file__).resolve().parents[3]
 VACANCY = {
@@ -35,6 +46,10 @@ MOCK_SKIP = {
     "verifier-ambiguous-ru",
     "verifier-off-topic-uz",
     "review-injection-paraphrased",
+    "answer-off-topic-ru",
+    "answer-good-uz",
+    "answer-average-en",
+    "report-injection-in-quote-en",
 }
 
 
@@ -60,6 +75,75 @@ async def run_case(llm: LLMClient, case: dict, mock: bool) -> tuple[str, str]:
         flagged = bool(out.injection_lines) or out.injection_flagged
         ok = exp["min_percent"] <= out.percent <= exp["max_percent"] and flagged == exp["injection"]
         return ("pass" if ok else "fail"), f"{out.percent}%, injection={flagged}"
+    if role == "answer_evaluator":
+        out = await grade_answer(
+            llm,
+            lang,
+            question=case["question"],
+            rubric=case["rubric"],
+            reference=case["reference"],
+            answer=case["answer"],
+        )
+        if out is None or out.percent is None:
+            return "fail", "no score"
+        flagged = is_injection(case["answer"]) or bool(out.grade and out.grade.injection_attempt)
+        ok = exp["min_percent"] <= out.percent <= exp["max_percent"] and flagged == exp["injection"]
+        return ("pass" if ok else "fail"), f"{out.percent}%, injection={flagged}"
+    if role == "report_writer":
+        out = await write_report(
+            llm,
+            lang,
+            scores=case["scores"],
+            evaluations=case["evaluations"],
+            signals=case["signals"],
+            answers=case["answers"],
+            code=case["code"],
+        )
+        if out.draft is None:
+            return "fail", "no checked report"
+        ok = (
+            out.draft.recommendation in exp["recommendation_in"]
+            and check_report(out.draft, case["answers"], case["code"], lang).ok
+        )
+        return ("pass" if ok else "fail"), out.draft.recommendation
+    if role == "feedback_writer":
+        out = await write_feedback(
+            llm,
+            lang,
+            evaluations=case["evaluations"],
+            skills=case["skills"],
+            refs=set(case["refs"]),
+            secrets=case["secrets"],
+            hidden_values=case["hidden_values"],
+        )
+        if out.draft is None:
+            return "fail", "no checked feedback"
+        ok = len(out.draft.mistakes) >= exp["min_mistakes"] and (
+            check_feedback(
+                out.draft, set(case["refs"]), case["secrets"], case["hidden_values"], lang
+            ).ok
+        )
+        return ("pass" if ok else "fail"), f"{len(out.draft.mistakes)} mistakes"
+    if role == "interviewer":
+        if exp.get("help_request"):
+            # Such an answer never reaches this role: the service declines and moves on.
+            ok = is_help_request(case["answer"])
+            return ("pass" if ok else "fail"), f"help_request={ok}"
+        text = await follow_up_question(
+            llm,
+            lang,
+            parent_question=case["question"],
+            answer=case["answer"],
+            skills=["Python"],
+            secrets=case["secrets"],
+            t=Stage2Thresholds(),
+        )
+        if text is None:
+            return "pass", "no follow-up (every attempt was rejected)"
+        ok = not any(leaks(text, s) for s in case["secrets"]) and (
+            detect_language(text) in (None, exp["language"])
+        )
+        return ("pass" if ok else "fail"), text[:60]
     if role == "item_verifier":
         req = build_request(
             role,

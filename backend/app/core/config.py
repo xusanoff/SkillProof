@@ -92,6 +92,8 @@ class Settings(BaseSettings):
     interview_ws_tick_s: float = 2
     interview_ws_max_message_bytes: int = 1_000_000
     interview_code_max_chars: int = 200_000
+    interview_answer_max_chars: int = 20_000
+    interview_audio_max_bytes: int = 15 * 1024 * 1024
     evaluation_max_attempts: int = 5
     evaluation_sweep_batch: int = 20
 

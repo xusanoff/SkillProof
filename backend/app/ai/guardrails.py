@@ -6,7 +6,8 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from app.ai.schemas import CodeReview
+from app.ai.schemas import AnswerGrade, CodeReview, EvidencePoint, FeedbackDraft, ReportDraft
+from app.core.thresholds import ReportThresholds
 from app.sandbox.client import Limits, Sandbox, run_tests
 
 _CYRILLIC = re.compile(r"[Ѐ-ӿ]")
@@ -71,7 +72,7 @@ FORBIDDEN_TOPICS = {
     ],
     "health": ["kasal", "sog'li", "здоров", "болезн", "health", "illness", "pregnan"],
     "religion": [r"din(?:iy|ingiz|i|ga)?\b", "namoz", "религи", "religio"],
-    "politics": ["siyosat", "saylov", "политик", "выбор", "politic", "election"],
+    "politics": ["siyosat", "saylov", "политик", r"выбор(?:ы|ов)\b", "politic", "election"],
     "salary": ["maosh", "oylik", "зарплат", "salary"],
 }
 
@@ -192,3 +193,206 @@ def check_review(review: CodeReview, rubric: dict[str, Any], code: str, language
     texts = [review.rationale, *[p.text for p in (*review.strengths, *review.weaknesses)]]
     issues += check_texts(texts, language).issues
     return Check(issues)
+
+
+# --- Interviewer (spec §6.6 rules 6, 7, 9) -------------------------------------------------------
+_HELP = re.compile(
+    r"javob\w*\s+(ayt|ber)|yordam\s+ber|maslahat\s+ber|tell me the answer|give me the answer|"
+    r"just tell me|what is the (right|correct) answer|give me a hint|"
+    r"(скажи|скажите|дай|дайте|подскаж)\w*\s*(мне\s+)?(правильн\w+\s+)?(ответ|подсказк)|подскажи",
+    re.IGNORECASE,
+)
+_THINKING = re.compile(
+    r"o['\u02bb\u02bc`]?ylab\s+(ko['\u02bb\u02bc`]?r|ol)|let me think|give me a (moment|second)|"
+    r"дайте подумать|дай подумать|надо подумать|сейчас подумаю",
+    re.IGNORECASE,
+)
+_FEEDBACK = re.compile(
+    r"to['\u02bb\u02bc`]?g['\u02bb\u02bc`]?ri|yaxshi javob|ajoyib|баллы|правильн|неверн|отлично|"
+    r"\b(correct|incorrect|right answer|wrong|great|well done|good answer|rubric|score)\b",
+    re.IGNORECASE,
+)
+_SENTENCE_END = re.compile(r"[.!?]+(?:\s|$)")
+_TERM = re.compile(r"[^\W\d_]{4,}|[^\W\d_]+_[\w]+", re.UNICODE)
+LEAK_NGRAM_WORDS = 4
+MIN_HIDDEN_VALUE_CHARS = 6
+
+
+def is_help_request(answer: str) -> bool:
+    return bool(_HELP.search(answer))
+
+
+def has_thinking_phrase(answer: str) -> bool:
+    return bool(_THINKING.search(answer[:200]))
+
+
+def is_injection(answer: str) -> bool:
+    return bool(_INJECTION.search(answer))
+
+
+def scrub_answer(answer: str) -> str:
+    """Sentences giving the evaluator orders never reach a model (candidate content is data)."""
+    parts = re.split(r"(?<=[.!?\n])\s+", answer)
+    return " ".join("[removed]" if _INJECTION.search(p) else p for p in parts)
+
+
+def terms(*texts: str) -> set[str]:
+    """Word stems, so Uzbek and Russian endings don't hide a shared word."""
+    return {w.lower()[:5] for text in texts for w in _TERM.findall(text)}
+
+
+def _words(text: str) -> list[str]:
+    return [w.lower() for w in _WORD.findall(text)]
+
+
+def leaks(question: str, secret: str) -> bool:
+    """True when the question repeats a run of words from the reference answer or rubric."""
+    q = " ".join(_words(question))
+    words = _words(secret)
+    return any(
+        " ".join(words[i : i + LEAK_NGRAM_WORDS]) in q
+        for i in range(max(len(words) - LEAK_NGRAM_WORDS + 1, 0))
+    )
+
+
+def check_question(
+    text: str,
+    language: str,
+    *,
+    secrets: list[str],
+    topic_terms: set[str],
+    max_chars: int,
+    max_sentences: int,
+) -> Check:
+    """Everything the interviewer may not say, checked in code rather than trusted to the prompt."""
+    check = check_texts([text], language)
+    if not text.strip():
+        check.issues.append("empty")
+    if len(text) > max_chars:
+        check.issues.append("too_long")
+    if len(_SENTENCE_END.findall(text.strip())) > max_sentences or text.count("?") > 1:
+        check.issues.append("more_than_one_question")
+    if _FEEDBACK.search(text):
+        check.issues.append("gives_feedback")
+    if any(leaks(text, secret) for secret in secrets):
+        check.issues.append("reveals_answer")
+    if topic_terms and not terms(text) & topic_terms and not re.search(r"\d", text):
+        check.issues.append("off_topic")
+    return check
+
+
+def _normalized(text: str) -> str:
+    return " ".join(text.lower().split())
+
+
+def check_grade(
+    grade: AnswerGrade, rubric: dict[str, Any], answer: str, language: str | None = None
+) -> Check:
+    """Scores within the rubric, every criterion once, every score resting on a quote that is
+    really in the answer, written in the assessment's language."""
+    check = Check()
+    limits = {c["key"]: c["max_points"] for c in rubric.get("criteria", [])}
+    seen = [c.key for c in grade.criteria]
+    if sorted(seen) != sorted(limits):
+        check.issues.append("criteria_mismatch")
+    normalized = _normalized(answer)
+    for c in grade.criteria:
+        if c.key in limits and c.score > limits[c.key]:
+            check.issues.append(f"score_out_of_range: {c.key}")
+        if c.quote and _normalized(c.quote) not in normalized:
+            check.issues.append(f"fabricated_quote: {c.key}")
+        if c.score > 0 and not c.quote.strip():
+            check.issues.append(f"no_evidence: {c.key}")
+    if language is not None:
+        detected = detect_language(grade.rationale)
+        if detected is not None and detected != language:
+            check.issues.append(f"language_mismatch: expected {language}, got {detected}")
+    return check
+
+
+def score_mcq(answer: str, options: list[str], correct: list[int]) -> float:
+    """Deterministic (spec §6.4): the options named in the answer, by text or by number or letter,
+    must be exactly the correct ones. Longer option texts are matched first, so an option that is
+    part of another one isn't counted as chosen too."""
+    text = _normalized(answer)
+    chosen: set[int] = set()
+    for index in sorted(range(len(options)), key=lambda i: -len(options[i])):
+        option = _normalized(options[index])
+        if option and option in text:
+            chosen.add(index)
+            text = text.replace(option, " ")
+    for token in re.findall(r"[^\W_]+", text):
+        if token.isdigit() and 1 <= int(token) <= len(options):
+            chosen.add(int(token) - 1)
+        elif len(token) == 1 and token.isascii() and 0 <= ord(token) - ord("a") < len(options):
+            chosen.add(ord(token) - ord("a"))
+    return 100.0 if chosen and chosen == set(correct) else 0.0
+
+
+def _unknown_or_unsupported(
+    points: list[EvidencePoint], answers: dict[str, str], code: dict[str, str]
+) -> list[str]:
+    """A quote must be in that answer, a line must exist in that code (spec §6.6)."""
+    issues: list[str] = []
+    for point in points:
+        if point.ref in answers:
+            if not point.quote.strip():
+                issues.append(f"no_evidence: {point.ref}")
+            elif _normalized(point.quote) not in _normalized(answers[point.ref]):
+                issues.append(f"fabricated_quote: {point.ref}")
+        elif point.ref in code:
+            total = len(code[point.ref].splitlines())
+            if not point.lines:
+                issues.append(f"no_evidence: {point.ref}")
+            elif any(not 1 <= line <= total for line in point.lines):
+                issues.append(f"lines_do_not_exist: {point.ref}")
+        else:
+            issues.append(f"unknown_ref: {point.ref}")
+    return issues
+
+
+def check_report(
+    draft: ReportDraft, answers: dict[str, str], code: dict[str, str], language: str
+) -> Check:
+    texts = [draft.summary, *[p.text for p in (*draft.strengths, *draft.gaps)]]
+    issues = _unknown_or_unsupported([*draft.strengths, *draft.gaps], answers, code)
+    if not draft.summary.strip() and not draft.insufficient_evidence:
+        issues.append("empty_summary")
+    return Check(issues + check_texts(texts, language).issues)
+
+
+def reveals_hidden(text: str, secrets: list[str], hidden_values: list[str]) -> bool:
+    """The reference answer or solution in words, or a hidden test's input or output as written.
+    Very short values ("5") are too common to mean anything, so they are not matched."""
+    if any(leaks(text, secret) for secret in secrets):
+        return True
+    flat = _normalized(text)
+    return any(
+        len(value) >= MIN_HIDDEN_VALUE_CHARS and value in flat
+        for value in (_normalized(v) for v in hidden_values)
+    )
+
+
+def check_feedback(
+    draft: FeedbackDraft,
+    refs: set[str],
+    secrets: list[str],
+    hidden_values: list[str],
+    language: str,
+) -> Check:
+    """What the candidate reads: no answers, no hidden tests, every mistake tied to an evaluation
+    (spec §6.5)."""
+    texts = [m.text for m in draft.mistakes]
+    texts += [x for item in draft.learn_next for x in (item.topic, item.reason)]
+    issues = [f"unknown_ref: {m.ref}" for m in draft.mistakes if m.ref not in refs]
+    if any(reveals_hidden(text, secrets, hidden_values) for text in texts):
+        issues.append("reveals_answer")
+    return Check(issues + check_texts(texts, language).issues)
+
+
+def recommendation_band(overall: float, t: ReportThresholds) -> str:
+    if overall >= t.strong_yes_from:
+        return "strong_yes"
+    if overall >= t.yes_from:
+        return "yes"
+    return "maybe" if overall >= t.maybe_from else "no"

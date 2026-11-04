@@ -8,18 +8,23 @@ Refuses to run outside `local`/`test`. `--bulk N` adds N extra generated vacanci
 import argparse
 import asyncio
 import random
+import uuid
 from datetime import UTC, datetime, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.db import SessionLocal, engine
 from app.core.security import hash_password
 from app.models import (
+    Assessment,
+    AssessmentQuestion,
     CandidateProfile,
     Company,
     CompanyMember,
+    PracticalTask,
+    Question,
     Skill,
     User,
     Vacancy,
@@ -29,6 +34,7 @@ from app.models.enums import (
     EmploymentType,
     ExperienceLevel,
     MemberRole,
+    QuestionType,
     RemoteType,
     UserRole,
     VacancyStatus,
@@ -309,6 +315,149 @@ async def _vacancy(
         )
 
 
+DEMO_INTERVIEW_TITLE = "Python dasturchi (intervyu namunasi)"
+# Shares Python with the vacancy above: finish that one first, and here only FastAPI is left.
+DEMO_REUSE_TITLE = "Backend dasturchi (qayta foydalanish namunasi)"
+DEMO_RUBRIC = {
+    "criteria": [
+        {"key": "accuracy", "name": "Aniqlik", "max_points": 5},
+        {"key": "depth", "name": "Chuqurlik", "max_points": 5},
+    ]
+}
+DEMO_QUESTIONS = [
+    (
+        "FastAPI'da dependency injection qanday ishlaydi?",
+        2,
+        "Depends so'rov vaqtida obyekt beradi.",
+    ),
+    (
+        "PostgreSQL'da indeks qachon foyda bermaydi?",
+        3,
+        "Kichik jadval yoki kam tanlanuvchan ustun.",
+    ),
+    ("Python'da list va tuple farqi nimada?", 1, "List o'zgaradi, tuple o'zgarmaydi."),
+    ("REST API'da idempotentlik nima degani?", 3, "Takroriy so'rov natijani o'zgartirmaydi."),
+    (
+        "Tranzaksiya izolyatsiya darajalarini tushuntiring.",
+        4,
+        "Read committed, serializable va h.k.",
+    ),
+    (
+        "Python'da GIL nima va nimaga ta'sir qiladi?",
+        4,
+        "Bir vaqtda bitta thread bytecode bajaradi.",
+    ),
+    (
+        "N+1 so'rov muammosi nima va u qanday hal qilinadi?",
+        3,
+        "Bog'liq ma'lumotni oldindan yuklash.",
+    ),
+    ("Keshni qachon bekor qilish kerak?", 5, "Manba o'zgarganda yoki muddati tugaganda."),
+]
+
+
+async def _demo_interview(
+    session: AsyncSession,
+    company: Company,
+    hr: User,
+    skills_by_name: dict[str, Skill],
+    now: datetime,
+    title: str = DEMO_INTERVIEW_TITLE,
+    skill_names: tuple[str, ...] = ("Python", "PostgreSQL"),
+    task_skills: tuple[str, ...] = ("Python",),
+) -> None:
+    """A vacancy that is ready to interview on, so both stages can be tried right after a seed."""
+    existing = await session.scalar(select(Vacancy.id).where(Vacancy.title == title))
+    if existing is not None:
+        # Seeded before tasks had a skill: without one, the task can never be reused.
+        config = await session.scalar(
+            select(Assessment.stage1_config).where(Assessment.vacancy_id == existing)
+        )
+        if config and len(config.get("task_ids", [])) == 1 and task_skills[0] in skills_by_name:
+            await session.execute(
+                update(PracticalTask)
+                .where(
+                    PracticalTask.id == uuid.UUID(str(config["task_ids"][0])),
+                    PracticalTask.skill_id.is_(None),
+                )
+                .values(skill_id=skills_by_name[task_skills[0]].id)
+            )
+        return
+    names = [n for n in skill_names if n in skills_by_name]
+    vacancy = Vacancy(
+        company_id=company.id,
+        title=title,
+        description="Ikki bosqichli intervyuni sinab ko'rish uchun namunaviy vakansiya.",
+        requirements="Python asoslari",
+        profession_area="it",
+        country="UZ",
+        region_code="UZ-TK",
+        remote_type=RemoteType.remote,
+        employment_type=EmploymentType.full_time,
+        experience_level=ExperienceLevel.between_1_3,
+        currency="UZS",
+        status=VacancyStatus.published,
+        published_at=now,
+        created_by=hr.id,
+        skills_text=" ".join(names),
+    )
+    session.add(vacancy)
+    await session.flush()
+    for name in names:
+        session.add(VacancySkill(vacancy_id=vacancy.id, skill_id=skills_by_name[name].id, weight=3))
+    tasks = [
+        PracticalTask(
+            company_id=company.id,
+            title=f"Ikki son yig'indisi ({name})",
+            skill_id=skills_by_name[name].id if name in skills_by_name else None,
+            statement="Bir qatorda ikkita butun son beriladi. Ularning yig'indisini chiqaring.",
+            allowed_languages=["python"],
+            starter_code={"python": "a, b = map(int, input().split())\n"},
+            visible_tests=[{"name": "misol", "input": "2 3\n", "output": "5"}],
+            hidden_tests=[{"name": "manfiy", "input": "-1 1\n", "output": "0"}],
+            rubric=DEMO_RUBRIC,
+            reference_solution={
+                "language": "python",
+                "code": "print(sum(map(int, input().split())))",
+            },
+            language="uz",
+            is_approved=True,
+            created_by=hr.id,
+        )
+        for name in task_skills
+    ]
+    session.add_all(tasks)
+    assessment = Assessment(
+        vacancy_id=vacancy.id,
+        language="uz",
+        stage1_config={},
+        stage2_config={"question_count": len(DEMO_QUESTIONS), "mode": "voice", "adaptive": True},
+    )
+    session.add(assessment)
+    await session.flush()
+    assessment.stage1_config = {"task_ids": [str(task.id) for task in tasks]}
+    skill_ids: list[uuid.UUID | None] = [skills_by_name[n].id for n in names] or [None]
+    for i, (text, difficulty, reference) in enumerate(DEMO_QUESTIONS):
+        question = Question(
+            company_id=company.id,
+            type=QuestionType.open,
+            text=text,
+            correct_answer=None,
+            difficulty=difficulty,
+            language="uz",
+            skill_id=skill_ids[i % len(skill_ids)],
+            rubric=DEMO_RUBRIC,
+            reference_answer=reference,
+            is_approved=True,
+            created_by=hr.id,
+        )
+        session.add(question)
+        await session.flush()
+        session.add(
+            AssessmentQuestion(assessment_id=assessment.id, question_id=question.id, order=i)
+        )
+
+
 async def seed(bulk: int = 0) -> None:
     settings = get_settings()
     if settings.environment not in ("local", "test"):
@@ -365,6 +514,25 @@ async def seed(bulk: int = 0) -> None:
                 )
                 created += 1
         await session.commit()
+
+        owner_company = await session.scalar(
+            select(Company)
+            .join(CompanyMember, CompanyMember.company_id == Company.id)
+            .where(CompanyMember.user_id == demo_hr.id)
+        )
+        if owner_company is not None:
+            await _demo_interview(session, owner_company, demo_hr, skills_by_name, now)
+            await _demo_interview(
+                session,
+                owner_company,
+                demo_hr,
+                skills_by_name,
+                now,
+                title=DEMO_REUSE_TITLE,
+                skill_names=("Python", "FastAPI"),
+                task_skills=("Python", "FastAPI"),
+            )
+            await session.commit()
 
         if bulk:
             companies = list(await session.scalars(select(Company)))

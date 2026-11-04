@@ -50,7 +50,7 @@ from app.schemas.interview import (
     VisibleTest,
     WarmupOut,
 )
-from app.services import audit
+from app.services import audit, verified_skills
 from app.services.assessments import effective_thresholds, to_out
 
 _STARTABLE = {ApplicationStatus.applied, ApplicationStatus.interview_pending}
@@ -113,12 +113,20 @@ async def _stage1(session: AsyncSession, application_id: uuid.UUID) -> Interview
 
 
 async def _own_session(
-    session: AsyncSession, session_id: uuid.UUID, user: User, lock: bool = False
+    session: AsyncSession,
+    session_id: uuid.UUID,
+    user: User,
+    lock: bool = False,
+    stage: InterviewStage = InterviewStage.stage1,
 ) -> InterviewSession:
     q = (
         select(InterviewSession)
         .join(Application, Application.id == InterviewSession.application_id)
-        .where(InterviewSession.id == session_id, Application.candidate_id == user.id)
+        .where(
+            InterviewSession.id == session_id,
+            InterviewSession.stage == stage,
+            Application.candidate_id == user.id,
+        )
     )
     s = await session.scalar(q.with_for_update(of=InterviewSession) if lock else q)
     if s is None:
@@ -190,9 +198,12 @@ async def _disqualify(
             evidence=evidence,
         )
     )
-    await _end(
-        session, s, SessionStatus.disqualified, now, ApplicationStatus.stage1_disqualified, reason
+    status = (
+        ApplicationStatus.stage2_disqualified
+        if s.stage is InterviewStage.stage2
+        else ApplicationStatus.stage1_disqualified
     )
+    await _end(session, s, SessionStatus.disqualified, now, status, reason)
 
 
 async def _advance(
@@ -367,8 +378,19 @@ async def state(session: AsyncSession, application_id: uuid.UUID, user: User) ->
             RulesAcceptance.rules_version == settings.rules_version,
         )
     )
+    stage2 = await session.scalar(
+        select(InterviewSession).where(
+            InterviewSession.application_id == app.id,
+            InterviewSession.stage == InterviewStage.stage2,
+        )
+    )
     warmup = None
+    reuse = None
     if assessment is not None:
+        if s is None and app.status in _STARTABLE:
+            reuse = verified_skills.offer(
+                await verified_skills.plan(session, app.candidate_id, assessment, now)
+            )
         out = await to_out(session, assessment)
         allowed = out.tasks[0].allowed_languages if out.tasks else []
         languages = [lang for lang in allowed if lang in WARMUP_STARTER]
@@ -391,6 +413,17 @@ async def state(session: AsyncSession, application_id: uuid.UUID, user: User) ->
         blocked_reason=None if s is not None else await _blocked_reason(session, app, assessment),
         warmup=warmup,
         session=await _session_out(session, s, now) if s is not None else None,
+        stage2_available=stage2 is None and app.status is ApplicationStatus.stage2_pending,
+        stage2_session_id=stage2.id if stage2 else None,
+        stage2_status=stage2.status if stage2 else None,
+        stage2_mode=(
+            stage2.config["mode"]
+            if stage2
+            else assessment.stage2_config.get("mode", "voice")
+            if assessment
+            else None
+        ),
+        reuse=reuse,
     )
 
 
@@ -422,7 +455,9 @@ async def accept_rules(
     return await state(session, application_id, user)
 
 
-async def start_stage1(session: AsyncSession, application_id: uuid.UUID, user: User) -> SessionOut:
+async def start_stage1(
+    session: AsyncSession, application_id: uuid.UUID, user: User, reuse: bool = False
+) -> SessionOut:
     now = _now()
     await _application(session, application_id, user)
     app = await session.scalar(
@@ -456,9 +491,15 @@ async def start_stage1(session: AsyncSession, application_id: uuid.UUID, user: U
         )
     )
     by_id = {str(t.id): t for t in rows}
+    plan = (
+        await verified_skills.plan(session, app.candidate_id, assessment, now)
+        if reuse
+        else verified_skills.ReusePlan()
+    )
     tasks = [
         {"id": str(i), "limit_minutes": override or by_id[str(i)].time_limit_minutes}
         for i in assessment.stage1_config["task_ids"]
+        if str(i) not in plan.task_ids
     ]
     i = thresholds.integrity
     s = InterviewSession(
@@ -472,6 +513,8 @@ async def start_stage1(session: AsyncSession, application_id: uuid.UUID, user: U
         last_activity_at=now,
         config={
             "tasks": tasks,
+            "reused": verified_skills.stage1_reuse(plan.stage1) if plan.stage1 else None,
+            "reuse_stage2": plan.stage2,
             "rules_version": version,
             "thresholds": thresholds.model_dump(mode="json"),
             "integrity": IntegrityLimits(
@@ -485,8 +528,30 @@ async def start_stage1(session: AsyncSession, application_id: uuid.UUID, user: U
     )
     session.add(s)
     await session.flush()
-    await _show_task(session, s, now)
-    app.status = ApplicationStatus.stage1_in_progress
+    if plan.skills:
+        audit.record(
+            session,
+            user.id,
+            "application.skills_reused",
+            "application",
+            app.id,
+            {"skills": [str(x.skill_id) for x in plan.skills]},
+        )
+    if tasks:
+        await _show_task(session, s, now)
+        app.status = ApplicationStatus.stage1_in_progress
+    else:
+        # Every task is covered by a verified skill: nothing to take, nothing to evaluate.
+        s.status = SessionStatus.completed
+        s.completed_at = now
+        s.disconnected_at = None
+        s.evaluation_state = EvaluationState.done
+        s.score_percent = verified_skills.blended(None, 0, s.config["reused"])
+        s.passed = (s.score_percent or 0) >= thresholds.stage1.pass_threshold
+        s.suspicion_score = 0.0
+        app.status = (
+            ApplicationStatus.stage2_pending if s.passed else ApplicationStatus.stage1_failed
+        )
     audit.record(session, user.id, "interview.stage1_start", "interview_session", s.id)
     await session.commit()
     return await _session_out(session, s, now)

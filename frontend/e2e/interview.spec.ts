@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { API, makeInterviewVacancy, ok } from './interview-setup';
+import { API, makeInterviewVacancy, login, ok } from './interview-setup';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 
 /**
@@ -29,11 +29,11 @@ const applications: { aid: string; vid: string }[] = [];
 
 test.beforeAll(async ({ playwright }) => {
   hr = await playwright.request.newContext({ baseURL: BASE_URL });
-  const me = await ok(await hr.post(`${API}/auth/login`, { data: HR }), 'hr login');
+  const me = await login(hr, HR, 'hr login');
   companyId = me.companies[0].id;
   const stamp = Date.now();
   const cand = await playwright.request.newContext({ baseURL: BASE_URL });
-  await ok(await cand.post(`${API}/auth/login`, { data: CANDIDATE }), 'candidate login');
+  await login(cand, CANDIDATE, 'candidate login');
   for (const n of [1, 2]) {
     const vid = await makeInterviewVacancy(hr, companyId, stamp, n);
     vacancyIds.push(vid);
@@ -57,7 +57,7 @@ test.afterAll(async () => {
 });
 
 async function signInCandidate(page: Page) {
-  await ok(await page.request.post(`${API}/auth/login`, { data: CANDIDATE }), 'login');
+  await login(page.request, CANDIDATE, 'login');
 }
 
 async function passRulesAndWarmup(page: Page, aid: string) {
@@ -205,7 +205,7 @@ test('HR replays the session to the end: Monaco text equals final_code exactly',
 }) => {
   const { aid } = applications[0];
   const hrPage = await (await browser.newContext()).newPage();
-  await ok(await hrPage.request.post(`${API}/auth/login`, { data: HR }), 'hr login');
+  await login(hrPage.request, HR, 'hr login');
   const report = await ok(
     await hrPage.request.get(`${API}/companies/${companyId}/applications/${aid}/stage1`),
     'report',
@@ -290,7 +290,7 @@ test('a large external paste disqualifies and is never inserted', async ({ page,
 
   // HR report: suspicion 100 and the paste mark on the timeline.
   const hrPage = await (await browser.newContext()).newPage();
-  await ok(await hrPage.request.post(`${API}/auth/login`, { data: HR }), 'hr login');
+  await login(hrPage.request, HR, 'hr login');
   await expect
     .poll(
       async () =>

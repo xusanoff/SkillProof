@@ -110,7 +110,8 @@
   --score-mid: var(--warning);
   --score-low: var(--danger);
   --suspicion-low: var(--success);
-  --suspicion-medium: var(--warning);
+  /* Darker than --warning: the label sits on --warning-soft and must reach 4.5:1. */
+  --suspicion-medium: oklch(0.5 0.12 65);
   --suspicion-high: var(--danger);
 
   /* raw shadcn variable names for any registry code reading them directly */
@@ -141,6 +142,7 @@
   --danger-soft: oklch(0.3 0.07 25);
   --warning: oklch(0.8 0.13 75);
   --warning-soft: oklch(0.31 0.06 70);
+  --suspicion-medium: var(--warning);
   --success: oklch(0.76 0.11 170);
   --success-soft: oklch(0.29 0.05 170);
   --info: oklch(0.75 0.1 240);

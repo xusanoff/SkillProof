@@ -13,7 +13,11 @@ export type TelemetryEventType =
   | 'visibility_hidden'
   | 'visibility_visible'
   | 'idle_start'
-  | 'idle_end';
+  | 'idle_end'
+  | 'question_played'
+  | 'speech_activity'
+  | 'typing_activity'
+  | 'think';
 
 export interface TelemetryEvent {
   seq: number;

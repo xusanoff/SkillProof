@@ -14,6 +14,7 @@ from app.models.enums import (
     SignalSeverity,
 )
 from app.models.interview import PAGE_SEQ
+from app.schemas.verified_skill import ReuseOfferOut
 
 
 class RulesAcceptIn(BaseModel):
@@ -125,6 +126,11 @@ class InterviewStateOut(BaseModel):
     blocked_reason: str | None
     warmup: WarmupOut | None
     session: SessionOut | None
+    stage2_available: bool = False
+    stage2_session_id: uuid.UUID | None = None
+    stage2_status: SessionStatus | None = None
+    stage2_mode: str | None = None  # voice | text
+    reuse: ReuseOfferOut | None = None  # before Stage 1 starts, when something can be skipped
 
 
 class ClientEvent(BaseModel):
@@ -232,3 +238,48 @@ class ReplayOut(BaseModel):
     start_ms: int
     end_ms: int
     events: list[ReplayEvent]
+
+
+class TurnCodeOut(BaseModel):
+    language: str
+    code: str
+    lines: list[int]
+
+
+class TurnOut(BaseModel):
+    id: uuid.UUID
+    order: int
+    kind: str
+    is_follow_up: bool
+    text: str
+    has_audio: bool
+    code: TurnCodeOut | None
+    # True once the AI has finished asking: the answer clocks are running.
+    asked: bool
+    answer_deadline: datetime | None
+    think_available: bool
+
+
+class Stage2SessionOut(BaseModel):
+    id: uuid.UUID
+    application_id: uuid.UUID
+    status: SessionStatus
+    reason: str | None
+    mode: str  # voice | text
+    can_fall_back_to_text: bool
+    # Mock STT cannot hear: the room shows a box for what would have been said.
+    transcript_hint_needed: bool
+    language: str
+    started_at: datetime | None
+    expires_at: datetime | None
+    server_now: datetime
+    question_count: int
+    answered_count: int
+    answer_limit_s: int
+    warning_s: int
+    limit_s: int
+    audio_max_bytes: int
+    answer_max_chars: int
+    # True while the next question is being prepared: poll again shortly.
+    preparing: bool
+    current_turn: TurnOut | None

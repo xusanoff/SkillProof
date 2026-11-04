@@ -136,6 +136,11 @@ class EditorEventType(StrEnum):
     visibility_visible = "visibility_visible"
     idle_start = "idle_start"
     idle_end = "idle_end"
+    # Stage 2 (payload: {"turn_id"}): activity is reported by the client's VAD / text box.
+    question_played = "question_played"
+    speech_activity = "speech_activity"
+    typing_activity = "typing_activity"
+    think = "think"
     editor_reset = "editor_reset"  # new language or restored draft: {language, code} (D-086)
 
 

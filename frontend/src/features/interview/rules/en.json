@@ -16,8 +16,8 @@
       "body": "Typing and editing are recorded so the employer can replay how the code was written."
     },
     {
-      "title": "Stage 2 — voice conversation",
-      "body": "Stage 2 is a voice conversation with an AI. Long silences and other signals are recorded. The AI will ask about your own code."
+      "title": "Stage 2 — spoken interview",
+      "body": "Stage 2 is a spoken interview with an AI. The voice in your answers is recorded and stored so the employer can review it (in text mode, the text of your answers is stored). Long silences and other signals are recorded. The AI will ask about your own code."
     },
     {
       "title": "Inactivity limit: 90 seconds",

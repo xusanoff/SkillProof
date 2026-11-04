@@ -28,7 +28,16 @@ export function useDeadlineSeconds(
   return secondsLeft(deadline, serverClock(anchor.serverNow, anchor.at)(now));
 }
 
-export function TimerChip({ seconds, label }: { seconds: number | null; label: string }) {
+export function TimerChip({
+  seconds,
+  label,
+  showLabel,
+}: {
+  seconds: number | null;
+  label: string;
+  /** Show the label to everyone, not only to screen readers (two clocks side by side). */
+  showLabel?: boolean;
+}) {
   if (seconds === null) return null;
   const low = seconds <= 60;
   return (
@@ -36,7 +45,7 @@ export function TimerChip({ seconds, label }: { seconds: number | null; label: s
       className={`inline-flex min-h-9 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium tabular-nums ${low ? 'border-danger/40 bg-danger-soft' : 'border-border bg-surface'}`}
     >
       <Timer aria-hidden="true" className="size-4" />
-      <span className="sr-only">{label}: </span>
+      <span className={showLabel ? 'font-normal text-muted' : 'sr-only'}>{label}: </span>
       {formatClock(seconds)}
     </p>
   );

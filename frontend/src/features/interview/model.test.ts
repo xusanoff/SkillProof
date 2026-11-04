@@ -72,3 +72,17 @@ describe('helpers', () => {
     expect(inactivityCountdown(null)).toBeNull();
   });
 });
+
+describe('Stage 2 entry from the cabinet', () => {
+  it('stage2_pending / stage2_in_progress open the room with their own label', async () => {
+    const { canViewInterviewResult, entryLabelKey } = await import('./model');
+    expect(canEnterInterview('stage2_pending')).toBe(true);
+    expect(canEnterInterview('stage2_in_progress')).toBe(true);
+    expect(entryLabelKey('stage2_pending')).toBe('stage2Start');
+    expect(entryLabelKey('stage2_in_progress')).toBe('stage2Open');
+    expect(entryLabelKey('stage1_in_progress')).toBe('resume');
+    expect(entryLabelKey('applied')).toBe('start');
+    expect(canViewInterviewResult('stage2_pending')).toBe(false);
+    expect(canViewInterviewResult('stage2_disqualified')).toBe(true);
+  });
+});

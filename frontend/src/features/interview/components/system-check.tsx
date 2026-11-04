@@ -1,10 +1,11 @@
 'use client';
 
-import { CircleAlert, CircleCheck, Maximize, Mic } from 'lucide-react';
+import { CircleAlert, CircleCheck, Maximize } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Notice } from '@/components/common/notice';
 import { Button } from '@/components/ui/button';
+import { MicTest } from '@/components/voice/mic-test';
 
 export interface Compat {
   websocket: boolean;
@@ -35,6 +36,8 @@ export function enterFullscreen() {
   return document.documentElement.requestFullscreen?.().catch(() => {});
 }
 
+const noop = () => {};
+
 function Row({ ok, label, hint }: { ok: boolean; label: string; hint?: string }) {
   const t = useTranslations('interview.check');
   return (
@@ -54,7 +57,7 @@ function Row({ ok, label, hint }: { ok: boolean; label: string; hint?: string })
   );
 }
 
-/** Browser compatibility, fullscreen (offered, never forced) and the microphone stub (Phase 6). */
+/** Browser compatibility, fullscreen (offered, never forced) and a real microphone test (record + playback; informational, Stage 1 needs no microphone). */
 export function SystemCheck({ onContinue }: { onContinue: () => void }) {
   const t = useTranslations('interview.check');
   const [compat] = useState(detectCompat);
@@ -86,12 +89,7 @@ export function SystemCheck({ onContinue }: { onContinue: () => void }) {
           </Button>
         </div>
       ) : null}
-      <Notice tone="info" title={t('micTitle')}>
-        <span className="inline-flex items-start gap-1.5">
-          <Mic aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-          {t('micStub')}
-        </span>
-      </Notice>
+      <MicTest onResult={noop} />
       {blocked ? (
         <Notice tone="danger" role="alert">
           {t('browserBlocked')}

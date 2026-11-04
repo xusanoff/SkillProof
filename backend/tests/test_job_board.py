@@ -332,7 +332,7 @@ async def test_hr_applicants_flow_and_isolation(signup: SignUp) -> None:
     base = f"/api/v1/companies/{cid}/applications/{item['id']}"
     r = await hr.patch(base, json={"status": "shortlisted"})
     assert r.status_code == 200 and r.json()["status"] == "shortlisted"
-    assert (await hr.patch(base, json={"status": "hired"})).status_code == 422
+    assert (await hr.patch(base, json={"status": "evaluated"})).status_code == 422
     resume = await hr.get(f"{base}/resume")
     assert resume.status_code == 200 and resume.content == PDF
 

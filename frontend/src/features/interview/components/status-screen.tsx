@@ -15,9 +15,11 @@ import { ResultPanel } from './result-panel';
 export function StatusScreen({
   session: initial,
   application,
+  onStartStage2,
 }: {
   session: Session;
   application: InterviewState;
+  onStartStage2?: () => void;
 }) {
   // Live copy: the result is scored after the stage ends and polled until it is ready.
   const session = useSession(initial.id, initial).data ?? initial;
@@ -52,8 +54,24 @@ export function StatusScreen({
       {session.status === 'completed' || session.status === 'expired' ? (
         <ResultPanel session={session} />
       ) : null}
+      {onStartStage2 ? (
+        <div className="grid gap-2 rounded-xl border border-border p-4">
+          <h2 className="text-lg font-semibold">{t('stage2Title')}</h2>
+          <p className="max-w-prose text-sm text-muted">{t('stage2Body')}</p>
+          <div>
+            <Button size="lg" className="min-h-11 px-6" onClick={onStartStage2}>
+              {t('stage2Start')}
+            </Button>
+          </div>
+        </div>
+      ) : null}
       <div>
-        <Button asChild size="lg" className="min-h-11 px-6">
+        <Button
+          asChild
+          variant={onStartStage2 ? 'outline' : 'default'}
+          size="lg"
+          className="min-h-11 px-6"
+        >
           <Link href="/candidate/applications">{t('back')}</Link>
         </Button>
       </div>

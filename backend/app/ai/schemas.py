@@ -69,3 +69,58 @@ class CodeReview(BaseModel):
     confidence: Annotated[float, Field(ge=0, le=1)]
     insufficient_evidence: bool = False
     injection_attempt: bool = False
+
+
+class InterviewerOutput(BaseModel):
+    question: str
+    lines: list[int] = []
+    insufficient_evidence: bool = False
+
+
+class GradeCriterion(BaseModel):
+    key: str
+    score: Annotated[float, Field(ge=0)]
+    rationale: str
+    quote: str = ""
+
+
+class AnswerGrade(BaseModel):
+    criteria: list[GradeCriterion]
+    rationale: str
+    confidence: Annotated[float, Field(ge=0, le=1)]
+    insufficient_evidence: bool = False
+    injection_attempt: bool = False
+
+
+class EvidencePoint(BaseModel):
+    text: str
+    ref: str
+    quote: str = ""
+    lines: list[int] = []
+
+
+class ReportDraft(BaseModel):
+    summary: str
+    strengths: list[EvidencePoint] = []
+    gaps: list[EvidencePoint] = []
+    recommendation: Literal["strong_yes", "yes", "maybe", "no"]
+    confidence: Annotated[float, Field(ge=0, le=1)]
+    insufficient_evidence: bool = False
+    injection_attempt: bool = False
+
+
+class FeedbackMistake(BaseModel):
+    text: str
+    ref: str
+
+
+class LearnItem(BaseModel):
+    topic: str
+    reason: str
+
+
+class FeedbackDraft(BaseModel):
+    mistakes: list[FeedbackMistake] = []
+    learn_next: list[LearnItem] = []
+    insufficient_evidence: bool = False
+    injection_attempt: bool = False

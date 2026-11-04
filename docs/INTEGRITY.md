@@ -58,3 +58,26 @@ Every signal's `evidence` carries `task_id` (except live paste signals) and `at_
 - A client that fakes its whole event stream can avoid the typing signals. Hidden tests, the code review and Stage 2 questions about the candidate's own code are the backstop.
 - `editor_reset` replaces the editor's content and is not checked against the rules, so a modified client could bring in outside code through it. A normal browser only sends it on a language switch or a restored draft.
 - Fast honest typists and people who plan on paper can trigger `linear_writing` or `burst_after_idle`. That is why these inform HR and decide nothing.
+
+## Stage 2 signals
+From `app/ai/integrity/stage2.py`. Deterministic, computed where the session ends. All limits are in the thresholds registry.
+
+| Type | Severity | Rule |
+|---|---|---|
+| `long_silence` | info | Over `long_silence_s` (8 s) before answering, short answer, or the candidate said "let me think" |
+| `long_silence_then_fluent` | medium | The same silence, then at least `fluent_answer_min_words` (40) with no "let me think" |
+| `repeated_long_silences` | medium | At least `long_silence_repeat_count` (3) long silences |
+| `cannot_explain_own_code` | high | Mean own-code score under `own_code_low_percent` (50) over at least `own_code_min_answers` (2) while Stage 1 is at least `own_code_stage1_high_percent` (70) |
+| `reading_style` | low | Voice only: 3+ long answers, almost no fillers, steady pace. A weak heuristic |
+| `evaluator_injection_attempt` | high | An answer gives orders to the evaluator |
+| `asked_for_answer` | info | The candidate asked for the answer |
+| `text_paste_blocked` | low | A paste into the text box was blocked (no disqualification: §7.1 covers Stage 1) |
+| `voice_fallback` | info | The candidate moved from voice to text |
+| focus signals | as Stage 1 | Same rules as Stage 1 |
+| `inactivity` | disqualifying | 90 s with no speech or typing. Counts as medium in suspicion, as in Stage 1 |
+
+Not built yet: background voices and keyboard sounds (later phase, spec §7.3). Speech activity comes from the browser, so a modified client could fake it, as with all client telemetry. No Stage 2 threshold is calibrated on real interviews yet.
+
+## The application's suspicion
+When the report is written (`app/services/reports.py`), the percentage and label are recalculated from the signals of both stages with the same formula. They are shown to HR with the five strongest reasons, and never change a skill score or the score band behind the recommendation. HR overrides cannot change them. The candidate sees none of it, except the reason for a disqualification.
+

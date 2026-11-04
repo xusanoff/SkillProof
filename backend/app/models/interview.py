@@ -80,6 +80,8 @@ class InterviewSession(UUIDPk, Timestamps, Base):
     code_review_percent: Mapped[float | None] = mapped_column(Float)
     needs_review: Mapped[bool] = mapped_column(default=False)
     passed: Mapped[bool | None] = mapped_column()
+    # Stage 2: who is building the next turn; no lock is held across LLM calls (D-091).
+    preparing_since: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class CodeSubmission(UUIDPk, Timestamps, Base):
@@ -131,13 +133,49 @@ class IntegritySignal(UUIDPk, CreatedAt, Base):
     evidence: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
 
 
+class InterviewTurn(UUIDPk, CreatedAt, Base):
+    """One question and its answer (spec §6.2). `asked_at` is when the AI finished asking, which is
+    when the candidate's clocks start (§7.1b). Time lost to a disconnect is kept in `paused_ms`."""
+
+    __tablename__ = "interview_turns"
+    __table_args__ = (UniqueConstraint("session_id", "order"),)
+
+    session_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("interview_sessions.id", ondelete="CASCADE"), index=True
+    )
+    order: Mapped[int] = mapped_column(Integer)
+    kind: Mapped[str] = mapped_column(String(16))  # own_code | bank | follow_up
+    question_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("questions.id"))
+    question_text: Mapped[str] = mapped_column(Text)
+    refers_to: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
+    is_follow_up: Mapped[bool] = mapped_column(default=False)
+    parent_turn_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("interview_turns.id"))
+    difficulty: Mapped[int | None] = mapped_column(Integer)
+    question_audio_url: Mapped[str | None] = mapped_column(String(300))
+    answer_audio_url: Mapped[str | None] = mapped_column(String(300))
+    answer_transcript: Mapped[str | None] = mapped_column(Text)
+    answer_source: Mapped[str | None] = mapped_column(String(16))  # voice | text | timeout
+    # help_request, injection_attempt, thinking_phrase, stt_failed
+    flags: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    shown_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    asked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    speech_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    think_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    answered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    paused_ms: Mapped[int] = mapped_column(Integer, default=0)
+    response_latency_ms: Mapped[int | None] = mapped_column(Integer)
+    silence_ms: Mapped[int | None] = mapped_column(Integer)
+
+
 class Evaluation(UUIDPk, CreatedAt, Base):
     __tablename__ = "evaluations"
 
     session_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("interview_sessions.id", ondelete="CASCADE"), index=True
     )
-    turn_id: Mapped[uuid.UUID | None] = mapped_column()  # interview_turns arrive in Phase 6
+    turn_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("interview_turns.id", ondelete="CASCADE"), index=True
+    )
     submission_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("code_submissions.id", ondelete="CASCADE"), index=True
     )

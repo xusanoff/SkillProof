@@ -23,12 +23,12 @@ export default defineConfig({
   projects: [
     {
       name: 'e2e',
-      testIgnore: /(screenshots|assessment|interview)\.spec\.ts/,
+      testIgnore: /(screenshots|assessment|interview|stage2)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'e2e-live',
-      testMatch: /(assessment|interview)\.spec\.ts/,
+      testMatch: /(assessment|interview|stage2)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
@@ -40,7 +40,14 @@ export default defineConfig({
       name: 'screenshots',
       testMatch: /screenshots\.spec\.ts/,
       // Deterministic captures: no entrance animations.
-      use: { ...devices['Desktop Chrome'], reducedMotion: 'reduce' },
+      use: {
+        ...devices['Desktop Chrome'],
+        reducedMotion: 'reduce',
+        // Phase 6: a fake microphone for the voice interview.
+        launchOptions: {
+          args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'],
+        },
+      },
     },
   ],
 });

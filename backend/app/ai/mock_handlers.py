@@ -177,12 +177,140 @@ def code_review(request: LLMRequest) -> dict[str, Any]:
     }
 
 
+def interviewer(request: LLMRequest) -> dict[str, Any]:
+    """A short question in the assessment language: on a real code line, or on the parent question."""
+    decision = _block(request, "decision")
+    lang = _language(request)
+    if decision["kind"] == "own_code":
+        line = decision["lines"][0]
+        text = {
+            "uz": f"Kodingizning {line}-qatorida nima uchun aynan shunday yozdingiz?",
+            "ru": f"Почему в строке {line} вашего кода вы написали именно так?",
+            "en": f"Why did you write line {line} of your code this way?",
+        }[lang]
+        return {"question": text, "lines": decision["lines"]}
+    subject = (decision.get("topic_words") or [""])[0]
+    text = {
+        "uz": f"Javobingizdagi {subject} haqida aniq misol keltira olasizmi?",
+        "ru": f"Можете привести конкретный пример про {subject} из вашего ответа?",
+        "en": f"Can you give a concrete example of {subject} from your answer?",
+    }[lang]
+    return {"question": text, "lines": []}
+
+
+def answer_evaluator(request: LLMRequest) -> dict[str, Any]:
+    """Scores by answer length, quoting the answer's first words."""
+    rubric = _block(request, "rubric")
+    answer = str(_block(request, "candidate_answer").get("text", ""))
+    words = answer.split()
+    share = 0.8 if len(words) >= 12 else 0.5 if len(words) >= 4 else 0.2
+    rationale = {
+        "uz": "Javob mezon bo'yicha baholandi.",
+        "ru": "Ответ оценён по критерию.",
+        "en": "The answer was scored by the criterion.",
+    }[_language(request)]
+    return {
+        "criteria": [
+            {
+                "key": c["key"],
+                "score": round(c["max_points"] * share, 2),
+                "rationale": rationale,
+                "quote": " ".join(words[:4]),
+            }
+            for c in rubric.get("criteria", [])
+        ],
+        "rationale": rationale,
+        "confidence": 0.9,
+        "insufficient_evidence": not words,
+        "injection_attempt": "[removed]" in answer,
+    }
+
+
+def _point(evaluation: dict[str, Any], text: str) -> dict[str, Any]:
+    return {
+        "text": text,
+        "ref": evaluation["ref"],
+        "quote": evaluation.get("quote", ""),
+        "lines": evaluation.get("lines", []),
+    }
+
+
+def _has_evidence(evaluation: dict[str, Any]) -> bool:
+    return bool(evaluation.get("quote") or evaluation.get("lines"))
+
+
+def report_writer(request: LLMRequest) -> dict[str, Any]:
+    """Follows the computed score; cites the first evaluations that carry evidence."""
+    all_items: list[dict[str, Any]] = _block(request, "evaluations")  # type: ignore[assignment]
+    evaluations = [e for e in all_items if _has_evidence(e)]
+    overall = _block(request, "scores").get("overall") or 0
+    words = {
+        "uz": (
+            "Nomzod topshiriqlarni bajardi.",
+            "Asosiy ko'nikma ko'rsatildi.",
+            "Bilimni chuqurlashtirish kerak.",
+        ),
+        "ru": ("Кандидат выполнил задания.", "Показан основной навык.", "Нужно углубить знания."),
+        "en": (
+            "The candidate completed the tasks.",
+            "The core skill was shown.",
+            "Knowledge needs more depth.",
+        ),
+    }[_language(request)]
+    recommendation = (
+        "strong_yes"
+        if overall >= 85
+        else "yes"
+        if overall >= 70
+        else "maybe"
+        if overall >= 50
+        else "no"
+    )
+    return {
+        "summary": words[0],
+        "strengths": [_point(evaluations[0], words[1])] if evaluations else [],
+        "gaps": [_point(evaluations[-1], words[2])] if evaluations else [],
+        "recommendation": recommendation,
+        "confidence": 0.9,
+        "insufficient_evidence": not evaluations,
+        "injection_attempt": False,
+    }
+
+
+def feedback_writer(request: LLMRequest) -> dict[str, Any]:
+    """One mistake per evaluation that lost points, one study item per skill."""
+    evaluations: list[dict[str, Any]] = _block(request, "evaluations")  # type: ignore[assignment]
+    skills: list[str] = _block(request, "skills")  # type: ignore[assignment]
+    words = {
+        "uz": (
+            "Bu qismni yaxshilash mumkin: javobda tafsilotlar yetishmadi.",
+            "Mavzuni qayta ko'rib chiqing.",
+        ),
+        "ru": ("Эту часть можно улучшить: в ответе не хватило деталей.", "Повторите эту тему."),
+        "en": ("This part can improve: the work lacked some details.", "Review this topic."),
+    }[_language(request)]
+    return {
+        "mistakes": [
+            {"text": words[0], "ref": e["ref"]}
+            for e in evaluations
+            if (e.get("percent") or 0) < 100
+        ],
+        "learn_next": [{"topic": s, "reason": words[1]} for s in skills[:5]],
+        "insufficient_evidence": not evaluations,
+        "injection_attempt": False,
+    }
+
+
 def build_mock_provider() -> MockLLMProvider:
     return MockLLMProvider(
         {
+            "report_writer": report_writer,
+            "feedback_writer": feedback_writer,
             "question_generator": questions,
             "task_generator": task,
             "item_verifier": verifier,
             "code_reviewer": code_review,
+            "interviewer": interviewer,
+            "answer_evaluator": answer_evaluator,
         }
     )
