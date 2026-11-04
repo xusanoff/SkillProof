@@ -108,6 +108,10 @@ def get_stt(settings: Settings | None = None) -> STTProvider:
     settings = settings or get_settings()
     if settings.stt_provider == "mock":
         return MeteredSTT(MockSTTProvider())
+    if settings.stt_provider == "azure":
+        from app.ai.azure_speech import AzureSTT
+
+        return MeteredSTT(AzureSTT(settings))
     raise NotImplementedError(f"STT provider '{settings.stt_provider}' is not implemented yet")
 
 
@@ -115,4 +119,8 @@ def get_tts(settings: Settings | None = None) -> TTSProvider:
     settings = settings or get_settings()
     if settings.tts_provider == "mock":
         return MeteredTTS(MockTTSProvider())
+    if settings.tts_provider == "azure":
+        from app.ai.azure_speech import AzureTTS
+
+        return MeteredTTS(AzureTTS(settings))
     raise NotImplementedError(f"TTS provider '{settings.tts_provider}' is not implemented yet")

@@ -10,7 +10,7 @@ from app.core.thresholds import Thresholds
 
 Environment = Literal["local", "test", "staging", "production"]
 LLMProvider = Literal["mock", "openai_compatible", "gemini", "anthropic"]
-SpeechProvider = Literal["mock"]
+SpeechProvider = Literal["mock", "azure"]
 
 
 _DEV_JWT_SECRET = "dev-only-insecure-jwt-secret-change-me-in-env"
@@ -152,6 +152,10 @@ class Settings(BaseSettings):
             ]
             if not_real:
                 raise ValueError(f"Production needs real services: {', '.join(not_real)}")
+        if "azure" in (self.stt_provider, self.tts_provider) and not (
+            self.azure_speech_key and self.azure_speech_region
+        ):
+            raise ValueError("The azure speech provider needs AZURE_SPEECH_KEY and _REGION")
         if self.email_backend == "smtp" and not (self.smtp_host and self.smtp_from):
             raise ValueError("EMAIL_BACKEND=smtp needs SMTP_HOST and SMTP_FROM")
         telegram = (
@@ -181,6 +185,8 @@ class Settings(BaseSettings):
     llm_extra_body: dict[str, Any] = Field(default_factory=dict)
     stt_provider: SpeechProvider = "mock"
     tts_provider: SpeechProvider = "mock"
+    azure_speech_key: SecretStr | None = None
+    azure_speech_region: str | None = None
 
     # Global defaults for every configurable threshold (spec §0.9). Override with
     # e.g. THRESHOLDS__INTEGRITY__INACTIVITY_LIMIT_S=120; per-assessment overrides

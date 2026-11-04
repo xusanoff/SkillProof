@@ -30,6 +30,8 @@ x-api-env: &api-env
   JUDGE0_AUTHN_TOKEN: ${JUDGE0_AUTHN_TOKEN:-dev-only-judge0-token}
   STT_PROVIDER: ${STT_PROVIDER:-mock}
   TTS_PROVIDER: ${TTS_PROVIDER:-mock}
+  AZURE_SPEECH_KEY: ${AZURE_SPEECH_KEY:-}
+  AZURE_SPEECH_REGION: ${AZURE_SPEECH_REGION:-}
 
 x-judge0-env: &judge0-env
   REDIS_PASSWORD: ${JUDGE0_REDIS_PASSWORD:-dev-only-judge0-redis}

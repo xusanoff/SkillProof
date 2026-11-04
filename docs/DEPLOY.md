@@ -3,7 +3,7 @@
 One Linux server with Docker Compose 2.24 or newer. Caddy gets HTTPS certificates by itself; nothing else is reachable from outside.
 
 ## Before you start
-- **Not ready yet:** STT and TTS have only mock providers in the code, and production refuses to start on a mock. Connect the speech providers first. Until then, try the setup with `ENVIRONMENT=staging`, which allows mocks. Staging results are invented, so do not use it for real hiring.
+- Real LLM, speech and SMTP settings: production refuses to start on a mock. To try the setup without them, use `ENVIRONMENT=staging`. Staging results are invented, so do not use it for real hiring.
 - A domain whose A record points at the server, and ports 80 and 443 open.
 - SMTP credentials.
 - 4 GB of RAM or more: Judge0 runs candidates' code.
