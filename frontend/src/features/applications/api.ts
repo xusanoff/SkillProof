@@ -4,17 +4,15 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { patchViewer } from '@/features/vacancies';
 import { unwrap } from '@/lib/api';
 import { useApi } from '@/lib/api/use-api';
-import type { ApplicationStatus, HrStatus } from './model';
+import type { ApplicationStatus, HrListQuery, HrStatus } from './model';
 
 export const applicationKeys = {
   all: ['applications'] as const,
   mine: (status: ApplicationStatus | null, page: number) =>
     [...applicationKeys.all, 'mine', status, page] as const,
   company: (companyId: string) => [...applicationKeys.all, 'company', companyId] as const,
-  companyList: (
-    companyId: string,
-    q: { vacancyId: string | null; status: ApplicationStatus; page: number },
-  ) => [...applicationKeys.company(companyId), q] as const,
+  companyList: (companyId: string, q: HrListQuery) =>
+    [...applicationKeys.company(companyId), q] as const,
 };
 
 export function useMyApplications(status: ApplicationStatus | null, page: number) {
@@ -50,10 +48,7 @@ export function useWithdraw() {
 }
 
 /** Lists the company's applications. Note: the API marks returned items as seen by HR. */
-export function useCompanyApplications(
-  companyId: string,
-  q: { vacancyId: string | null; status: ApplicationStatus; page: number },
-) {
+export function useCompanyApplications(companyId: string, q: HrListQuery) {
   const api = useApi();
   return useQuery({
     queryKey: applicationKeys.companyList(companyId, q),
@@ -63,8 +58,11 @@ export function useCompanyApplications(
           params: {
             path: { company_id: companyId },
             query: {
-              status: q.status,
+              tab: q.tab,
+              sort: 'score',
               page: q.page,
+              ...(q.status ? { status: q.status } : {}),
+              ...(q.minScore !== null ? { min_score: q.minScore } : {}),
               ...(q.vacancyId ? { vacancy_id: q.vacancyId } : {}),
             },
           },
@@ -74,7 +72,7 @@ export function useCompanyApplications(
   });
 }
 
-/** Shortlist / reject / back to new. Not optimistic (react-architecture §6). */
+/** Shortlist / reject / hire / back to new. Not optimistic (react-architecture §6). */
 export function useSetApplicationStatus(companyId: string) {
   const api = useApi();
   const queryClient = useQueryClient();
@@ -90,6 +88,7 @@ export function useSetApplicationStatus(companyId: string) {
       Promise.all([
         queryClient.invalidateQueries({ queryKey: applicationKeys.company(companyId) }),
         queryClient.invalidateQueries({ queryKey: ['hr-vacancies', companyId] }),
+        queryClient.invalidateQueries({ queryKey: ['hr-report', companyId] }),
       ]),
   });
 }

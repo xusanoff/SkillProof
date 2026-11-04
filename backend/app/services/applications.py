@@ -3,13 +3,20 @@
 import uuid
 from datetime import UTC, datetime
 
-from sqlalchemy import ColumnElement, func, select
+from sqlalchemy import ColumnElement, and_, func, not_, or_, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.errors import AppError, NotFoundError, PermissionDeniedError
-from app.models import Application, CandidateProfile, SavedVacancy, User, Vacancy
+from app.models import (
+    Application,
+    CandidateProfile,
+    SavedVacancy,
+    SessionReport,
+    User,
+    Vacancy,
+)
 from app.models.enums import ApplicationStatus, UserRole, VacancyStatus
 from app.schemas.vacancy import (
     ApplicationOut,
@@ -30,6 +37,13 @@ _WITHDRAWABLE = {
     ApplicationStatus.interview_pending,
     ApplicationStatus.shortlisted,
 }
+
+
+_EXCLUDED = (
+    ApplicationStatus.stage1_failed,
+    ApplicationStatus.stage1_disqualified,
+    ApplicationStatus.stage2_disqualified,
+)
 
 
 def _now() -> datetime:
@@ -184,6 +198,9 @@ async def hr_list(
     status: ApplicationStatus | None,
     page: int,
     size: int,
+    tab: str | None = None,
+    min_score: float | None = None,
+    sort: str = "recent",
 ) -> HrApplicationPage:
     await get_membership(session, company_id, user)
     where: list[ColumnElement[bool]] = [
@@ -194,22 +211,47 @@ async def hr_list(
         where.append(Application.vacancy_id == vacancy_id)
     if status:
         where.append(Application.status == status)
-    base = select(Application).join(Vacancy, Vacancy.id == Application.vacancy_id).where(*where)
+    # Spec §8: the failed and the disqualified are never mixed into the ranking.
+    excluded = or_(
+        Application.status.in_(_EXCLUDED),
+        and_(
+            Application.status == ApplicationStatus.evaluated,
+            SessionReport.stage2_passed.is_(False),
+        ),
+    )
+    if tab == "excluded":
+        where.append(excluded)
+    elif tab == "ranked":
+        where.append(not_(excluded))
+    if min_score is not None:
+        where.append(Application.final_score >= min_score)
+    base = (
+        select(Application)
+        .join(Vacancy, Vacancy.id == Application.vacancy_id)
+        .outerjoin(SessionReport, SessionReport.application_id == Application.id)
+        .where(*where)
+    )
+    order = (
+        (Application.final_score.desc().nulls_last(), Application.created_at.desc())
+        if sort == "score"
+        else (Application.created_at.desc(),)
+    )
     total = await session.scalar(select(func.count()).select_from(base.subquery()))
     rows = await session.execute(
-        select(Application, Vacancy, User, CandidateProfile)
+        select(Application, Vacancy, User, CandidateProfile, SessionReport)
         .join(Vacancy, Vacancy.id == Application.vacancy_id)
         .join(User, User.id == Application.candidate_id)
         .outerjoin(CandidateProfile, CandidateProfile.user_id == User.id)
+        .outerjoin(SessionReport, SessionReport.application_id == Application.id)
         .where(*where)
-        .order_by(Application.created_at.desc(), Application.id)
+        .order_by(*order, Application.id)
         .limit(size)
         .offset((page - 1) * size)
     )
     items = []
     seen: list[Application] = []
-    for app, vacancy, cand, profile in rows.all():
-        items.append(_hr_application(app, vacancy, cand, profile))
+    for app, vacancy, cand, profile, report in rows.all():
+        items.append(_hr_application(app, vacancy, cand, profile, report))
         if app.seen_by_hr_at is None:
             seen.append(app)
     # Listing applications marks them as seen, which clears the "+N new" badge.
@@ -221,7 +263,11 @@ async def hr_list(
 
 
 def _hr_application(
-    app: Application, vacancy: Vacancy, cand: User, profile: CandidateProfile | None
+    app: Application,
+    vacancy: Vacancy,
+    cand: User,
+    profile: CandidateProfile | None,
+    report: SessionReport | None = None,
 ) -> HrApplication:
     return HrApplication(
         id=app.id,
@@ -229,6 +275,12 @@ def _hr_application(
         suspicion_percent=app.suspicion_percent,
         suspicion_label=app.suspicion_label,
         disqualification_reason=app.disqualification_reason,
+        final_score=app.final_score,
+        stage1_score=report.stage1_score if report else None,
+        stage2_score=report.stage2_score if report else None,
+        recommendation=report.recommendation if report else None,
+        needs_review=report.needs_review if report else False,
+        report_state=report.state.value if report else None,
         cover_note=app.cover_note,
         created_at=app.created_at,
         updated_at=app.updated_at,
@@ -290,8 +342,11 @@ async def hr_update_status(
     await session.refresh(app)
     cand = await session.get(User, app.candidate_id)
     profile = await session.get(CandidateProfile, app.candidate_id)
+    report = await session.scalar(
+        select(SessionReport).where(SessionReport.application_id == app.id)
+    )
     assert cand is not None
-    return _hr_application(app, vacancy, cand, profile)
+    return _hr_application(app, vacancy, cand, profile, report)
 
 
 async def hr_resume(

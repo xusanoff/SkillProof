@@ -32,6 +32,7 @@ import { cn } from '@/lib/utils';
 import { useMyApplications, useWithdraw } from '../api';
 import {
   CANDIDATE_TABS,
+  canViewResults,
   canWithdraw,
   parseTab,
   type Application,
@@ -39,6 +40,13 @@ import {
 } from '../model';
 
 /** "Arizalarim": the candidate's applications with status tabs and withdraw. */
+const ENTRY_LABEL = {
+  start: 'interviewStart',
+  resume: 'interviewResume',
+  stage2Start: 'interviewStage2Start',
+  stage2Open: 'interviewStage2Open',
+} as const;
+
 export function CandidateApplications() {
   const t = useTranslations('applications');
   const tc = useTranslations('common');
@@ -181,10 +189,15 @@ function ApplicationRow({
             <Link href={`/candidate/interview/${a.id}`}>{t('interviewResult')}</Link>
           </Button>
         ) : null}
+        {canViewResults(a.status) ? (
+          <Button asChild variant="outline" size="lg" className="min-h-11 px-4">
+            <Link href={`/candidate/applications/${a.id}/results`}>{t('viewResults')}</Link>
+          </Button>
+        ) : null}
         {canEnterInterview(a.status) ? (
           <Button asChild size="lg" className="min-h-11 px-4">
             <Link href={`/candidate/interview/${a.id}`}>
-              {t(entryLabelKey(a.status) === 'resume' ? 'interviewResume' : 'interviewStart')}
+              {t(ENTRY_LABEL[entryLabelKey(a.status)])}
             </Link>
           </Button>
         ) : null}

@@ -238,6 +238,12 @@ class HrApplication(BaseModel):
     suspicion_percent: int | None = None
     suspicion_label: str | None = None
     disqualification_reason: str | None = None
+    final_score: float | None = None
+    stage1_score: float | None = None
+    stage2_score: float | None = None
+    recommendation: str | None = None
+    needs_review: bool = False
+    report_state: str | None = None
     cover_note: str | None
     created_at: datetime
     updated_at: datetime
@@ -253,4 +259,4 @@ class HrApplicationPage(BaseModel):
 
 
 class HrApplicationUpdate(BaseModel):
-    status: Literal["applied", "shortlisted", "rejected"]
+    status: Literal["applied", "shortlisted", "rejected", "hired"]

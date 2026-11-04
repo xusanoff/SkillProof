@@ -49,6 +49,35 @@ async def sweep_stage1(ctx: dict[str, Any]) -> None:
         )
 
 
+async def sweep_stage2(ctx: dict[str, Any]) -> None:
+    from app.core.db import SessionLocal
+    from app.services.stage2 import sweep
+
+    async with SessionLocal() as session:
+        await sweep(session)
+
+
+async def finalize_application(ctx: dict[str, Any], application_id: str) -> None:
+    from app.ai.llm_client import get_llm_client
+    from app.core.db import SessionLocal
+    from app.services.reports import finalize
+
+    async with SessionLocal() as session:
+        await finalize(session, uuid.UUID(application_id), get_llm_client())
+
+
+async def sweep_reports(ctx: dict[str, Any]) -> None:
+    from app.core.db import SessionLocal
+    from app.services.reports import due
+
+    async with SessionLocal() as session:
+        applications = await due(session)
+    for application_id in applications:
+        await ctx["redis"].enqueue_job(
+            "finalize_application", str(application_id), _job_id=f"report-{application_id}"
+        )
+
+
 async def startup(ctx: dict[str, Any]) -> None:
     configure_logging(get_settings().log_level)
     logger.info("worker_started")
@@ -60,8 +89,13 @@ class WorkerSettings:
         generate_assessment_items,
         # keep_result=0: a stored result would block the retry that reuses this job id.
         func(evaluate_stage1, keep_result=0),
+        func(finalize_application, keep_result=0),
     ]
-    cron_jobs: ClassVar[list[Any]] = [cron(sweep_stage1, second={0, 15, 30, 45})]
+    cron_jobs: ClassVar[list[Any]] = [
+        cron(sweep_stage1, second={0, 15, 30, 45}),
+        cron(sweep_stage2, second={5, 20, 35, 50}),
+        cron(sweep_reports, second={10, 25, 40, 55}),
+    ]
     job_timeout = 600
     on_startup = startup
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)

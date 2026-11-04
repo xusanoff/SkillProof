@@ -86,3 +86,13 @@ export function disqualificationKey(
     ? reason
     : 'other';
 }
+
+export const RECOMMENDATIONS = ['strong_yes', 'yes', 'maybe', 'no'] as const;
+export type RecommendationName = (typeof RECOMMENDATIONS)[number];
+
+/** The server's recommendation if it is one the UI knows; otherwise `null` (hidden). */
+export function recommendationKey(value: string | null | undefined): RecommendationName | null {
+  return (RECOMMENDATIONS as readonly string[]).includes(value ?? '')
+    ? (value as RecommendationName)
+    : null;
+}

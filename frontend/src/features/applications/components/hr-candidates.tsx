@@ -1,9 +1,9 @@
 'use client';
 
-import { Download, MapPin, UsersRound } from 'lucide-react';
+import { Download, MapPin, TriangleAlert, UsersRound } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useId, useState } from 'react';
+import { useId, useState, type KeyboardEvent } from 'react';
 import { ApplicationStatusBadge } from '@/components/common/application-status-badge';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
@@ -11,11 +11,12 @@ import { Pagination } from '@/components/common/pagination';
 import { Salary } from '@/components/common/salary';
 import { TabLinks } from '@/components/common/tab-links';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
 import { SuspicionBadge } from '@/components/common/suspicion-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { NeedsCompany, useActiveCompany } from '@/features/companies';
-import { suspicionLevel } from '@/features/hr-stage1';
+import { percentText, recommendationKey, suspicionLevel } from '@/features/hr-stage1';
 import { useHrVacancies } from '@/features/hr-vacancies';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useFormat } from '@/lib/format';
@@ -23,9 +24,19 @@ import { useErrorText } from '@/lib/forms';
 import { pageCount } from '@/lib/pagination';
 import { cn } from '@/lib/utils';
 import { resumeUrl, useCompanyApplications, useSetApplicationStatus } from '../api';
-import { HR_TABS, hrActions, type HrApplication, type HrStatus } from '../model';
+import {
+  HR_LIST_TABS,
+  HR_STATUS_FILTERS,
+  hasScores,
+  hrActions,
+  hrListHref,
+  parseHrQuery,
+  parseMinScore,
+  type HrApplication,
+  type HrStatusFilter,
+} from '../model';
 
-/** "Nomzodlar" (hh "Отклики"): applications per vacancy and status. No AI ranking yet. */
+/** "Nomzodlar": the ranking by test result and the failed / disqualified tab (spec §8). */
 export function HrCandidates() {
   const { active } = useActiveCompany();
   if (!active) return <NeedsCompany />;
@@ -35,42 +46,40 @@ export function HrCandidates() {
 function Candidates({ companyId }: { companyId: string }) {
   const t = useTranslations('hrCandidates');
   const tc = useTranslations('common');
+  const ts = useTranslations('applicationStatus');
   const errorText = useErrorText();
   const router = useRouter();
   const selectId = useId();
   const params = useSearchParams();
-  const vacancyId = params.get('vacancy');
-  const raw = params.get('status');
-  const status: HrStatus = (HR_TABS as readonly string[]).includes(raw ?? '')
-    ? (raw as HrStatus)
-    : 'applied';
-  const page = Math.max(1, Number(params.get('page')) || 1);
+  const query = parseHrQuery(new URLSearchParams(params.toString()));
+  const { tab, status, minScore, page } = query;
+  const statusId = useId();
+  const minId = useId();
   const vacancies = useHrVacancies(companyId, null, 1, 50);
-  const list = useCompanyApplications(companyId, { vacancyId, status, page });
+  const list = useCompanyApplications(companyId, query);
+  const href = (next: Parameters<typeof hrListHref>[1]) => hrListHref(query, { page: 1, ...next });
 
-  const href = (next: { vacancy?: string | null; status?: HrStatus }) => {
-    const p = new URLSearchParams();
-    const v = next.vacancy === undefined ? vacancyId : next.vacancy;
-    if (v) p.set('vacancy', v);
-    p.set('status', next.status ?? status);
-    return `/hr/candidates?${p.toString()}`;
+  const applyMin = (raw: string) => {
+    const next = parseMinScore(raw);
+    if (next !== minScore) router.replace(href({ minScore: next }));
   };
 
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{t('title')}</h1>
-          <p className="mt-1 text-sm text-muted">{t('lead')}</p>
-        </div>
-        <div className="grid w-full gap-1.5 sm:w-80">
+      <div>
+        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <p className="mt-1 text-sm text-muted">{t('lead')}</p>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)_8rem]">
+        <div className="grid gap-1.5">
           <label htmlFor={selectId} className="text-sm text-muted">
             {t('vacancyFilter')}
           </label>
           <NativeSelect
             id={selectId}
-            value={vacancyId ?? ''}
-            onChange={(e) => router.replace(href({ vacancy: e.target.value || null }))}
+            value={query.vacancyId ?? ''}
+            onChange={(e) => router.replace(href({ vacancyId: e.target.value || null }))}
           >
             <option value="">{t('allVacancies')}</option>
             {(vacancies.data?.items ?? []).map((v) => (
@@ -80,13 +89,57 @@ function Candidates({ companyId }: { companyId: string }) {
             ))}
           </NativeSelect>
         </div>
+        <div className="grid gap-1.5">
+          <label htmlFor={statusId} className="text-sm text-muted">
+            {t('statusFilter')}
+          </label>
+          <NativeSelect
+            id={statusId}
+            value={status ?? ''}
+            onChange={(e) =>
+              router.replace(href({ status: (e.target.value || null) as HrStatusFilter | null }))
+            }
+          >
+            <option value="">{t('allStatuses')}</option>
+            {HR_STATUS_FILTERS.map((s) => (
+              <option key={s} value={s}>
+                {ts(s)}
+              </option>
+            ))}
+          </NativeSelect>
+        </div>
+        <div className="grid gap-1.5">
+          <label htmlFor={minId} className="text-sm text-muted">
+            {t('minScore')}
+          </label>
+          <Input
+            key={minScore ?? 'none'}
+            id={minId}
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={100}
+            defaultValue={minScore ?? ''}
+            placeholder="0–100"
+            className="tabular-nums"
+            onBlur={(e) => applyMin(e.target.value)}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === 'Enter') applyMin(e.currentTarget.value);
+            }}
+          />
+        </div>
       </div>
 
       <TabLinks
         label={t('tabsLabel')}
-        active={status}
-        items={HR_TABS.map((s) => ({ key: s, label: t(`tabs.${s}`), href: href({ status: s }) }))}
+        active={tab}
+        items={HR_LIST_TABS.map((k) => ({
+          key: k,
+          label: t(`tabs.${k}`),
+          href: href({ tab: k }),
+        }))}
       />
+      {tab === 'excluded' ? <p className="text-sm text-muted">{t('excludedLead')}</p> : null}
 
       {list.isError && !list.data ? (
         <ErrorState
@@ -102,14 +155,18 @@ function Candidates({ companyId }: { companyId: string }) {
           ))}
         </div>
       ) : list.data.items.length === 0 ? (
-        <EmptyState icon={UsersRound} title={t(`empty.${status}`)} description={t('emptyBody')} />
+        <EmptyState icon={UsersRound} title={t(`empty.${tab}`)} description={t('emptyBody')} />
       ) : (
         <>
           <p className="text-sm text-muted">{t('total', { count: list.data.total })}</p>
           <ul className={cn('grid gap-3', list.isPlaceholderData && 'opacity-60')}>
             {list.data.items.map((a) => (
               <li key={a.id}>
-                <CandidateRow application={a} companyId={companyId} showVacancy={!vacancyId} />
+                <CandidateRow
+                  application={a}
+                  companyId={companyId}
+                  showVacancy={!query.vacancyId}
+                />
               </li>
             ))}
           </ul>
@@ -117,7 +174,7 @@ function Candidates({ companyId }: { companyId: string }) {
             page={page}
             totalPages={pageCount(list.data.total, list.data.page_size)}
             pathname="/hr/candidates"
-            query={new URLSearchParams(href({}).split('?')[1]).toString()}
+            query={new URLSearchParams(href({ page: 1 }).split('?')[1]).toString()}
           />
         </>
       )}
@@ -146,17 +203,27 @@ function CandidateRow({
     : null;
   const place = [c.city, country].filter(Boolean).join(', ');
   const noteId = `note-${a.id}`;
+  const started = interviewStarted(a);
   const hasSalary = c.desired_salary_min !== null || c.desired_salary_max !== null;
 
   return (
     <article
       aria-labelledby={`cand-${a.id}`}
-      className="grid gap-4 rounded-xl border border-border bg-surface p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_11rem]"
+      className="grid gap-4 rounded-xl border border-border bg-surface p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_15rem]"
     >
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <h2 id={`cand-${a.id}`} className="text-lg font-semibold">
-            {c.full_name}
+            {started ? (
+              <Link
+                href={`/hr/candidates/${a.id}`}
+                className="text-accent underline-offset-4 hover:underline"
+              >
+                {c.full_name}
+              </Link>
+            ) : (
+              c.full_name
+            )}
           </h2>
           <ApplicationStatusBadge status={a.status} />
         </div>
@@ -263,22 +330,49 @@ function CandidateRow({
         ) : null}
       </div>
 
-      <Stage1Cell application={a} />
+      <ScoreCell application={a} started={started} />
     </article>
   );
 }
 
-/** Stage 1 summary for HR: suspicion badge (from the server) and the report link. Never decides anything. */
-function Stage1Cell({ application: a }: { application: HrApplication }) {
-  const t = useTranslations('hrCandidates.stage1');
+/** The interview began or left a result, so a report page exists to open. */
+function interviewStarted(a: HrApplication): boolean {
+  return (
+    hasScores(a) ||
+    a.suspicion_percent != null ||
+    a.report_state != null ||
+    a.status.startsWith('stage') ||
+    a.status === 'evaluated'
+  );
+}
+
+/**
+ * Scores for HR, as the server computed them: overall, Stage 1, Stage 2 (a missing score is a dash,
+ * never 0), suspicion badge, recommendation and the "needs review" mark. Decides nothing.
+ */
+function ScoreCell({ application: a, started }: { application: HrApplication; started: boolean }) {
+  const t = useTranslations('hrCandidates.scores');
   const level = suspicionLevel(a.suspicion_label);
-  const started = a.suspicion_percent != null || a.status.startsWith('stage');
+  const recommendation = recommendationKey(a.recommendation);
   return (
     <aside
       aria-label={t('label')}
-      className="grid content-start gap-1.5 rounded-lg border border-border p-3 text-sm"
+      className="grid content-start gap-2 rounded-lg border border-border p-3 text-sm"
     >
-      <p className="font-medium">{t('title')}</p>
+      <dl className="grid grid-cols-3 gap-2">
+        <div className="col-span-3">
+          <dt className="text-muted">{t('overall')}</dt>
+          <dd className="text-2xl font-semibold tabular-nums">{percentText(a.final_score)}</dd>
+        </div>
+        <div>
+          <dt className="text-muted">{t('stage1')}</dt>
+          <dd className="font-medium tabular-nums">{percentText(a.stage1_score)}</dd>
+        </div>
+        <div className="col-span-2">
+          <dt className="text-muted">{t('stage2')}</dt>
+          <dd className="font-medium tabular-nums">{percentText(a.stage2_score)}</dd>
+        </div>
+      </dl>
       {a.suspicion_percent != null && level ? (
         <p className="flex flex-wrap items-center gap-2">
           <SuspicionBadge level={level} label={t(`level.${level}`)} />
@@ -287,9 +381,21 @@ function Stage1Cell({ application: a }: { application: HrApplication }) {
       ) : (
         <p className="text-muted">{started ? t('evaluating') : t('notStarted')}</p>
       )}
+      {recommendation ? (
+        <p>
+          <span className="text-muted">{t('recommendationLabel')}: </span>
+          <span className="font-medium">{t(`recommendation.${recommendation}`)}</span>
+        </p>
+      ) : null}
+      {a.needs_review ? (
+        <p className="flex items-center gap-1.5 font-medium">
+          <TriangleAlert aria-hidden="true" className="size-4 text-warning" />
+          {t('needsReview')}
+        </p>
+      ) : null}
       {started ? (
         <Link
-          href={`/hr/candidates/${a.id}/stage1`}
+          href={`/hr/candidates/${a.id}`}
           className="inline-flex min-h-11 items-center font-medium text-accent underline-offset-4 hover:underline"
         >
           {t('open')}
