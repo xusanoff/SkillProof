@@ -118,7 +118,10 @@ class GoogleSTT:
                         "mime_type": "audio/wav",
                     }
                 ],
-                "generation_config": {"transcription_config": {"language_codes": [locale]}},
+                "generation_config": {
+                    "temperature": 0,
+                    "transcription_config": {"language_codes": [locale]},
+                },
             }
         )
         return "".join(str(i.get("text") or "") for i in content if i.get("type") == "text").strip()

@@ -72,6 +72,7 @@ async def test_stt_sends_wav_and_language_with_the_key_only_in_a_header() -> Non
     assert KEY not in str(seen[0].url)
     assert seen[0].headers["x-goog-api-key"] == KEY
     body = json.loads(seen[0].content)
+    assert body["generation_config"]["temperature"] == 0
     assert body["generation_config"]["transcription_config"]["language_codes"] == ["uz-UZ"]
     part = body["input"][0]
     assert part["mime_type"] == "audio/wav"
