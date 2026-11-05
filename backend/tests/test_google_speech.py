@@ -198,6 +198,43 @@ async def test_tts_bad_answers_are_provider_errors(response: httpx.Response) -> 
         await _tts(lambda _: response).synthesize("Savol", "uz")
 
 
+@pytest.fixture
+def slept(monkeypatch: pytest.MonkeyPatch) -> list[float]:
+    waits: list[float] = []
+
+    async def sleep(seconds: float) -> None:
+        waits.append(seconds)
+
+    monkeypatch.setattr(google_speech.asyncio, "sleep", sleep)
+    monkeypatch.setattr(google_speech, "_STT_WAIT_JITTER_S", 0)
+    return waits
+
+
+def _limited(seconds: int) -> httpx.Response:
+    return httpx.Response(
+        429, json={"error": {"message": f"Please retry in {seconds}s or upgrade"}}
+    )
+
+
+async def test_stt_waits_as_long_as_google_asks_and_keeps_the_answer(slept: list[float]) -> None:
+    replies = [_limited(10), httpx.Response(429, headers={"Retry-After": "20"}), _said("ok")]
+    result = await _stt(lambda _: replies.pop(0)).transcribe(b"\0\0", "uz")
+    assert result.text == "ok"
+    assert slept == [10, 20]
+
+
+async def test_stt_gives_up_at_once_on_a_daily_limit(slept: list[float]) -> None:
+    with pytest.raises(SpeechProviderError, match="429"):
+        await _stt(lambda _: _limited(3600)).transcribe(b"\0\0", "uz")
+    assert slept == []
+
+
+async def test_stt_stops_waiting_when_the_total_is_used(slept: list[float]) -> None:
+    with pytest.raises(SpeechProviderError, match="429"):
+        await _stt(lambda _: _limited(30)).transcribe(b"\0\0", "uz")
+    assert slept == [30, 30]
+
+
 async def test_a_passing_outage_is_retried_once() -> None:
     replies = [httpx.Response(503), _said("ok")]
     result = await _stt(lambda _: replies.pop(0)).transcribe(b"\0\0", "uz")

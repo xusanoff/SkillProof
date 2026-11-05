@@ -8,6 +8,7 @@ import asyncio
 import base64
 import binascii
 import logging
+import random
 import re
 import time
 from typing import Any
@@ -24,6 +25,9 @@ PROVIDER = "google"
 _URL = "https://generativelanguage.googleapis.com/v1beta/interactions"
 _MAX_PIECE_S = 300  # 16 kHz mono PCM: 9.6 MB, under 13 MB as base64
 _STT_TIMEOUT_S = 120.0
+_STT_WAIT_TOTAL_S = 65.0  # a per-minute limit passes in this time; a daily one does not
+_STT_WAIT_DEFAULT_S = 10.0
+_STT_WAIT_JITTER_S = 2.0  # candidates who hit the limit together should not return together
 _TTS_TIMEOUT_S = 15.0  # a candidate is waiting; without audio the question still shows on screen
 _TTS_TOTAL_S = 30.0  # the whole chain of models
 _COOLDOWN_S = 60.0  # a model out of quota is not asked again for this long
@@ -39,6 +43,17 @@ _cooling_until: dict[str, float] = {}
 
 class _RateLimited(SpeechProviderError):
     """This model's quota is out; another model has its own."""
+
+    def __init__(self, retry_after_s: float | None) -> None:
+        super().__init__("HTTP 429")
+        self.retry_after_s = retry_after_s
+
+
+def _retry_after(response: httpx.Response) -> float | None:
+    """Google says it in a header or in the message: "Please retry in 10s"."""
+    found = re.fullmatch(r"\s*(\d+(?:\.\d+)?)\s*", response.headers.get("retry-after", ""))
+    found = found or re.search(r"retry in (\d+(?:\.\d+)?)\s*s", response.text[:1000], re.I)
+    return float(found.group(1)) if found else None
 
 
 class _AccountProblem(SpeechProviderError):
@@ -72,7 +87,7 @@ class _Client:
                     failure = type(exc).__name__  # the class only: messages can quote the request
                     continue
                 if response.status_code == 429:
-                    raise _RateLimited("HTTP 429")
+                    raise _RateLimited(_retry_after(response))
                 if response.status_code >= 500:
                     failure = f"HTTP {response.status_code}"
                     continue
@@ -108,22 +123,33 @@ class GoogleSTT:
         self._model = settings.google_stt_model
 
     async def _piece(self, pcm: bytes, locale: str) -> str:
-        content = await self._client.post(
-            {
-                "model": self._model,
-                "input": [
-                    {
-                        "type": "audio",
-                        "data": base64.b64encode(wav(pcm)).decode(),
-                        "mime_type": "audio/wav",
-                    }
-                ],
-                "generation_config": {
-                    "temperature": 0,
-                    "transcription_config": {"language_codes": [locale]},
-                },
-            }
-        )
+        body = {
+            "model": self._model,
+            "input": [
+                {
+                    "type": "audio",
+                    "data": base64.b64encode(wav(pcm)).decode(),
+                    "mime_type": "audio/wav",
+                }
+            ],
+            "generation_config": {
+                "temperature": 0,
+                "transcription_config": {"language_codes": [locale]},
+            },
+        }
+        waited = 0.0
+        while True:
+            try:
+                content = await self._client.post(body)
+                break
+            except _RateLimited as exc:
+                delay = exc.retry_after_s or _STT_WAIT_DEFAULT_S
+                delay += random.uniform(0, _STT_WAIT_JITTER_S)
+                if waited + delay > _STT_WAIT_TOTAL_S:
+                    raise
+                logger.warning("stt_rate_limited", extra={"wait_s": round(delay, 1)})
+                await asyncio.sleep(delay)
+                waited += delay
         return "".join(str(i.get("text") or "") for i in content if i.get("type") == "text").strip()
 
     async def transcribe(

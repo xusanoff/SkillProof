@@ -869,6 +869,9 @@ async def _store_answer(
     transcript = data.text or ""
     key = None
     failed = False
+    # The clock stops at arrival: a slow or rate-limited provider must not cost a candidate
+    # an answer that came in on time.
+    now = _now()
     if mode == "voice" and data.audio is not None and extension is not None:
         key = await storage.save(f"interviews/{s.id}/answers", extension, data.audio)
         try:
@@ -877,7 +880,6 @@ async def _store_answer(
         except Exception:
             logger.exception("stt_failed", extra={"session_id": str(s.id)})
             failed = True
-    now = _now()
     s = await _own(session, s.id, user, lock=True)
     await session.refresh(s)
     await _sync(session, s, now)

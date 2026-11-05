@@ -29,9 +29,9 @@ from app.ai.interviewer import (
 )
 from app.ai.llm_client import LLMClient, LLMRawResponse, LLMRequest
 from app.ai.mock_handlers import build_mock_provider
-from app.ai.speech import SpeechAudio
+from app.ai.speech import SpeechAudio, Transcript
 from app.api.deps import ACCESS_COOKIE
-from app.api.v1.interview import llm_dep
+from app.api.v1.interview import llm_dep, stt_dep
 from app.core.db import SessionLocal
 from app.core.thresholds import IntegrityThresholds, Stage2Thresholds
 from app.models import EditorEvent, Evaluation, IntegritySignal, InterviewSession, InterviewTurn
@@ -224,6 +224,35 @@ async def _voice(ctx: dict[str, Any]) -> dict[str, Any]:
 
 
 WEBM = b"\x1a\x45\xdf\xa3" + b"\0" * 64
+
+
+async def test_a_slow_transcription_keeps_an_answer_that_came_in_on_time(
+    signup: SignUp, app: FastAPI, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ctx = await _passed_stage1(signup, app)
+    state = await _voice(ctx)
+    turn = await _connected(state["id"], T.answer_time_limit_s + T.answer_upload_grace_s - 5, 1)
+    late = timedelta(0)
+    real_now = stage2._now
+    monkeypatch.setattr(stage2, "_now", lambda: real_now() + late)
+
+    class RateLimitedSTT:
+        async def transcribe(
+            self, audio: bytes, language: str, hint_transcript: str | None = None
+        ) -> Transcript:
+            nonlocal late
+            late = timedelta(seconds=60)
+            return Transcript(LONG_ANSWER, language, 0, "test")
+
+    app.dependency_overrides[stt_dep] = RateLimitedSTT
+    response = await ctx["c"].post(
+        f"/api/v1/interview-sessions/{state['id']}/stage2/turns/{turn}/answer",
+        files={"audio": ("a.webm", WEBM, "audio/webm")},
+    )
+    assert response.status_code == 200, response.text
+    stored = (await _turns(state["id"]))[0]
+    assert stored.answer_transcript == LONG_ANSWER and stored.answer_source == "voice"
+    assert stored.answer_audio_url
 
 
 async def test_voice_answer_stores_audio_and_uses_the_transcript(
