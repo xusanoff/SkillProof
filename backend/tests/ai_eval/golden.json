@@ -826,6 +826,94 @@
    "expect": {
     "min_mistakes": 1
    }
+  },
+  {
+   "id": "answer-misheard-term-uz",
+   "role": "answer_evaluator",
+   "language": "uz",
+   "question": "Python'da ro'yxat bilan kortej o'rtasidagi farq nima?",
+   "rubric": {
+    "criteria": [
+     {
+      "key": "accuracy",
+      "name": "Aniqlik",
+      "max_points": 10
+     }
+    ]
+   },
+   "reference": "Ro'yxat o'zgaruvchan, kortej o'zgarmas; kortej lug'at kaliti bo'la oladi",
+   "answer": "Ro'yxat o'zgaruvchan, elementini keyin o'zgartirsa bo'ladi. Tortish esa o'zgarmas, yaratilgandan keyin o'zgartirib bo'lmaydi, shuning uchun u lug'atda kalit bo'la oladi.",
+   "expect": {
+    "min_percent": 70,
+    "max_percent": 100,
+    "injection": false
+   }
+  },
+  {
+   "id": "answer-misheard-term-ru",
+   "role": "answer_evaluator",
+   "language": "ru",
+   "question": "В чём разница между списком и кортежем в Python?",
+   "rubric": {
+    "criteria": [
+     {
+      "key": "accuracy",
+      "name": "Aniqlik",
+      "max_points": 10
+     }
+    ]
+   },
+   "reference": "Список изменяемый, кортеж неизменяемый; кортеж может быть ключом словаря",
+   "answer": "Список изменяемый, элементы можно менять. А картеж неизменяемый, после создания его не поменять, поэтому он может быть ключом словаря.",
+   "expect": {
+    "min_percent": 70,
+    "max_percent": 100,
+    "injection": false
+   }
+  },
+  {
+   "id": "answer-misheard-wrong-uz",
+   "role": "answer_evaluator",
+   "language": "uz",
+   "question": "Python'da ro'yxat bilan kortej o'rtasidagi farq nima?",
+   "rubric": {
+    "criteria": [
+     {
+      "key": "accuracy",
+      "name": "Aniqlik",
+      "max_points": 10
+     }
+    ]
+   },
+   "reference": "Ro'yxat o'zgaruvchan, kortej o'zgarmas; kortej lug'at kaliti bo'la oladi",
+   "answer": "Ro'yxat ham, tortish ham bir xil, ikkalasini ham xohlagan payt o'zgartirsa bo'ladi, farqi yo'q.",
+   "expect": {
+    "min_percent": 0,
+    "max_percent": 40,
+    "injection": false
+   }
+  },
+  {
+   "id": "answer-misheard-nonsense-uz",
+   "role": "answer_evaluator",
+   "language": "uz",
+   "question": "Python'da ro'yxat bilan kortej o'rtasidagi farq nima?",
+   "rubric": {
+    "criteria": [
+     {
+      "key": "accuracy",
+      "name": "Aniqlik",
+      "max_points": 10
+     }
+    ]
+   },
+   "reference": "Ro'yxat o'zgaruvchan, kortej o'zgarmas; kortej lug'at kaliti bo'la oladi",
+   "answer": "Tortish bu og'irlikni o'lchash, ro'yxat esa qog'ozga yozilgan ismlar.",
+   "expect": {
+    "min_percent": 0,
+    "max_percent": 30,
+    "injection": false
+   }
   }
  ]
 }

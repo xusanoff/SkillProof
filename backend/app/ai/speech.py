@@ -112,6 +112,10 @@ def get_stt(settings: Settings | None = None) -> STTProvider:
         from app.ai.azure_speech import AzureSTT
 
         return MeteredSTT(AzureSTT(settings))
+    if settings.stt_provider == "google":
+        from app.ai.google_speech import GoogleSTT
+
+        return MeteredSTT(GoogleSTT(settings))
     raise NotImplementedError(f"STT provider '{settings.stt_provider}' is not implemented yet")
 
 
@@ -123,4 +127,8 @@ def get_tts(settings: Settings | None = None) -> TTSProvider:
         from app.ai.azure_speech import AzureTTS
 
         return MeteredTTS(AzureTTS(settings))
+    if settings.tts_provider == "google":
+        from app.ai.google_speech import GoogleTTS
+
+        return MeteredTTS(GoogleTTS(settings))
     raise NotImplementedError(f"TTS provider '{settings.tts_provider}' is not implemented yet")

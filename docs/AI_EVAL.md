@@ -35,6 +35,8 @@ Newest first. `make ai-eval` (real provider) / `--fast` (mock).
 | feedback-normal-en | pass | 1 mistakes |
 | feedback-weak-uz | pass | 1 mistakes |
 
+Misheard terms, `answer_evaluator.v1` on DeepSeek, 2026-11-04: right answers with "tortish" or "картеж" for "kortej" scored 100%; wrong and nonsense answers with the same word scored 0%. The existing prompt line is enough, so the prompt did not change. Four cases only.
+
 `questions-uz` failed on a provider timeout (120 s, twice), not on quality. Rerun alone: pass, 4 questions, 94 s. Median call 34 s, 90th percentile 72 s, on the NVIDIA trial API.
 
 ## 2026-11-03 10:02 UTC — provider `mock`

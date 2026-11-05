@@ -107,7 +107,7 @@ def split_pcm(pcm: bytes, max_s: int = _MAX_PIECE_S, search_s: int = _SEARCH_S) 
     return pieces
 
 
-def _wav(pcm: bytes) -> bytes:
+def wav(pcm: bytes) -> bytes:
     buffer = io.BytesIO()
     with wave.open(buffer, "wb") as out:
         out.setnchannels(1)
@@ -164,7 +164,7 @@ class AzureSTT:
         response = await self._client.post(
             f"https://{self._client.region}.stt.speech.microsoft.com"
             "/speech/recognition/conversation/cognitiveservices/v1",
-            _wav(pcm),
+            wav(pcm),
             {
                 "Content-Type": f"audio/wav; codecs=audio/pcm; samplerate={SAMPLE_RATE}",
                 "Accept": "application/json",

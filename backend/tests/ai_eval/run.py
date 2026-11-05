@@ -42,6 +42,10 @@ VACANCY = {
 # With the mock provider, model-quality checks (does the verifier catch a wrong answer?)
 # are meaningless; only the pipeline/schema checks run. Real providers run everything.
 MOCK_SKIP = {
+    "answer-misheard-term-uz",
+    "answer-misheard-term-ru",
+    "answer-misheard-wrong-uz",
+    "answer-misheard-nonsense-uz",
     "verifier-wrong-mcq-en",
     "verifier-ambiguous-ru",
     "verifier-off-topic-uz",

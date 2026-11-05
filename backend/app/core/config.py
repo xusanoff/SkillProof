@@ -10,7 +10,7 @@ from app.core.thresholds import Thresholds
 
 Environment = Literal["local", "test", "staging", "production"]
 LLMProvider = Literal["mock", "openai_compatible", "gemini", "anthropic"]
-SpeechProvider = Literal["mock", "azure"]
+SpeechProvider = Literal["mock", "azure", "google"]
 
 
 _DEV_JWT_SECRET = "dev-only-insecure-jwt-secret-change-me-in-env"
@@ -156,6 +156,8 @@ class Settings(BaseSettings):
             self.azure_speech_key and self.azure_speech_region
         ):
             raise ValueError("The azure speech provider needs AZURE_SPEECH_KEY and _REGION")
+        if "google" in (self.stt_provider, self.tts_provider) and not self.gemini_api_key:
+            raise ValueError("The google speech provider needs GEMINI_API_KEY")
         if self.email_backend == "smtp" and not (self.smtp_host and self.smtp_from):
             raise ValueError("EMAIL_BACKEND=smtp needs SMTP_HOST and SMTP_FROM")
         telegram = (
@@ -187,6 +189,10 @@ class Settings(BaseSettings):
     tts_provider: SpeechProvider = "mock"
     azure_speech_key: SecretStr | None = None
     azure_speech_region: str | None = None
+    gemini_api_key: SecretStr | None = None
+    google_stt_model: str = "models/gemini-3.5-transcribe"
+    google_tts_model: str = "gemini-3.8-flash-lite-tts"
+    google_tts_voice: str = "Kore"
 
     # Global defaults for every configurable threshold (spec §0.9). Override with
     # e.g. THRESHOLDS__INTEGRITY__INACTIVITY_LIMIT_S=120; per-assessment overrides
