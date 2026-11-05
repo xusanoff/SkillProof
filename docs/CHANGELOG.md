@@ -5,6 +5,7 @@
 - Too slow for the live interview so far (calls of 50–90 s against a 3 s target). Not switched on in the stack yet.
 - Azure STT and TTS for uz, ru and en (D-174). The API image now includes ffmpeg.
 - Google Gemini STT and TTS as a second speech provider, `STT_PROVIDER` / `TTS_PROVIDER=google` (D-176). Real API round trip passed on generated speech in uz, ru and en; a real human voice is not tested yet.
+- Google TTS moves to the next model when one is out of quota (D-177). STT stays on one model.
 - Live interview no longer waits for the model (D-172); saved questions and shared bank audio (D-173). Migration `question cache`; threshold `stage2.live_llm_timeout_s`.
 
 ## Phase 10 — Admin, analytics, hardening, deployment (2026-11-04)

@@ -191,7 +191,13 @@ class Settings(BaseSettings):
     azure_speech_region: str | None = None
     gemini_api_key: SecretStr | None = None
     google_stt_model: str = "models/gemini-3.5-transcribe"
-    google_tts_model: str = "gemini-3.8-flash-lite-tts"
+    # Tried in order: when one is out of quota or down, the next one speaks.
+    google_tts_models: list[str] = [
+        "gemini-3.8-flash-lite-tts",
+        "gemini-3.8-flash-tts",
+        "gemini-3.1-flash-tts-preview",
+        "gemini-2.5-flash-preview-tts",
+    ]
     google_tts_voice: str = "Kore"
 
     # Global defaults for every configurable threshold (spec §0.9). Override with

@@ -107,12 +107,12 @@ def split_pcm(pcm: bytes, max_s: int = _MAX_PIECE_S, search_s: int = _SEARCH_S) 
     return pieces
 
 
-def wav(pcm: bytes) -> bytes:
+def wav(pcm: bytes, sample_rate: int = SAMPLE_RATE) -> bytes:
     buffer = io.BytesIO()
     with wave.open(buffer, "wb") as out:
         out.setnchannels(1)
         out.setsampwidth(2)
-        out.setframerate(SAMPLE_RATE)
+        out.setframerate(sample_rate)
         out.writeframes(pcm)
     return buffer.getvalue()
 
