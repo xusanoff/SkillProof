@@ -10,10 +10,7 @@ export function RecommendationSection({ report }: { report: HrReport }) {
   const key = recommendationKey(report.recommendation);
   if (!key) return null;
   return (
-    <section
-      aria-labelledby="rec-h"
-      className="grid gap-1 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="rec-h" className="sp-card grid gap-1 p-4 sm:p-5">
       <h2 id="rec-h" className="text-lg font-semibold">
         {t('title')}
       </h2>

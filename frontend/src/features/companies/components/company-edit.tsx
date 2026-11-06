@@ -26,7 +26,7 @@ function CompanyEditLoaded({ id }: { id: string }) {
   return (
     <div className="grid gap-8">
       <div>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <p className="mt-2 max-w-prose text-muted">{t('lead')}</p>
       </div>
       {company.isPending ? (

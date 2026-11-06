@@ -72,7 +72,7 @@ function TalentBody({ companyId }: { companyId: string }) {
     const { items, total } = list.data;
     body = (
       <div className="grid gap-4" aria-busy={list.isFetching}>
-        <p role="status" className="text-sm text-muted tabular-nums">
+        <p role="status" className="tabular-nums text-sm text-muted">
           {t('total', { count: total })}
         </p>
         <ul className="grid gap-3">
@@ -94,7 +94,7 @@ function TalentBody({ companyId }: { companyId: string }) {
   return (
     <div className="grid gap-5">
       <div>
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <p className="mt-1 max-w-prose text-sm text-muted">{t('lead')}</p>
       </div>
       <div className="grid gap-4 sm:grid-cols-[minmax(0,2fr)_8rem]">
@@ -164,7 +164,7 @@ function TalentCard({ profile: p }: { profile: PublicProfile }) {
   const t = useTranslations('talent');
   const place = placeText(p);
   return (
-    <li className="grid gap-3 rounded-xl border border-border p-4">
+    <li className="sp-card grid gap-3 p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-lg font-semibold">{p.full_name}</h2>
         <Link

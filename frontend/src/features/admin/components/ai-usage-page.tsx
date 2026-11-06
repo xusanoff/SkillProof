@@ -75,7 +75,7 @@ export function AiUsagePage() {
   return (
     <div className="grid gap-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <label className="grid gap-1 text-sm text-muted">
           {t('range')}
           <NativeSelect value={String(days)} onChange={(e) => setDays(Number(e.target.value))}>

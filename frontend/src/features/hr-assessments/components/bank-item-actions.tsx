@@ -45,7 +45,8 @@ export function BankItemActions({
   const busy = approve.isPending || remove.isPending;
   const error = approve.error ?? remove.error;
 
-  if (isGlobal && companyId !== GLOBAL_SCOPE) return <p className="text-sm text-muted">{t('readOnly')}</p>;
+  if (isGlobal && companyId !== GLOBAL_SCOPE)
+    return <p className="text-sm text-muted">{t('readOnly')}</p>;
 
   return (
     <div className="grid gap-1.5">

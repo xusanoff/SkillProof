@@ -32,21 +32,18 @@ export function ResultPanel({ session }: { session: Session }) {
   }
   const passed = r.passed === true;
   return (
-    <section
-      aria-labelledby="result-h"
-      className="grid gap-4 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="result-h" className="sp-card grid gap-4 p-4 sm:p-5">
       <h2 id="result-h" className="text-lg font-semibold">
         {t('title')}
       </h2>
       <div className="flex flex-wrap items-end gap-x-6 gap-y-2">
-        <p className="text-4xl font-semibold tabular-nums">
+        <p className="tabular-nums text-4xl font-semibold">
           {r.score_percent ?? '—'}
           <span className="text-2xl">%</span>
         </p>
         <p className="grid gap-0.5 text-sm">
           {r.pass_threshold != null ? (
-            <span className="text-muted tabular-nums">
+            <span className="tabular-nums text-muted">
               {t('threshold', { value: r.pass_threshold })}
             </span>
           ) : null}
@@ -69,7 +66,7 @@ export function ResultPanel({ session }: { session: Session }) {
           <li key={i} className="grid gap-2 rounded-lg border border-border p-3">
             <p className="flex flex-wrap items-baseline justify-between gap-2 font-medium">
               <span>{task.title}</span>
-              <span className="text-sm text-muted tabular-nums">
+              <span className="tabular-nums text-sm text-muted">
                 {t('hidden', { passed: task.hidden_passed, total: task.hidden_total })}
               </span>
             </p>

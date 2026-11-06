@@ -70,7 +70,7 @@ export function ProfileForm({ profile }: { profile: CandidateProfile }) {
       noValidate
       onSubmit={onSubmit}
       aria-labelledby="profile-form-title"
-      className="grid gap-8"
+      className="sp-card grid gap-8 p-5 sm:p-7"
     >
       <h2 id="profile-form-title" className="sr-only">
         {t('formTitle')}
@@ -174,7 +174,7 @@ export function ProfileForm({ profile }: { profile: CandidateProfile }) {
           control={form.control}
           name="open_to_work"
           render={({ field }) => (
-            <div className="flex items-start justify-between gap-4 rounded-xl border border-border bg-surface p-4">
+            <div className="sp-card flex items-start justify-between gap-4 p-4">
               <div className="grid gap-1">
                 <label htmlFor="open-to-work" className="font-medium">
                   {t('openToWork')}

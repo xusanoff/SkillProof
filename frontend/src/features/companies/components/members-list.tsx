@@ -1,5 +1,6 @@
 'use client';
 
+import { Crown, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ErrorState } from '@/components/common/error-state';
@@ -43,7 +44,7 @@ export function MembersList({
       <h2 id="members-title" className="text-lg font-semibold">
         {t('members')}
         {members.data ? (
-          <span className="ml-2 font-normal text-muted tabular-nums">{members.data.length}</span>
+          <span className="ml-2 tabular-nums font-normal text-muted">{members.data.length}</span>
         ) : null}
       </h2>
       {removeError ? (
@@ -60,7 +61,7 @@ export function MembersList({
           retryLabel={tc('retry')}
         />
       ) : (
-        <ul className="divide-y divide-border rounded-xl border border-border bg-surface">
+        <ul className="sp-card divide-y divide-border">
           {members.data.map((m) => (
             <MemberRow
               key={m.user_id}
@@ -118,7 +119,7 @@ function MemberRow({
       <span className="rounded-md bg-surface-2 px-2 py-1 text-xs font-medium">
         {t(`roles.${member.member_role}`)}
       </span>
-      <span className="w-28 text-sm text-muted tabular-nums">{format.date(member.joined_at)}</span>
+      <span className="w-28 tabular-nums text-sm text-muted">{format.date(member.joined_at)}</span>
       {canMakeOwner ? (
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -127,8 +128,9 @@ function MemberRow({
               size="lg"
               className="min-h-11 px-3"
               aria-label={t('makeOwnerAria', { name: member.full_name })}
+              title={t('makeOwnerAria', { name: member.full_name })}
             >
-              {t('makeOwner')}
+              <Crown aria-hidden="true" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -150,8 +152,9 @@ function MemberRow({
               className="min-h-11 px-3 text-danger"
               disabled={removing}
               aria-label={t('removeAria', { name: member.full_name })}
+              title={t('removeAria', { name: member.full_name })}
             >
-              {t('remove')}
+              <Trash2 aria-hidden="true" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>

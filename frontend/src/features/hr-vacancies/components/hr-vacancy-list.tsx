@@ -47,7 +47,7 @@ function List({ companyId }: { companyId: string }) {
   return (
     <div className="grid gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <Button asChild size="lg" className="min-h-11 gap-2 px-4">
           <Link href="/hr/vacancies/new">
             <Plus aria-hidden="true" />
@@ -143,7 +143,7 @@ function Row({
   return (
     <article
       aria-labelledby={`hv-${v.id}`}
-      className="grid gap-3 rounded-xl border border-border bg-surface p-4 lg:grid-cols-[minmax(0,1fr)_10rem_9rem_14rem] lg:items-center lg:gap-4"
+      className="sp-card grid gap-3 p-4 lg:grid-cols-[minmax(0,1fr)_10rem_9rem_14rem] lg:items-center lg:gap-4"
     >
       <div className="min-w-0">
         <h2 id={`hv-${v.id}`} className="font-semibold">
@@ -174,17 +174,17 @@ function Row({
         <span className="text-muted lg:sr-only">{t('columns.applications')}:</span>
         <Link
           href={`/hr/candidates?vacancy=${v.id}`}
-          className="font-medium tabular-nums underline-offset-4 hover:underline"
+          className="tabular-nums font-medium underline-offset-4 hover:underline"
         >
           {t('applicationsCount', { count: v.applications_count })}
         </Link>
         {v.new_applications_count > 0 ? (
-          <span className="rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-fg tabular-nums">
+          <span className="rounded-full bg-accent px-1.5 tabular-nums text-xs font-semibold text-accent-fg">
             {t('newCount', { count: v.new_applications_count })}
           </span>
         ) : null}
       </div>
-      <p className="text-sm text-muted tabular-nums">
+      <p className="tabular-nums text-sm text-muted">
         <span className="lg:sr-only">{t('columns.updated')}: </span>
         {format.date(v.updated_at)}
       </p>

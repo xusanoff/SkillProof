@@ -47,7 +47,7 @@ export function ReviewSection({ task }: { task: TaskReport }) {
   const findings = r.findings as Point[];
   return (
     <div className="grid gap-3">
-      <p className="text-sm tabular-nums">
+      <p className="tabular-nums text-sm">
         {t('score')}: <strong>{r.score_percent == null ? '—' : `${r.score_percent}%`}</strong>
         {r.status === 'needs_review' ? ` · ${t('needsReview')}` : ''}
       </p>

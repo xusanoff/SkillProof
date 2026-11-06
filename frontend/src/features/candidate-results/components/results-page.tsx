@@ -2,6 +2,7 @@
 
 import { ArrowLeft, BadgeCheck, LoaderCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ScoreRing } from '@/components/common/design';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
 import { Notice } from '@/components/common/notice';
@@ -63,7 +64,7 @@ export function CandidateResultsPage({ applicationId }: { applicationId: string 
     <div className="grid gap-5">
       <div>
         {back}
-        <h1 className="mt-1 text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title mt-1">{t('title')}</h1>
         <p className="text-sm text-muted">{r.vacancy_title}</p>
       </div>
       <Body results={r} />
@@ -120,9 +121,9 @@ function Body({ results: r }: { results: CandidateResults }) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid gap-0.5 rounded-lg border border-border p-3">
+    <div className="sp-card grid gap-0.5 p-4">
       <dt className="text-sm text-muted">{label}</dt>
-      <dd className="text-2xl font-semibold tabular-nums">{value}</dd>
+      <dd className="tabular-nums text-2xl font-semibold">{value}</dd>
     </div>
   );
 }
@@ -130,18 +131,21 @@ function Stat({ label, value }: { label: string; value: string }) {
 function Scores({ results: r }: { results: CandidateResults }) {
   const t = useTranslations('candidateResults.scores');
   return (
-    <section
-      aria-labelledby="cr-scores"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="cr-scores" className="sp-card grid gap-5 p-5 sm:p-7">
       <h2 id="cr-scores" className="text-lg font-semibold">
         {t('title')}
       </h2>
-      <dl className="grid gap-3 sm:grid-cols-3">
-        <Stat label={t('overall')} value={percentText(r.overall_score)} />
-        <Stat label={t('stage1')} value={percentText(r.stage1_score)} />
-        <Stat label={t('stage2')} value={percentText(r.stage2_score)} />
-      </dl>
+      <div className="sp-dark flex flex-wrap items-center gap-8 rounded-xl p-6 sm:p-8">
+        <ScoreRing
+          value={r.overall_score ?? null}
+          label={t('overall')}
+          formatted={percentText(r.overall_score)}
+        />
+        <dl className="grid flex-1 gap-3 sm:grid-cols-2">
+          <Stat label={t('stage1')} value={percentText(r.stage1_score)} />
+          <Stat label={t('stage2')} value={percentText(r.stage2_score)} />
+        </dl>
+      </div>
       {r.per_skill.length ? (
         <div>
           <h3 className="text-sm font-semibold">{t('perSkill')}</h3>
@@ -158,7 +162,7 @@ function Scores({ results: r }: { results: CandidateResults }) {
                       </span>
                     ) : null}
                   </span>
-                  <span className="font-semibold tabular-nums">{percentText(s.percent)}</span>
+                  <span className="tabular-nums font-semibold">{percentText(s.percent)}</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-surface-2" aria-hidden="true">
                   <div
@@ -178,18 +182,15 @@ function Scores({ results: r }: { results: CandidateResults }) {
 function Tasks({ results: r }: { results: CandidateResults }) {
   const t = useTranslations('candidateResults.tasks');
   return (
-    <section
-      aria-labelledby="cr-tasks"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="cr-tasks" className="sp-card grid gap-5 p-5 sm:p-7">
       <h2 id="cr-tasks" className="text-lg font-semibold">
         {t('title')}
       </h2>
       <ul className="grid gap-3">
         {r.tasks.map((task, i) => (
-          <li key={i} className="grid gap-2 rounded-lg border border-border p-3">
+          <li key={i} className="sp-card grid gap-2 p-4">
             <h3 className="font-semibold">{task.title}</h3>
-            <p className="text-sm tabular-nums">
+            <p className="tabular-nums text-sm">
               {t('tests', { passed: task.hidden_passed, total: task.hidden_total })}
               {task.code_review_percent != null ? (
                 <span className="text-muted">
@@ -226,24 +227,18 @@ function Bullets({ title, items }: { title: string; items: string[] }) {
 function Answers({ results: r }: { results: CandidateResults }) {
   const t = useTranslations('candidateResults.answers');
   return (
-    <section
-      aria-labelledby="cr-answers"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="cr-answers" className="sp-card grid gap-5 p-5 sm:p-7">
       <h2 id="cr-answers" className="text-lg font-semibold">
         {t('title')}
       </h2>
       <ol className="grid gap-2">
         {r.answers.map((a) => (
-          <li
-            key={a.order}
-            className="flex items-baseline justify-between gap-3 rounded-lg border border-border p-3"
-          >
+          <li key={a.order} className="sp-card flex items-baseline justify-between gap-3 p-4">
             <span className="min-w-0">
               <span className="text-sm text-muted">{t('question', { n: a.order })}</span>
               <span className="block max-w-prose">{a.question_text}</span>
             </span>
-            <span className="font-semibold tabular-nums">{percentText(a.percent)}</span>
+            <span className="tabular-nums font-semibold">{percentText(a.percent)}</span>
           </li>
         ))}
       </ol>
@@ -255,7 +250,7 @@ function Feedback({ results: r }: { results: CandidateResults }) {
   const t = useTranslations('candidateResults.feedback');
   if (feedbackMissing(r)) {
     return (
-      <section aria-labelledby="cr-fb" className="rounded-xl border border-border p-4 sm:p-5">
+      <section aria-labelledby="cr-fb" className="sp-card p-4 sm:p-5">
         <h2 id="cr-fb" className="text-lg font-semibold">
           {t('title')}
         </h2>
@@ -266,17 +261,14 @@ function Feedback({ results: r }: { results: CandidateResults }) {
   return (
     <>
       {r.mistakes.length ? (
-        <section
-          aria-labelledby="cr-mistakes"
-          className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-        >
+        <section aria-labelledby="cr-mistakes" className="sp-card grid gap-5 p-5 sm:p-7">
           <h2 id="cr-mistakes" className="text-lg font-semibold">
             {t('mistakes')}
           </h2>
           <p className="max-w-prose text-sm text-muted">{t('mistakesLead')}</p>
           <ul className="grid gap-2">
             {r.mistakes.map((m, i) => (
-              <li key={i} className="rounded-lg border border-border p-3">
+              <li key={i} className="sp-card p-4">
                 {m.about ? <p className="text-sm text-muted">{m.about}</p> : null}
                 <p className="max-w-prose">{m.text}</p>
               </li>
@@ -285,16 +277,13 @@ function Feedback({ results: r }: { results: CandidateResults }) {
         </section>
       ) : null}
       {r.learn_next.length ? (
-        <section
-          aria-labelledby="cr-learn"
-          className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-        >
+        <section aria-labelledby="cr-learn" className="sp-card grid gap-5 p-5 sm:p-7">
           <h2 id="cr-learn" className="text-lg font-semibold">
             {t('learnNext')}
           </h2>
           <ul className="grid gap-2">
             {r.learn_next.map((x, i) => (
-              <li key={i} className="rounded-lg border border-border p-3">
+              <li key={i} className="sp-card p-4">
                 <p className="font-medium">{x.topic}</p>
                 <p className="max-w-prose text-sm text-muted">{x.reason}</p>
               </li>

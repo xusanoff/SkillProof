@@ -28,7 +28,7 @@ export function CodePanel({ code }: { code: NonNullable<Turn['code']> }) {
             >
               <span
                 aria-hidden="true"
-                className="w-8 shrink-0 pr-3 text-right text-muted tabular-nums select-none"
+                className="w-8 shrink-0 pr-3 text-right tabular-nums text-muted select-none"
               >
                 {r.n}
               </span>

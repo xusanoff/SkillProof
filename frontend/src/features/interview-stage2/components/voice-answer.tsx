@@ -118,7 +118,21 @@ export function VoiceAnswer({
         </Notice>
       ) : null}
 
-      <div className="grid gap-2" role="status">
+      <div
+        className="grid justify-items-center gap-4 rounded-xl border border-border bg-surface p-6"
+        role="status"
+      >
+        <div
+          aria-hidden="true"
+          className="relative grid size-32 place-items-center rounded-full border border-border bg-surface-2"
+          style={{
+            boxShadow: recording
+              ? `0 0 0 ${Math.round(rec.level * 24)}px color-mix(in srgb, var(--primary) 12%, transparent)`
+              : undefined,
+          }}
+        >
+          <Mic className={recording ? 'size-11 text-signal' : 'size-11 text-dark-muted'} />
+        </div>
         <LevelMeter level={recording ? rec.level : 0} />
         <p className="min-h-6 text-sm text-muted">{status}</p>
       </div>

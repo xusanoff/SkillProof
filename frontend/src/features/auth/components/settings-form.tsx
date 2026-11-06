@@ -36,7 +36,7 @@ export function SettingsPage() {
   const { data: me } = useMe();
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
-      <h1 className="font-display text-3xl font-semibold tracking-tight">{t('title')}</h1>
+      <h1 className="sp-page-title">{t('title')}</h1>
       <p className="mt-2 text-muted">{t('lead')}</p>
       {me ? <SettingsForm me={me} /> : null}
       {me ? <NotificationSettings me={me} /> : null}
@@ -79,7 +79,12 @@ function SettingsForm({ me }: { me: Me }) {
   });
 
   return (
-    <form noValidate onSubmit={onSubmit} className="mt-8 grid gap-5" aria-label={t('title')}>
+    <form
+      noValidate
+      onSubmit={onSubmit}
+      className="sp-card mt-8 grid gap-5 p-5 sm:p-7"
+      aria-label={t('title')}
+    >
       {formError ? (
         <Notice tone="danger" role="alert">
           {formError}

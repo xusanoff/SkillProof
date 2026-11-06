@@ -1,5 +1,6 @@
 'use client';
 
+import { SearchForm } from '@/features/search';
 import { SearchX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { EmptyState } from '@/components/common/empty-state';
@@ -42,6 +43,7 @@ export function VacancySearch({ initial }: { initial: InitialPage | null }) {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:py-8">
+      <SearchForm idPrefix="vacancy-search" size="lg" className="sp-card mb-7 p-3" />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <ResultsHeading total={data ? data.total : null} q={filters.q} />
         <div className="flex w-full items-center justify-between gap-2 sm:w-auto">
@@ -53,7 +55,7 @@ export function VacancySearch({ initial }: { initial: InitialPage | null }) {
       </div>
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-8">
-        <aside aria-label={t('filters.title')} className="hidden lg:block">
+        <aside aria-label={t('filters.title')} className="sp-card hidden self-start p-5 lg:block">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold">{t('filters.title')}</h2>
             {countActive(filters) ? (

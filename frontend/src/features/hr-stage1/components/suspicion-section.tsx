@@ -20,10 +20,7 @@ export function SuspicionSection({ report }: { report: Stage1Report }) {
   const pending = report.evaluation_state !== 'done' && report.suspicion_percent == null;
 
   return (
-    <section
-      aria-labelledby="susp-h"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="susp-h" className="sp-card grid gap-3 p-4 sm:p-5">
       <h2 id="susp-h" className="text-lg font-semibold">
         {t('title')}
       </h2>
@@ -31,7 +28,7 @@ export function SuspicionSection({ report }: { report: Stage1Report }) {
         <p className="text-muted">{pending ? t('notYet') : t('none')}</p>
       ) : (
         <div className="flex flex-wrap items-center gap-3">
-          <p className="text-4xl font-semibold tabular-nums">
+          <p className="tabular-nums text-4xl font-semibold">
             {Math.round(report.suspicion_percent)}
             <span className="text-2xl">%</span>
           </p>
@@ -47,7 +44,7 @@ export function SuspicionSection({ report }: { report: Stage1Report }) {
             {report.reasons.map((r, i) => (
               <li key={i} className="flex flex-wrap items-baseline gap-x-2">
                 {mmss(r.at_ms) ? (
-                  <span className="font-mono text-sm text-muted tabular-nums">{mmss(r.at_ms)}</span>
+                  <span className="tabular-nums font-mono text-sm text-muted">{mmss(r.at_ms)}</span>
                 ) : null}
                 <span>{signalText(ts, r.type, r.evidence)}</span>
                 <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs">

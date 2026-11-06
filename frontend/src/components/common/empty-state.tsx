@@ -21,11 +21,11 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        'flex flex-col items-start gap-3 rounded-xl border border-dashed border-border-strong p-6 sm:p-8',
+        'sp-card flex flex-col items-start gap-4 p-6 sm:p-9',
         className,
       )}
     >
-      {Icon ? <Icon aria-hidden="true" className="size-6 text-muted" /> : null}
+      {Icon ? <Icon aria-hidden="true" className="size-12 rounded-xl bg-accent-soft p-3 text-accent" /> : null}
       <Heading className={cn('font-semibold text-fg', headingLevel === 1 ? 'text-2xl' : 'text-lg')}>
         {title}
       </Heading>

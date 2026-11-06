@@ -43,14 +43,14 @@ export function RulesStep({
   return (
     <article lang={lang} className="mx-auto grid max-w-prose gap-5">
       <header>
-        <h1 className="text-2xl font-semibold">{r.title}</h1>
+        <h1 className="sp-page-title">{r.title}</h1>
         <p className="mt-1 text-muted">{state.vacancy_title}</p>
         <p className="mt-2">{r.lead}</p>
       </header>
       <ol className="grid gap-4">
         {r.items.map((item, i) => (
           <li key={i} className="grid grid-cols-[1.75rem_1fr] gap-x-2">
-            <span aria-hidden="true" className="font-semibold text-muted tabular-nums">
+            <span aria-hidden="true" className="tabular-nums font-semibold text-muted">
               {i + 1}.
             </span>
             <div>
@@ -60,7 +60,7 @@ export function RulesStep({
           </li>
         ))}
       </ol>
-      <p className="text-sm text-muted tabular-nums">
+      <p className="tabular-nums text-sm text-muted">
         {r.version}: {state.rules_version}
       </p>
       {state.reuse && onReuseChange ? (

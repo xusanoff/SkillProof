@@ -27,10 +27,7 @@ export function BankFiltersBar({
   const set = (patch: Partial<BankFilters>) => onChange({ ...filters, ...patch, page: 1 });
 
   return (
-    <section
-      aria-label={t('label')}
-      className="grid gap-3 rounded-xl border border-border p-3 sm:p-4"
-    >
+    <section aria-label={t('label')} className="sp-card grid gap-3 p-3 sm:p-4">
       <form
         role="search"
         onSubmit={(e) => {

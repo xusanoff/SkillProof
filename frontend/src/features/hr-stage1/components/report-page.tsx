@@ -73,7 +73,7 @@ function Report({ companyId, applicationId }: { companyId: string; applicationId
     <div className="grid max-w-5xl gap-5">
       <div>
         {back}
-        <h1 className="mt-1 text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title mt-1">{t('title')}</h1>
         <p className="text-sm text-muted">{t(`status.${report.status}`)}</p>
       </div>
 

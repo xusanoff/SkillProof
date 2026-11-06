@@ -81,7 +81,7 @@ export function TaskWorkspace(p: Props) {
     <div className="grid min-h-0 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
       <section
         aria-labelledby="task-h"
-        className="grid content-start gap-4 overflow-y-auto lg:max-h-[calc(100dvh-9rem)]"
+        className="sp-card grid content-start gap-5 overflow-y-auto p-5 lg:max-h-[calc(100dvh-9rem)]"
       >
         <h2 id="task-h" className="text-xl font-semibold">
           {p.title}
@@ -109,7 +109,10 @@ export function TaskWorkspace(p: Props) {
         </div>
       </section>
 
-      <section aria-label={t('editorRegion')} className="grid min-h-0 content-start gap-3">
+      <section
+        aria-label={t('editorRegion')}
+        className="sp-dark grid min-h-0 content-start gap-4 rounded-xl p-4"
+      >
         {p.top}
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-sm font-medium">
@@ -173,7 +176,7 @@ export function TaskWorkspace(p: Props) {
               aria-labelledby="results-h"
               className="grid gap-2 rounded-lg border border-border p-3"
             >
-              <h3 id="results-h" className="text-sm font-semibold tabular-nums">
+              <h3 id="results-h" className="tabular-nums text-sm font-semibold">
                 {t('resultsSummary', { passed, total: p.results.length })}
               </h3>
               <ul className="grid gap-1.5">
@@ -191,7 +194,7 @@ export function TaskWorkspace(p: Props) {
                       <span className={cn('text-muted')}>
                         {t(`status.${r.status as 'passed'}`)}
                       </span>
-                      <span className="ml-auto text-xs text-muted tabular-nums">
+                      <span className="ml-auto tabular-nums text-xs text-muted">
                         {r.time_ms} ms
                       </span>
                     </p>

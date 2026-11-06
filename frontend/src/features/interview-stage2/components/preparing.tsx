@@ -5,10 +5,7 @@ import { useTranslations } from 'next-intl';
 export function Preparing() {
   const t = useTranslations('stage2.room');
   return (
-    <p
-      role="status"
-      className="mx-auto flex max-w-prose items-center gap-3 rounded-xl border border-border p-5"
-    >
+    <p role="status" className="sp-card mx-auto flex max-w-prose items-center gap-3 p-5">
       <LoaderCircle
         aria-hidden="true"
         className="size-5 shrink-0 animate-spin text-muted motion-reduce:animate-none"

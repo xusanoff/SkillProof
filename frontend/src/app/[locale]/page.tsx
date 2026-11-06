@@ -1,4 +1,4 @@
-import { getLocale } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { Suspense } from 'react';
 import { AudienceSplit, HomeHero, InterviewSteps } from '@/features/home';
 import { LatestVacancies } from '@/features/vacancies';
@@ -9,12 +9,12 @@ export default function HomePage() {
   return (
     <>
       <HomeHero />
-      {/* Request-time data streams in after the static hero (Cache Components). */}
+      <InterviewSteps />
+      <AudienceSplit />
       <Suspense>
         <Latest />
       </Suspense>
-      <InterviewSteps />
-      <AudienceSplit />
+      <Principle />
     </>
   );
 }
@@ -22,4 +22,17 @@ export default function HomePage() {
 async function Latest() {
   const res = await fetchVacancyPage(await getLocale(), LATEST_FILTERS, LATEST_COUNT);
   return <LatestVacancies initial={res.ok ? res.data : null} />;
+}
+
+async function Principle() {
+  const t = await getTranslations('home');
+  return (
+    <section className="bg-signal text-signal-ink">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
+        <p className="max-w-4xl text-2xl leading-tight font-bold tracking-tight sm:text-4xl">
+          {t('principle')}
+        </p>
+      </div>
+    </section>
+  );
 }

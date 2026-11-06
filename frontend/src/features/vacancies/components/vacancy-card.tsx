@@ -43,14 +43,14 @@ export function VacancyCard({
   return (
     <article
       aria-labelledby={titleId}
-      className={cn('rounded-xl border border-border bg-surface p-4 sm:p-5', className)}
+      className={cn('sp-card p-5 transition-colors hover:border-border-strong sm:p-6', className)}
     >
       <div className="flex items-start gap-4">
         <div className="min-w-0 flex-1">
           <Heading id={titleId} className="text-lg leading-snug font-semibold">
             <Link
               href={`/vacancies/${v.id}`}
-              className="text-accent underline-offset-4 hover:underline"
+              className="text-fg underline-offset-4 hover:text-accent hover:underline"
             >
               {v.title}
             </Link>
@@ -100,7 +100,7 @@ export function VacancyCard({
           {tags.map((tag) => (
             <li
               key={tag}
-              className="rounded-md bg-surface-2 px-2 py-0.5 text-xs font-medium text-fg"
+              className="rounded-full bg-surface-2 px-3 py-1 text-xs font-medium text-fg"
             >
               {t(`tags.${tag}` as 'tags.noExperience')}
             </li>
@@ -113,7 +113,7 @@ export function VacancyCard({
           {v.skills.slice(0, CARD_SKILLS).map((s) => (
             <li
               key={s.slug}
-              className="rounded-md border border-border px-2 py-0.5 text-xs text-muted"
+              className="rounded-full border border-border px-3 py-1 text-xs text-muted"
             >
               {s.name}
             </li>

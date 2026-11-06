@@ -78,10 +78,7 @@ export function GeneratePanel({
   const nameOf = (id: string) => skills.data?.find((s) => s.id === id)?.name ?? id;
 
   return (
-    <section
-      aria-labelledby="gen-h"
-      className="grid gap-4 rounded-xl border border-border bg-surface p-4 sm:p-5"
-    >
+    <section aria-labelledby="gen-h" className="sp-card grid gap-4 p-4 sm:p-5">
       <div>
         <h2 id="gen-h" className="flex items-center gap-2 text-lg font-semibold">
           <Sparkles aria-hidden="true" className="size-5 text-accent" />

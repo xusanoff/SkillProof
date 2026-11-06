@@ -30,7 +30,7 @@ function Point({ point }: { point: ReportPoint }) {
       {point.excerpt ? (
         <figure className="grid gap-1">
           {point.lines.length ? (
-            <figcaption className="text-xs text-muted tabular-nums">
+            <figcaption className="tabular-nums text-xs text-muted">
               {t('lines', { lines: point.lines.join(', ') })}
             </figcaption>
           ) : null}
@@ -69,10 +69,7 @@ export function PointsSection({ report }: { report: HrReport }) {
   const unavailable = summaryUnavailable(report);
   const reused = writtenByReuse(report);
   return (
-    <section
-      aria-labelledby="points-h"
-      className="grid gap-4 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="points-h" className="sp-card grid gap-4 p-4 sm:p-5">
       <h2 id="points-h" className="text-lg font-semibold">
         {t('title')}
       </h2>

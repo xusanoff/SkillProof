@@ -47,7 +47,7 @@ export function FacetGroup<T extends string>({
                 <Checkbox id={inputId} checked={o.selected} onChange={() => onToggle(o.value)} />
                 <span className={empty ? 'flex-1 text-muted' : 'flex-1'}>{label(o.value)}</span>
                 {o.count !== null ? (
-                  <span className="text-xs text-muted tabular-nums">
+                  <span className="tabular-nums text-xs text-muted">
                     {formatAmount(o.count, locale)}
                   </span>
                 ) : null}

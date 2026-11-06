@@ -27,11 +27,11 @@ export function CompanyProfile({ company: c }: { company: CompanyPublic }) {
   const place = [c.city, country].filter(Boolean).join(', ');
 
   return (
-    <section className="rounded-xl border border-border bg-surface p-5 sm:p-7">
+    <section className="sp-card p-5 sm:p-7">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <CompanyLogo logoUrl={c.logo_url} name={c.name} size={80} />
         <div className="min-w-0">
-          <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold sm:text-3xl">
+          <h1 className="sp-page-title flex flex-wrap items-center gap-2">
             {c.name}
             {c.is_verified ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-sm font-medium text-fg">

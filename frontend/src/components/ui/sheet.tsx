@@ -37,7 +37,7 @@ function SheetContent({
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-fg/40 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
       <DialogPrimitive.Content
         className={cn(
-          'fixed z-50 flex flex-col overflow-y-auto border-border bg-surface text-fg shadow-lg outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0',
+          'fixed z-50 flex flex-col overflow-y-auto border-border bg-surface text-fg shadow-[var(--shadow-pop)] outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0',
           variants[variant],
           className,
         )}

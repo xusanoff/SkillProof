@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
+import { WorkspaceFrame } from '@/components/layout/workspace-frame';
 import { Notice } from '@/components/common/notice';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -32,8 +33,8 @@ const NAV = [
 ] as const;
 
 /**
- * HR chrome: dense, neutral. Desktop: left rail with company switcher;
- * phone: switcher + a horizontally scrolling tab row. No company yet → no chrome.
+ * HR workspace: dark company/navigation rail, shared topbar and a wrapping mobile menu.
+ * No company yet: keep the company-creation flow in the public shell.
  */
 export function HrShell({ children }: { children: ReactNode }) {
   const t = useTranslations('hr.nav');
@@ -43,59 +44,64 @@ export function HrShell({ children }: { children: ReactNode }) {
   if (!active) return <>{children}</>;
 
   return (
-    <div className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10 lg:py-10">
-      <aside className="grid grid-cols-[minmax(0,1fr)] content-start gap-4 lg:sticky lg:top-24">
-        {companies.length > 1 ? (
-          <div className="grid gap-1.5">
-            <label htmlFor="company-switcher" className="text-sm text-muted">
-              {t('switcher')}
-            </label>
-            <NativeSelect
-              id="company-switcher"
-              value={active.id}
-              onChange={(e) => select(e.target.value)}
-            >
-              {companies.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </NativeSelect>
-          </div>
-        ) : (
-          <p className="truncate font-semibold" title={active.name}>
-            {active.name}
-          </p>
-        )}
-        <nav aria-label={t('label')} className="-mx-4 border-b border-border lg:mx-0 lg:border-0">
-          <ul className="flex gap-1 overflow-x-auto px-4 lg:flex-col lg:px-0">
-            {NAV.map(({ href, key, icon: Icon }) => {
-              const current =
-                href === '/hr'
-                  ? pathname === href
-                  : pathname === href || pathname.startsWith(`${href}/`);
-              return (
-                <li key={key} className="shrink-0">
-                  <Link
-                    href={href}
-                    aria-current={current ? 'page' : undefined}
-                    className={cn(
-                      'flex min-h-11 items-center gap-2.5 px-3 text-sm font-medium whitespace-nowrap',
-                      'border-b-2 lg:rounded-lg lg:border-b-0',
-                      current
-                        ? 'border-accent text-fg lg:bg-surface-2'
-                        : 'border-transparent text-muted hover:text-fg lg:hover:bg-surface-2',
-                    )}
-                  >
-                    <Icon aria-hidden="true" className="size-4" />
-                    {t(key)}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </aside>
+    <WorkspaceFrame
+      hr
+      sidebar={
+        <div className="grid min-w-0 gap-5">
+          {companies.length > 1 ? (
+            <div className="grid gap-1.5">
+              <label
+                htmlFor="company-switcher"
+                className="text-xs font-semibold tracking-wider text-dark-muted uppercase"
+              >
+                {t('switcher')}
+              </label>
+              <NativeSelect
+                id="company-switcher"
+                value={active.id}
+                onChange={(e) => select(e.target.value)}
+              >
+                {companies.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </NativeSelect>
+            </div>
+          ) : (
+            <p className="truncate font-semibold" title={active.name}>
+              {active.name}
+            </p>
+          )}
+          <nav aria-label={t('label')} className="min-w-0">
+            <ul className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-1">
+              {NAV.map(({ href, key, icon: Icon }) => {
+                const current =
+                  href === '/hr'
+                    ? pathname === href
+                    : pathname === href || pathname.startsWith(`${href}/`);
+                return (
+                  <li key={key} className="shrink-0">
+                    <Link
+                      href={href}
+                      aria-current={current ? 'page' : undefined}
+                      className={cn(
+                        'flex min-h-11 items-center gap-2.5 px-3 text-sm font-medium whitespace-normal',
+                        'rounded-lg',
+                        current ? 'text-dark-text' : 'text-dark-muted',
+                      )}
+                    >
+                      <Icon aria-hidden="true" className="size-4" />
+                      {t(key)}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </div>
+      }
+    >
       <div className="grid min-w-0 content-start gap-5">
         {active.blocked ? (
           <Notice tone="danger" role="alert" title={t('blockedTitle')}>
@@ -104,6 +110,6 @@ export function HrShell({ children }: { children: ReactNode }) {
         ) : null}
         <div className="min-w-0">{children}</div>
       </div>
-    </div>
+    </WorkspaceFrame>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { defineEditorThemes, editorTheme } from '@/components/editor/theme';
+import { applyEditorFont, defineEditorThemes, editorTheme } from '@/components/editor/theme';
 import {
   ClipboardPaste,
   Eye,
@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
-import { useTheme } from 'next-themes';
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { ErrorState } from '@/components/common/error-state';
 import { Button } from '@/components/ui/button';
@@ -60,7 +59,7 @@ const MARKER_ICON = {
   run: Terminal,
 } as const;
 const MARKER_TONE = {
-  paste: 'bg-danger text-white',
+  paste: 'bg-danger-soft text-danger',
   idle: 'bg-warning text-fg',
   focus: 'bg-fg/70 text-bg',
   run: 'bg-accent text-accent-fg',
@@ -94,7 +93,6 @@ export function ReplayPlayer({
 
 function Player({ replay }: { replay: Replay }) {
   const t = useTranslations('hrReplay');
-  const { resolvedTheme } = useTheme();
   const { start_ms: start, end_ms: end } = replay;
   const span = Math.max(1, end - start);
   const cursor = useMemo(
@@ -103,6 +101,13 @@ function Player({ replay }: { replay: Replay }) {
   );
   const markers = useMemo(() => buildMarkers(replay.events, start), [replay.events, start]);
   const counts = countMarkers(markers);
+  const activity = useMemo(() => {
+    const bins = Array<number>(40).fill(0);
+    for (const event of replay.events)
+      bins[Math.min(39, Math.max(0, Math.floor(((event.t_ms - start) / span) * 40)))]++;
+    const max = Math.max(1, ...bins);
+    return bins.map((count) => (count / max) * 100);
+  }, [replay.events, start, span]);
 
   const [pos, setPos] = useState(start);
   const [playing, setPlaying] = useState(false);
@@ -163,7 +168,7 @@ function Player({ replay }: { replay: Replay }) {
       tabIndex={0}
       aria-label={t('region')}
       onKeyDown={onKey}
-      className="grid gap-3 rounded-xl border border-border p-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-accent sm:p-4"
+      className="sp-dark grid gap-3 rounded-xl border border-border p-3 outline-offset-2 focus-visible:outline-2 focus-visible:outline-accent sm:p-4"
     >
       <div
         className="h-80 overflow-hidden rounded-lg border border-border"
@@ -173,7 +178,8 @@ function Player({ replay }: { replay: Replay }) {
           value={state.code}
           language={MONACO_LANG[state.language ?? replay.language] ?? 'plaintext'}
           beforeMount={defineEditorThemes}
-          theme={editorTheme(resolvedTheme)}
+          onMount={applyEditorFont}
+          theme={editorTheme('dark')}
           options={{
             readOnly: true,
             domReadOnly: true,
@@ -250,12 +256,21 @@ function Player({ replay }: { replay: Replay }) {
           />
           {t('skipIdle')}
         </label>
-        <p className="ml-auto text-sm tabular-nums" aria-live="off">
+        <p className="ml-auto tabular-nums text-sm" aria-live="off">
           <span className="sr-only">{t('time')}: </span>
           {formatMs(pos - start)} / {formatMs(span)}
         </p>
       </div>
 
+      <div aria-hidden="true" className="flex h-12 items-end gap-1 rounded-lg bg-surface p-2">
+        {activity.map((height, index) => (
+          <span
+            key={index}
+            className="flex-1 rounded-sm bg-accent"
+            style={{ height: `${height}%` }}
+          />
+        ))}
+      </div>
       <div>
         <div className="relative h-8" aria-label={t('markers')} role="group">
           {markers.map((m) => (

@@ -307,7 +307,7 @@ export function VacancyForm({ companyId, defaultValues, vacancyId, status }: Vac
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="grid gap-5 rounded-xl border border-border bg-surface p-5 sm:p-6">
+    <section className="sp-card grid gap-5 p-5 sm:p-6">
       <h2 className="text-lg font-semibold">{title}</h2>
       {children}
     </section>

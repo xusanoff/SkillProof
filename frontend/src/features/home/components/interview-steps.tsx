@@ -8,8 +8,12 @@ export function InterviewSteps() {
   const t = useTranslations('home');
 
   return (
-    <section aria-labelledby="steps-title" className="border-y border-border bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <section
+      id="how-it-works"
+      aria-labelledby="steps-title"
+      className="border-y border-border bg-surface"
+    >
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
         <div className="max-w-2xl">
           <h2
             id="steps-title"
@@ -20,12 +24,17 @@ export function InterviewSteps() {
           <p className="mt-4 text-lg text-muted">{t('steps.lead')}</p>
         </div>
 
-        <ol className="mt-12 grid gap-10 md:grid-cols-2 md:gap-x-10 lg:grid-cols-4 lg:gap-8">
+        <ol className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step, i) => (
-            <FadeIn as="li" key={step} index={staggerIndex(i, 4)} className="relative">
+            <FadeIn
+              as="li"
+              key={step}
+              index={staggerIndex(i, 4)}
+              className="relative rounded-xl bg-surface-2 p-6"
+            >
               <div className="flex items-center gap-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-accent font-display text-lg font-semibold text-accent tabular-nums">
-                  {i + 1}
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft tabular-nums font-mono text-sm font-semibold text-accent">
+                  {String(i + 1).padStart(2, '0')}
                 </span>
                 {/* Track line to the next step (desktop row only). */}
                 {i < STEPS.length - 1 ? (
@@ -40,12 +49,6 @@ export function InterviewSteps() {
             </FadeIn>
           ))}
         </ol>
-
-        <FadeIn className="mt-16 border-l-2 border-accent pl-6">
-          <p className="max-w-3xl font-display text-2xl leading-snug font-medium text-balance sm:text-3xl">
-            {t('principle')}
-          </p>
-        </FadeIn>
       </div>
     </section>
   );

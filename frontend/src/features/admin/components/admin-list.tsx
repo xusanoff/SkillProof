@@ -51,7 +51,7 @@ export function AdminList<T extends { id: string }>({
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
-      <h1 className="text-2xl font-semibold">{title}</h1>
+      <h1 className="sp-page-title">{title}</h1>
       <form role="search" onSubmit={onSubmit} className="flex gap-2">
         <Input
           aria-label={t('search')}
@@ -102,7 +102,7 @@ export function AdminList<T extends { id: string }>({
 
 export function RowCard({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="sp-card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
       {children}
     </div>
   );

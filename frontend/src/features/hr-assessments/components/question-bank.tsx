@@ -70,15 +70,12 @@ function Bank({ companyId, pathname }: { companyId: string; pathname: string }) 
         ) : null
       }
       renderItem={(q) => (
-        <article
-          aria-labelledby={`q-${q.id}`}
-          className="grid gap-3 rounded-xl border border-border bg-surface p-4"
-        >
+        <article aria-labelledby={`q-${q.id}`} className="sp-card grid gap-3 p-4">
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs font-medium">
               {tq(`types.${q.type}`)}
             </span>
-            <span className="text-xs text-muted tabular-nums">
+            <span className="tabular-nums text-xs text-muted">
               {t('difficultyOption', { n: q.difficulty })}
             </span>
             <span className="text-xs text-muted">{t(`languages.${q.language as 'uz'}`)}</span>

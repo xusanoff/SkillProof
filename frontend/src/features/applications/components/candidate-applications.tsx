@@ -4,6 +4,7 @@ import { ClipboardList } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import { StageStepper } from '@/components/common/design';
 import { ApplicationStatusBadge } from '@/components/common/application-status-badge';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
@@ -49,17 +50,19 @@ const ENTRY_LABEL = {
 
 export function CandidateApplications() {
   const t = useTranslations('applications');
+  const design = useTranslations('design');
   const tc = useTranslations('common');
   const errorText = useErrorText();
   const params = useSearchParams();
   const status = parseTab<ApplicationStatus>(params.get('status'), CANDIDATE_TABS);
   const page = Math.max(1, Number(params.get('page')) || 1);
   const list = useMyApplications(status, page);
+  const pending = list.data?.items.find((a) => canEnterInterview(a.status));
   const [notice, setNotice] = useState<string | null>(null);
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:py-10">
-      <h1 className="text-2xl font-semibold sm:text-3xl">{t('title')}</h1>
+    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:py-10">
+      <h1 className="sp-page-title">{t('title')}</h1>
       <p className="mt-1 text-muted">{t('lead')}</p>
 
       <TabLinks
@@ -72,6 +75,20 @@ export function CandidateApplications() {
           href: s ? `/candidate/applications?status=${s}` : '/candidate/applications',
         }))}
       />
+
+      {pending ? (
+        <section className="sp-dark mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl p-6">
+          <div>
+            <h2 className="text-xl font-semibold">{design('readyTitle')}</h2>
+            <p className="mt-2 text-sm text-dark-muted">{design('readyBody')}</p>
+          </div>
+          <Button asChild variant="signal" className="px-5">
+            <Link href={`/candidate/interview/${pending.id}`}>
+              {t(ENTRY_LABEL[entryLabelKey(pending.status)])}
+            </Link>
+          </Button>
+        </section>
+      ) : null}
 
       <div aria-live="polite" className="mt-4 empty:hidden">
         {notice ? (
@@ -136,6 +153,7 @@ function ApplicationRow({
   onWithdrawn: () => void;
 }) {
   const t = useTranslations('applications');
+  const design = useTranslations('design');
   const tc = useTranslations('common');
   const format = useFormat();
   const errorText = useErrorText();
@@ -145,7 +163,7 @@ function ApplicationRow({
   return (
     <article
       aria-labelledby={`app-${a.id}`}
-      className="grid gap-3 rounded-xl border border-border bg-surface p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:p-5"
+      className="sp-card grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:p-5"
     >
       <div className="min-w-0">
         <h2 id={`app-${a.id}`} className="text-lg leading-snug font-semibold">
@@ -177,10 +195,33 @@ function ApplicationRow({
           </p>
         ) : null}
       </div>
+      <div className="border-t border-border pt-4 sm:col-span-2 sm:row-start-2">
+        <StageStepper
+          steps={[
+            { label: design('stages.0'), complete: true },
+            {
+              label: design('stages.1'),
+              complete: [
+                'stage2_pending',
+                'stage2_in_progress',
+                'stage2_disqualified',
+                'evaluated',
+              ].includes(a.status),
+              current: a.status === 'stage1_in_progress',
+            },
+            {
+              label: design('stages.2'),
+              complete: a.status === 'evaluated',
+              current: ['stage2_pending', 'stage2_in_progress'].includes(a.status),
+            },
+            { label: design('stages.3'), complete: a.status === 'evaluated' },
+          ]}
+        />
+      </div>
       <div className="flex flex-wrap items-center gap-3 sm:flex-col sm:items-end sm:justify-between">
         <div className="flex flex-col items-start gap-1 sm:items-end">
           <ApplicationStatusBadge status={a.status} />
-          <p className="text-xs text-muted tabular-nums">
+          <p className="tabular-nums text-xs text-muted">
             {t('appliedOn', { date: format.date(a.created_at) })}
           </p>
         </div>

@@ -52,18 +52,21 @@ export function Room({
   if (tel.connection === 'superseded') {
     return (
       <section className="mx-auto grid max-w-prose gap-3" role="alert">
-        <h1 className="text-2xl font-semibold">{t('supersededTitle')}</h1>
+        <h1 className="sp-page-title">{t('supersededTitle')}</h1>
         <p>{t('supersededBody')}</p>
       </section>
     );
   }
 
   return (
-    <div className="mx-auto grid w-full max-w-5xl gap-4">
-      <header className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <LogoMark />
+    <div
+      data-stage2-room
+      className="sp-dark mx-auto grid min-h-[calc(100dvh-3rem)] w-full max-w-7xl content-start gap-6 rounded-[22px] p-5 sm:p-8"
+    >
+      <header className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-border pb-5">
+        <LogoMark className="[&_path]:stroke-dark-panel [&_rect]:fill-signal" />
         <div className="min-w-0">
-          <h1 className="text-lg font-semibold">{t('title')}</h1>
+          <h1 className="sp-page-title text-lg">{t('title')}</h1>
           <p className="truncate text-sm text-muted">{title}</p>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
@@ -78,7 +81,7 @@ export function Room({
       </header>
 
       <div className="grid gap-1">
-        <p className="text-sm text-muted tabular-nums">
+        <p className="tabular-nums text-sm text-muted">
           {t('answered', { n: state.answered_count, total: state.question_count })}
         </p>
         <div
@@ -101,34 +104,43 @@ export function Room({
       {!turn || state.preparing ? (
         <Preparing />
       ) : (
-        <div className={`grid gap-6 ${turn.code ? 'lg:grid-cols-2' : 'mx-auto w-full max-w-3xl'}`}>
+        <div
+          className={`grid gap-6 ${turn.code ? 'lg:grid-cols-[minmax(0,1fr)_22rem]' : 'mx-auto w-full max-w-3xl'}`}
+        >
           <div className="grid content-start gap-4">
-            <section aria-labelledby="q-h" className="grid gap-2">
+            <section
+              aria-labelledby="q-h"
+              className="grid gap-4 rounded-xl border border-border bg-surface p-6"
+            >
               <div aria-live="polite" aria-atomic="true" className="grid gap-2">
-                <h2 id="q-h" className="text-sm font-semibold text-muted tabular-nums">
+                <h2 id="q-h" className="tabular-nums text-sm font-semibold text-muted">
                   {turn.is_follow_up
                     ? t('followUp')
                     : t('questionN', { n: questionNumber(state), total: state.question_count })}
                 </h2>
-                <p className="text-xl leading-snug font-medium">{turn.text}</p>
+                <p className="text-2xl leading-relaxed font-semibold">{turn.text}</p>
               </div>
             </section>
-            {turn.code ? <CodePanel code={turn.code} /> : null}
+            <div className="grid content-start gap-3">
+              {turn.is_follow_up ? <Notice tone="info">{t('followUpNote')}</Notice> : null}
+              {isTextMode(state) ? (
+                <TextAnswer
+                  key={`${turn.id}-t`}
+                  state={state}
+                  turn={turn}
+                  tel={tel}
+                  submit={submit}
+                />
+              ) : (
+                <VoiceAnswer key={turn.id} state={state} turn={turn} tel={tel} submit={submit} />
+              )}
+            </div>
           </div>
-          <div className="grid content-start gap-3">
-            {turn.is_follow_up ? <Notice tone="info">{t('followUpNote')}</Notice> : null}
-            {isTextMode(state) ? (
-              <TextAnswer
-                key={`${turn.id}-t`}
-                state={state}
-                turn={turn}
-                tel={tel}
-                submit={submit}
-              />
-            ) : (
-              <VoiceAnswer key={turn.id} state={state} turn={turn} tel={tel} submit={submit} />
-            )}
-          </div>
+          {turn.code ? (
+            <aside className="grid min-w-0 content-start gap-4 rounded-xl border border-border bg-surface p-5">
+              <CodePanel code={turn.code} />
+            </aside>
+          ) : null}
         </div>
       )}
     </div>

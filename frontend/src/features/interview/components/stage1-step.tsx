@@ -1,6 +1,6 @@
 'use client';
 
-import { Maximize } from 'lucide-react';
+import { Code2, Mic, Maximize } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Notice } from '@/components/common/notice';
@@ -115,7 +115,7 @@ function Superseded() {
   const t = useTranslations('interview.stage1');
   return (
     <section className="mx-auto grid max-w-prose gap-3" role="alert">
-      <h1 className="text-2xl font-semibold">{t('supersededTitle')}</h1>
+      <h1 className="sp-page-title">{t('supersededTitle')}</h1>
       <p>{t('supersededBody')}</p>
     </section>
   );
@@ -135,6 +135,7 @@ function TaskRun({
   tel: ReturnType<typeof useStage1Telemetry>;
 }) {
   const t = useTranslations('interview.stage1');
+  const design = useTranslations('design');
   const task = session.tasks[taskIndex];
   const run = useRunTask(session.id, task.id);
   const submit = useSubmitTask(session.id, task.id);
@@ -160,11 +161,21 @@ function TaskRun({
       : null;
 
   return (
-    <div className="grid gap-3">
-      <div className="flex flex-wrap items-center gap-3">
-        <LogoMark />
-        <h1 className="text-lg font-semibold">{application.vacancy_title}</h1>
-        <p className="text-sm text-muted tabular-nums">
+    <div data-stage1-room className="grid gap-4">
+      <header className="sp-dark flex flex-wrap items-center gap-3 rounded-xl p-4 sm:px-6">
+        <LogoMark className="rounded-lg bg-signal [&_path]:stroke-dark-panel [&_rect]:fill-signal" />
+        <div className="flex flex-wrap gap-3 text-xs text-dark-muted">
+          <span className="flex items-center gap-2 font-semibold text-signal">
+            <Code2 className="size-4" aria-hidden="true" />
+            {design('stages.1')}
+          </span>
+          <span className="flex items-center gap-2">
+            <Mic className="size-4" aria-hidden="true" />
+            {design('stages.2')}
+          </span>
+        </div>
+        <h1 className="sp-page-title text-lg">{application.vacancy_title}</h1>
+        <p className="tabular-nums text-sm text-muted">
           {t('taskOf', { n: taskIndex + 1, total: session.tasks.length })}
         </p>
         <div className="ml-auto flex items-center gap-3">
@@ -175,12 +186,15 @@ function TaskRun({
           ) : null}
           <TimerChip seconds={left} label={t('taskTimer')} />
         </div>
-      </div>
+      </header>
 
+      <p className="rounded-lg border border-warning/30 bg-warning-soft px-4 py-3 text-sm text-warning">
+        {t('introBody')}
+      </p>
       {remaining !== null ? (
         <Notice tone="warning" role="alert" title={t('inactiveTitle')}>
           {t('inactiveBody')}{' '}
-          <span className="font-semibold tabular-nums">
+          <span className="tabular-nums font-semibold">
             {t('inactiveCountdown', { s: remaining })}
           </span>
         </Notice>

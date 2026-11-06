@@ -75,7 +75,7 @@ function Editor({ data }: { data: ThresholdsOut }) {
       }}
     >
       <div>
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <p className="mt-1 text-sm text-muted">{t('lead')}</p>
       </div>
       {save.error ? (
@@ -87,7 +87,7 @@ function Editor({ data }: { data: ThresholdsOut }) {
         </Notice>
       ) : null}
       {groups.map((group) => (
-        <fieldset key={group.group} className="grid gap-3 rounded-xl border border-border p-4">
+        <fieldset key={group.group} className="sp-card grid gap-3 p-4">
           <legend className="px-1 font-mono text-sm font-semibold">{group.group}</legend>
           {group.fields.map((f) => {
             const value = values[f.path] ?? f.value;

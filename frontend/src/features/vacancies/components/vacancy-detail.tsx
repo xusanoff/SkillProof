@@ -34,6 +34,7 @@ import { VacancyApply } from './vacancy-apply';
  */
 export function VacancyDetailView({ vacancy: v }: { vacancy: VacancyDetail }) {
   const t = useTranslations('vacancy');
+  const design = useTranslations('design');
   const locale = useLocale();
   const timeZone = useTimeZone();
   const regionLabel = useRegionLabel();
@@ -50,23 +51,25 @@ export function VacancyDetailView({ vacancy: v }: { vacancy: VacancyDetail }) {
       >
         {t('backToSearch')}
       </Link>
+      <header className="sp-dark mt-3 rounded-[22px] p-6 sm:p-9">
+        <h1 className="sp-page-title leading-tight font-bold text-balance sm:text-4xl">
+          {v.title}
+        </h1>
+        <Salary
+          min={v.salary_min}
+          max={v.salary_max}
+          currency={v.currency}
+          className="mt-4 text-2xl text-signal"
+        />
+      </header>
       <div className="mt-2 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
-        <article className="min-w-0 rounded-xl border border-border bg-surface p-5 sm:p-7">
+        <article className="sp-card min-w-0 p-5 sm:p-7">
           {!open ? (
             <Notice tone="warning" className="mb-5">
               {t('closedNotice')}
             </Notice>
           ) : null}
-          <h1 className="text-2xl leading-tight font-semibold text-balance sm:text-3xl">
-            {v.title}
-          </h1>
-          <Salary
-            min={v.salary_min}
-            max={v.salary_max}
-            currency={v.currency}
-            className="mt-3 text-xl"
-          />
-          <dl className="mt-5 grid gap-2 text-sm">
+          <dl className="grid gap-4 border-b border-border pb-6 text-sm sm:grid-cols-2">
             <Line icon={GraduationCap} label={t('experienceLabel')}>
               {t(`experience.${v.experience_level}`)}
             </Line>
@@ -137,8 +140,26 @@ export function VacancyDetailView({ vacancy: v }: { vacancy: VacancyDetail }) {
         </article>
 
         <aside className="grid content-start gap-4 lg:sticky lg:top-24 lg:self-start">
-          <CompanyBox vacancy={v} />
           <VacancyApply vacancy={v} />
+          <section className="sp-card p-5">
+            <h2 className="text-lg font-semibold">{design('timelineTitle')}</h2>
+            <ol className="mt-5 grid gap-5">
+              {([0, 1, 2, 3] as const).map((index) => (
+                <li key={index} className="flex gap-3">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-accent-soft font-mono text-sm text-accent">
+                    {index + 1}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold">{design(`stages.${index}`)}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
+                      {design(`timeline.${index}`)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+          <CompanyBox vacancy={v} />
         </aside>
       </div>
       <SimilarVacancies vacancy={v} />
@@ -156,7 +177,7 @@ function Line({
   children: ReactNode;
 }) {
   return (
-    <div className="flex items-start gap-2.5">
+    <div className="flex flex-wrap items-start gap-2.5 rounded-lg bg-surface-2 p-3">
       <Icon aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-muted" />
       <dt className="text-muted">{label}:</dt>
       <dd className="font-medium">{children}</dd>
@@ -168,10 +189,7 @@ function CompanyBox({ vacancy: v }: { vacancy: VacancyDetail }) {
   const t = useTranslations('vacancy');
   const count = useCompanyVacancies(v.company.slug, 1);
   return (
-    <section
-      aria-label={t('companyLabel')}
-      className="rounded-xl border border-border bg-surface p-5"
-    >
+    <section aria-label={t('companyLabel')} className="sp-card p-5">
       <div className="flex items-center gap-3">
         <CompanyLogo logoUrl={v.company.logo_url} name={v.company.name} size={56} />
         <div className="min-w-0">
@@ -229,7 +247,7 @@ export function VacancyDetailFallback({ id }: { id: string }) {
 export function VacancyDetailSkeleton() {
   return (
     <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 pt-16 sm:px-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <div className="grid gap-3 rounded-xl border border-border bg-surface p-7" aria-hidden="true">
+      <div className="sp-card grid gap-3 p-7" aria-hidden="true">
         <Skeleton className="h-9 w-2/3" />
         <Skeleton className="h-7 w-1/3" />
         <Skeleton className="mt-3 h-4 w-1/2" />

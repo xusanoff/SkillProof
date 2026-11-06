@@ -23,7 +23,7 @@ function DialogTopSheet({
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-fg/40 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
       <DialogPrimitive.Content
         className={cn(
-          'fixed inset-x-0 top-0 z-50 border-b border-border bg-bg p-4 shadow-lg outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0',
+          'fixed inset-x-0 top-0 z-50 border-b border-border bg-bg p-4 shadow-[var(--shadow-pop)] outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0',
           className,
         )}
         {...props}

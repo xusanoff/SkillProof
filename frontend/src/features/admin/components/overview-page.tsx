@@ -8,9 +8,9 @@ import { useAdminOverview } from '../api';
 
 function Tile({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="sp-card p-4">
       <dt className="text-sm text-muted">{label}</dt>
-      <dd className="mt-1 text-2xl font-semibold tabular-nums">{value}</dd>
+      <dd className="mt-1 tabular-nums text-2xl font-semibold">{value}</dd>
       {note ? <dd className="mt-1 text-xs text-muted">{note}</dd> : null}
     </div>
   );
@@ -35,7 +35,7 @@ export function OverviewPage() {
   const n = (value: number) => format.number(value);
   return (
     <div className="grid gap-5">
-      <h1 className="text-2xl font-semibold">{t('title')}</h1>
+      <h1 className="sp-page-title">{t('title')}</h1>
       <dl className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <Tile label={t('candidates')} value={n(d.candidates)} />
         <Tile label={t('hrUsers')} value={n(d.hr_users)} />

@@ -86,7 +86,7 @@ export function QuestionForm({
         noValidate
         onSubmit={submit}
         aria-label={editing ? tq('titleEdit') : tq('titleNew')}
-        className="grid gap-4 rounded-xl border border-border bg-surface p-4 sm:p-5"
+        className="sp-card grid gap-4 p-4 sm:p-5"
       >
         <h2 className="text-lg font-semibold">{editing ? tq('titleEdit') : tq('titleNew')}</h2>
         {editing ? <Notice tone="info">{t('editResets')}</Notice> : null}

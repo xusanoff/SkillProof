@@ -25,7 +25,7 @@ export function InactivityBanner({ server }: { server: Stage2Telemetry['server']
   return (
     <Notice tone="warning" role="alert" title={t('inactiveTitle')}>
       {t('inactiveBody')}{' '}
-      <span className="font-semibold tabular-nums">{t('inactiveCountdown', { s: remaining })}</span>
+      <span className="tabular-nums font-semibold">{t('inactiveCountdown', { s: remaining })}</span>
     </Notice>
   );
 }

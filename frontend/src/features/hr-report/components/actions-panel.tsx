@@ -18,10 +18,7 @@ export function ActionsPanel({ report, companyId }: { report: HrReport; companyI
   const actions = hrActions(report.status);
 
   return (
-    <aside
-      aria-labelledby="actions-h"
-      className="grid content-start gap-5 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <aside aria-labelledby="actions-h" className="sp-card grid content-start gap-5 p-4 sm:p-5">
       <h2 id="actions-h" className="text-lg font-semibold">
         {t('title')}
       </h2>

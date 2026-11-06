@@ -78,7 +78,7 @@ export function TaskForm({
         noValidate
         onSubmit={submit}
         aria-label={editing ? tt('titleEdit') : tt('titleNew')}
-        className="grid gap-5 rounded-xl border border-border bg-surface p-4 sm:p-5"
+        className="sp-card grid gap-5 p-4 sm:p-5"
       >
         <h2 className="text-lg font-semibold">{editing ? tt('titleEdit') : tt('titleNew')}</h2>
         {editing ? <Notice tone="info">{t('editResets')}</Notice> : null}

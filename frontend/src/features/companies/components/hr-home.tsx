@@ -40,11 +40,11 @@ function Dashboard({ id, name, isOwner }: { id: string; name: string; isOwner: b
       <div className="flex items-center gap-4">
         <CompanyLogo logoUrl={company.data?.logo_url} name={name} size={56} />
         <div className="min-w-0">
-          <h1 className="truncate font-display text-3xl font-semibold tracking-tight">{name}</h1>
+          <h1 className="sp-page-title truncate">{name}</h1>
           <p className="text-sm text-muted">{t(isOwner ? 'roleOwner' : 'roleHr')}</p>
         </div>
       </div>
-      <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface">
+      <ul className="sp-card divide-y divide-border overflow-hidden">
         {links.map(({ href, icon: Icon, title, body }) => (
           <li key={href}>
             <Link

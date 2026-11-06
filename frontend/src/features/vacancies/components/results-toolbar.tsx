@@ -10,10 +10,10 @@ import { SORTS, updateFilters, type VacancyFilters, type VacancySort } from '../
 export function ResultsHeading({ total, q }: { total: number | null; q: string }) {
   const t = useTranslations('vacancies');
   const locale = useLocale();
-  if (total === null) return <h1 className="text-2xl font-semibold">{t('title')}</h1>;
+  if (total === null) return <h1 className="sp-page-title">{t('title')}</h1>;
   const count = formatAmount(total, locale);
   return (
-    <h1 className="text-xl leading-tight font-semibold sm:text-2xl" aria-live="polite">
+    <h1 className="sp-page-title text-xl leading-tight sm:text-2xl" aria-live="polite">
       {q ? t('countFor', { total, count, q }) : t('count', { total, count })}
     </h1>
   );

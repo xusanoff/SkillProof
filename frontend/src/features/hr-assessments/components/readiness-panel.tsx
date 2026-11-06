@@ -48,10 +48,7 @@ export function ReadinessPanel({ assessment }: { assessment: AssessmentOut | nul
   };
 
   return (
-    <section
-      aria-labelledby="readiness-h"
-      className="grid gap-3 rounded-xl border border-border p-4"
-    >
+    <section aria-labelledby="readiness-h" className="sp-card grid gap-3 p-4">
       <h2 id="readiness-h" className="flex items-center gap-2 text-lg font-semibold">
         {assessment.ready ? (
           <CircleCheck aria-hidden="true" className="size-5 text-success" />

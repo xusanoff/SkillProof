@@ -1946,5 +1946,27 @@
       "cost": "Cost",
       "unknown": "Unknown"
     }
+  },
+  "design": {
+    "stages": {
+      "0": "Application",
+      "1": "Practical task",
+      "2": "Oral interview",
+      "3": "Results"
+    },
+    "timelineTitle": "How an application is verified",
+    "timeline": {
+      "0": "Read and accept the interview rules.",
+      "1": "Complete a practical task in the platform editor.",
+      "2": "Discuss the code you wrote with AI.",
+      "3": "Receive scores and feedback. HR makes the final decision."
+    },
+    "readyTitle": "Your interview is waiting",
+    "readyBody": "Start or resume your interview to verify your application.",
+    "largestDrop": "Largest drop-off",
+    "dropDetail": "{from} → {to}: {before} → {after} candidates ({percent} decrease).",
+    "averages": "Average scores",
+    "rank": "Ranking",
+    "loadedResults": "Results on this page"
   }
 }

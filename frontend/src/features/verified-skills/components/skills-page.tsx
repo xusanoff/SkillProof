@@ -79,7 +79,7 @@ export function VerifiedSkillsPage() {
   return (
     <div className="mx-auto grid w-full max-w-3xl gap-5 px-4 py-6 sm:px-6 lg:py-10">
       <div>
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <p className="mt-1 max-w-prose text-muted">{t('lead')}</p>
       </div>
       <Notice tone="info" title={t('privacy.title')}>
@@ -100,16 +100,16 @@ function SkillRow({ skill: s }: { skill: VerifiedSkill }) {
   const expired = !s.is_valid;
 
   return (
-    <li className="grid gap-3 rounded-xl border border-border p-4">
+    <li className="sp-card grid gap-3 p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-lg font-semibold">{s.name}</h2>
-        <p className="font-semibold tabular-nums">
+        <p className="tabular-nums font-semibold">
           {[levelText(s.level), t('score', { score: Math.round(s.score) })]
             .filter(Boolean)
             .join(', ')}
         </p>
       </div>
-      <p className="text-sm tabular-nums">
+      <p className="tabular-nums text-sm">
         {expired ? (
           <span className="font-medium text-danger">
             {t('expired', { date: f.date(s.valid_until) })}

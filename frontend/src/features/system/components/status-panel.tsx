@@ -33,7 +33,7 @@ export function StatusPanel() {
       <section
         aria-labelledby="api-status-title"
         aria-busy={isFetching || undefined}
-        className="rounded-xl border border-border bg-surface"
+        className="sp-card"
       >
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border p-5 sm:p-6">
           <h2 id="api-status-title" className="text-lg font-semibold">
@@ -96,7 +96,7 @@ export function StatusPanel() {
 
         {!isPending ? (
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border p-5 sm:px-6 sm:py-4">
-            <p className="text-sm text-muted tabular-nums">
+            <p className="tabular-nums text-sm text-muted">
               {checkedAt
                 ? t('status.lastChecked', {
                     time: format.dateTime(new Date(checkedAt), {
@@ -158,7 +158,7 @@ function Field({ term, value }: { term: string; value: string }) {
   return (
     <div>
       <dt className="text-sm text-muted">{term}</dt>
-      <dd className="mt-1 text-lg font-semibold tabular-nums">{value}</dd>
+      <dd className="mt-1 tabular-nums text-lg font-semibold">{value}</dd>
     </div>
   );
 }

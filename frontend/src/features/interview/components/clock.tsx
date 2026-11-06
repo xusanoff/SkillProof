@@ -42,7 +42,7 @@ export function TimerChip({
   const low = seconds <= 60;
   return (
     <p
-      className={`inline-flex min-h-9 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium tabular-nums ${low ? 'border-danger/40 bg-danger-soft' : 'border-border bg-surface'}`}
+      className={`inline-flex min-h-9 items-center gap-1.5 rounded-lg border px-3 tabular-nums text-sm font-medium ${low ? 'border-danger/40 bg-danger-soft' : 'border-border bg-surface'}`}
     >
       <Timer aria-hidden="true" className="size-4" />
       <span className={showLabel ? 'font-normal text-muted' : 'sr-only'}>{label}: </span>

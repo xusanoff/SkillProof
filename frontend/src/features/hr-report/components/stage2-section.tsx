@@ -30,7 +30,7 @@ function Turn({
               <span className="ml-2 text-sm text-muted">{t('followUp')}</span>
             ) : null}
           </h3>
-          <p className="text-xl font-semibold tabular-nums">
+          <p className="tabular-nums text-xl font-semibold">
             <span className="sr-only">{t('percent')}: </span>
             {percentText(turn.percent)}
           </p>
@@ -115,15 +115,12 @@ export function Stage2Section({
 }) {
   const t = useTranslations('hrReport.stage2');
   return (
-    <section
-      aria-labelledby="s2-h"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="s2-h" className="sp-card grid gap-3 p-4 sm:p-5">
       <h2 id="s2-h" className="text-lg font-semibold">
         {t('title')}
       </h2>
       {stage2.pass_threshold != null ? (
-        <p className="text-sm text-muted tabular-nums">
+        <p className="tabular-nums text-sm text-muted">
           {t('threshold', { value: stage2.pass_threshold })}
           {stage2.passed == null ? '' : ` · ${stage2.passed ? t('passed') : t('notPassed')}`}
         </p>

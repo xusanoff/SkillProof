@@ -8,7 +8,7 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
   return (
     <div className="grid gap-0.5 rounded-lg border border-border p-3">
       <dt className="text-sm text-muted">{label}</dt>
-      <dd className="text-2xl font-semibold tabular-nums">{value}</dd>
+      <dd className="tabular-nums text-2xl font-semibold">{value}</dd>
       {hint ? <dd className="text-xs text-muted">{hint}</dd> : null}
     </div>
   );
@@ -20,10 +20,7 @@ export function ScoresSection({ report }: { report: Stage1Report }) {
   const reason =
     report.status === 'disqualified' ? disqualificationKey(report.disqualification_reason) : null;
   return (
-    <section
-      aria-labelledby="scores-h"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="scores-h" className="sp-card grid gap-3 p-4 sm:p-5">
       <h2 id="scores-h" className="text-lg font-semibold">
         {t('title')}
       </h2>

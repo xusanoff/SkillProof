@@ -235,3 +235,98 @@ body[data-interview-room] {
   --accent-fg: var(--dark-1);
   --accent: var(--primary-hover);
 }
+
+/* Shared surfaces used by public, candidate, HR and administration screens. */
+@layer components {
+  .sp-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+  .sp-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--surface-2);
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .sp-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .sp-page-title {
+    font-size: clamp(26px, 3vw, 34px);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .sp-dark {
+    --ink: var(--dark-text);
+    --muted: var(--dark-muted);
+    --line: var(--dark-line);
+    --line-strong: var(--dark-line);
+    --track: var(--dark-line);
+    --success: #6fd3a6;
+    --success-soft: #0f2e24;
+    --warning: #f3c27a;
+    --warning-soft: #33240a;
+    --danger: #f59a8e;
+    --danger-soft: #3a1612;
+    --fg: var(--dark-text);
+    --muted-fg: var(--dark-muted);
+    --border: var(--dark-line);
+    --border-strong: var(--dark-line);
+    --surface: var(--dark-2);
+    --surface-2: var(--dark-3);
+    --bg: var(--dark-1);
+    --accent: var(--signal);
+    --accent-fg: var(--signal-ink);
+    --primary: var(--signal);
+    --primary-hover: var(--signal);
+    --primary-soft: var(--dark-3);
+    --accent-soft: var(--dark-3);
+    --score-high: var(--success);
+    --score-mid: var(--warning);
+    --score-low: var(--danger);
+    --suspicion-low: var(--success);
+    --suspicion-medium: var(--warning);
+    --suspicion-high: var(--danger);
+    --input: var(--dark-line);
+    background: var(--dark-1);
+    color: var(--dark-text);
+  }
+  .sp-workspace-sidebar nav a {
+    border-radius: var(--radius);
+    border-left: 3px solid transparent;
+  }
+  .sp-workspace-sidebar nav a[aria-current='page'] {
+    background: var(--dark-3);
+    color: var(--dark-text);
+    border-left-color: var(--signal);
+  }
+  .sp-workspace-sidebar nav a:not([aria-current='page']) {
+    color: var(--dark-muted);
+  }
+  .sp-workspace-sidebar nav a:hover {
+    background: var(--dark-2);
+    color: var(--dark-text);
+  }
+}
+body:has([data-workspace]) [data-site-chrome] {
+  display: none;
+}
+body:has([data-workspace]) {
+  padding-bottom: 0;
+}
+
+/* The oral room fills the surrounding page as well as its content panel. */
+body:has([data-stage2-room]) {
+  background: var(--dark-1);
+  color: var(--dark-text);
+}

@@ -1946,5 +1946,27 @@
       "cost": "Narx",
       "unknown": "Noma'lum"
     }
+  },
+  "design": {
+    "stages": {
+      "0": "Ariza",
+      "1": "Amaliy topshiriq",
+      "2": "Og‘zaki suhbat",
+      "3": "Natija"
+    },
+    "timelineTitle": "Ariza qanday tasdiqlanadi",
+    "timeline": {
+      "0": "Qoidalarni o‘qib, qabul qilasiz.",
+      "1": "Platforma muharririda amaliy topshiriqni bajarasiz.",
+      "2": "AI bilan yozgan kodingiz haqida suhbatlashasiz.",
+      "3": "Ball va izohlarni olasiz. Yakuniy qarorni HR qabul qiladi."
+    },
+    "readyTitle": "Intervyu sizni kutmoqda",
+    "readyBody": "Arizangizni tasdiqlash uchun suhbatni boshlang yoki davom ettiring.",
+    "largestDrop": "Eng katta yo‘qotish",
+    "dropDetail": "{from} → {to}: {before} → {after} nomzod ({percent} kamayish).",
+    "averages": "O‘rtacha ball",
+    "rank": "Reyting",
+    "loadedResults": "Joriy sahifadagi natijalar"
   }
 }

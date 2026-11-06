@@ -21,7 +21,7 @@ export function InvitationsList({ companyId }: { companyId: string }) {
       <h2 id="pending-title" className="text-lg font-semibold">
         {t('pending')}
         {invitations.data ? (
-          <span className="ml-2 font-normal text-muted tabular-nums">
+          <span className="ml-2 tabular-nums font-normal text-muted">
             {invitations.data.length}
           </span>
         ) : null}
@@ -39,7 +39,7 @@ export function InvitationsList({ companyId }: { companyId: string }) {
           {t('pendingEmpty')}
         </p>
       ) : (
-        <ul className="divide-y divide-border rounded-xl border border-border bg-surface">
+        <ul className="sp-card divide-y divide-border">
           {invitations.data.map((inv) => (
             <li
               key={inv.id}

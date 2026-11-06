@@ -43,10 +43,7 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section
-      aria-labelledby={id}
-      className="grid gap-4 rounded-xl border border-border bg-surface p-4 sm:p-5"
-    >
+    <section aria-labelledby={id} className="sp-card grid gap-4 p-4 sm:p-5">
       <div>
         <h2 id={id} className="text-lg font-semibold">
           {title}
@@ -337,7 +334,7 @@ export function AssessmentForm({
             return (
               <li key={f.id} className="grid gap-2 rounded-lg border border-border p-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="w-6 text-sm text-muted tabular-nums">{i + 1}.</span>
+                  <span className="w-6 tabular-nums text-sm text-muted">{i + 1}.</span>
                   <span className="min-w-0 flex-1 font-medium">{x?.text ?? '—'}</span>
                   {x ? (
                     <>

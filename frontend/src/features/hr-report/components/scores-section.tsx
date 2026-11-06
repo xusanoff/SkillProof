@@ -2,19 +2,11 @@
 
 import { BadgeCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { StatCard } from '@/components/common/design';
 import { Notice } from '@/components/common/notice';
 import { disqualificationKey, percentText } from '@/features/hr-stage1';
 import { useFormat } from '@/lib/format';
 import { isDisqualified, type HrReport } from '../model';
-
-function Stat({ label, value, big }: { label: string; value: string; big?: boolean }) {
-  return (
-    <div className="grid gap-0.5 rounded-lg border border-border p-3">
-      <dt className="text-sm text-muted">{label}</dt>
-      <dd className={`${big ? 'text-3xl' : 'text-2xl'} font-semibold tabular-nums`}>{value}</dd>
-    </div>
-  );
-}
 
 /** Spec §8 item 2: overall, Stage 1, Stage 2 and per-skill %. A missing score is a dash, never 0. */
 export function ScoresSection({ report }: { report: HrReport }) {
@@ -24,10 +16,7 @@ export function ScoresSection({ report }: { report: HrReport }) {
     ? disqualificationKey(report.disqualification_reason)
     : null;
   return (
-    <section
-      aria-labelledby="scores-h"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="scores-h" className="sp-card grid gap-5 p-5 sm:p-6">
       <h2 id="scores-h" className="text-lg font-semibold">
         {t('title')}
       </h2>
@@ -37,9 +26,13 @@ export function ScoresSection({ report }: { report: HrReport }) {
         </Notice>
       ) : null}
       <dl className="grid gap-3 sm:grid-cols-3">
-        <Stat big label={t('overall')} value={percentText(report.overall_score)} />
-        <Stat label={t('stage1')} value={percentText(report.stage1_score)} />
-        <Stat label={t('stage2')} value={percentText(report.stage2_score)} />
+        <StatCard
+          className="sp-dark [&_dd]:text-signal [&_dt]:text-dark-muted"
+          label={t('overall')}
+          value={percentText(report.overall_score)}
+        />
+        <StatCard label={t('stage1')} value={percentText(report.stage1_score)} />
+        <StatCard label={t('stage2')} value={percentText(report.stage2_score)} />
       </dl>
       {report.overall_score == null && report.state === 'done' ? (
         <p className="text-sm text-muted">{t('noOverall')}</p>
@@ -83,13 +76,13 @@ export function ScoresSection({ report }: { report: HrReport }) {
                       </span>
                     ) : null}
                   </span>
-                  <span className="text-sm text-muted tabular-nums">
+                  <span className="tabular-nums text-sm text-muted">
                     {t('skillDetail', {
                       stage1: percentText(s.stage1_percent),
                       stage2: percentText(s.stage2_percent),
                     })}
                   </span>
-                  <span className="font-semibold tabular-nums">{percentText(s.percent)}</span>
+                  <span className="tabular-nums font-semibold">{percentText(s.percent)}</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-surface-2" aria-hidden="true">
                   <div

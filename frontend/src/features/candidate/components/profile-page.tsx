@@ -18,7 +18,7 @@ export function CandidateProfilePage() {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-      <h1 className="font-display text-3xl font-semibold tracking-tight">{t('title')}</h1>
+      <h1 className="sp-page-title">{t('title')}</h1>
       <p className="mt-2 max-w-prose text-muted">{t('lead')}</p>
       {/* The avatar menu does not exist on phones: this is how they reach the page. */}
       <Link

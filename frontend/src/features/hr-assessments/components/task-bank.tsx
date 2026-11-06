@@ -70,19 +70,16 @@ function Bank({ companyId, pathname }: { companyId: string; pathname: string }) 
         ) : null
       }
       renderItem={(x) => (
-        <article
-          aria-labelledby={`t-${x.id}`}
-          className="grid gap-3 rounded-xl border border-border bg-surface p-4"
-        >
+        <article aria-labelledby={`t-${x.id}`} className="sp-card grid gap-3 p-4">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs text-muted tabular-nums">
+            <span className="tabular-nums text-xs text-muted">
               {t('difficultyOption', { n: x.difficulty })}
             </span>
             <span className="text-xs text-muted">{t(`languages.${x.language as 'uz'}`)}</span>
             {skillName(x.skill_id) ? (
               <span className="text-xs text-muted">{skillName(x.skill_id)}</span>
             ) : null}
-            <span className="text-xs text-muted tabular-nums">
+            <span className="tabular-nums text-xs text-muted">
               {tt('limitMinutes', { n: x.time_limit_minutes })}
             </span>
           </div>

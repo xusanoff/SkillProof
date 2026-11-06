@@ -39,13 +39,13 @@ export function SkillBadges({
             <BadgeCheck aria-hidden="true" className="size-4 text-success" />
             {s.name}
           </span>
-          <span className="text-sm tabular-nums">
+          <span className="tabular-nums text-sm">
             {[levelText(s.level), t('score', { score: Math.round(s.score) })]
               .filter(Boolean)
               .join(', ')}
           </span>
           {compact ? null : (
-            <span className="text-xs text-muted tabular-nums">
+            <span className="tabular-nums text-xs text-muted">
               {t('validUntil', { date: f.date(s.valid_until) })}
             </span>
           )}

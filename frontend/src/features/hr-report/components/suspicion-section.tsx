@@ -24,7 +24,7 @@ function SignalMeta({ signal }: { signal: SignalLike }) {
   return (
     <>
       {mmss(signal.at_ms) ? (
-        <span className="font-mono text-sm text-muted tabular-nums">{mmss(signal.at_ms)}</span>
+        <span className="tabular-nums font-mono text-sm text-muted">{mmss(signal.at_ms)}</span>
       ) : null}
       {stage ? <span className="text-sm text-muted">{ts(stage)}</span> : null}
       <SignalText signal={signal} />
@@ -41,10 +41,7 @@ export function SuspicionSection({ report }: { report: HrReport }) {
   const level = suspicionLevel(report.suspicion_label);
 
   return (
-    <section
-      aria-labelledby="susp-h"
-      className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-    >
+    <section aria-labelledby="susp-h" className="sp-card grid gap-3 p-4 sm:p-5">
       <h2 id="susp-h" className="text-lg font-semibold">
         {t('title')}
       </h2>
@@ -52,7 +49,7 @@ export function SuspicionSection({ report }: { report: HrReport }) {
         <p className="text-muted">{report.state === 'done' ? t('none') : t('notYet')}</p>
       ) : (
         <div className="flex flex-wrap items-center gap-3">
-          <p className="text-4xl font-semibold tabular-nums">
+          <p className="tabular-nums text-4xl font-semibold">
             {Math.round(report.suspicion_percent)}
             <span className="text-2xl">%</span>
           </p>

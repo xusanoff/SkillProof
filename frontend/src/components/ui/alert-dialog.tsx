@@ -19,7 +19,7 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         className={cn(
           // Phone: bottom sheet; desktop: centred modal (design-system §4).
-          'fixed inset-x-0 bottom-0 z-50 grid gap-4 rounded-t-2xl border border-border bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-lg outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:w-full sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:p-6',
+          'fixed inset-x-0 bottom-0 z-50 grid gap-4 rounded-t-2xl border border-border bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[var(--shadow-pop)] outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:w-full sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:p-6',
           className,
         )}
         {...props}

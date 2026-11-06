@@ -2,6 +2,7 @@
 
 import { ArrowLeft, LoaderCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Avatar } from '@/components/common/design';
 import { ApplicationStatusBadge } from '@/components/common/application-status-badge';
 import { ErrorState } from '@/components/common/error-state';
 import { Notice } from '@/components/common/notice';
@@ -20,7 +21,7 @@ import { ScoresSection } from './scores-section';
 import { Stage2Section } from './stage2-section';
 import { SuspicionSection } from './suspicion-section';
 
-/** HR candidate page, in the order of spec §8: suspicion → scores → strengths/gaps → recommendation → replay and code → Stage 2. */
+/** HR candidate report: score overview, integrity evidence, strengths/gaps, recommendation, replay and Stage 2. */
 export function HrReportPage({ applicationId }: { applicationId: string }) {
   const { active } = useActiveCompany();
   if (!active) return <NeedsCompany />;
@@ -74,9 +75,10 @@ function Report({ companyId, applicationId }: { companyId: string; applicationId
 
   return (
     <div className="grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-5">
-      <div>
+      <div className="sp-card p-5 sm:p-6">
         {back}
-        <h1 className="mt-1 text-2xl font-semibold">{report.candidate_name}</h1>
+        <Avatar name={report.candidate_name} className="mt-3 mb-3 size-14 text-xl" />
+        <h1 className="sp-page-title mt-1">{report.candidate_name}</h1>
         <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
           <span>{report.vacancy_title}</span>
           <ApplicationStatusBadge status={report.status} />
@@ -99,8 +101,8 @@ function Report({ companyId, applicationId }: { companyId: string; applicationId
 
       <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5">
-          <SuspicionSection report={report} />
           <ScoresSection report={report} />
+          <SuspicionSection report={report} />
           {phase === 'ready' ? <PointsSection report={report} /> : null}
           {phase === 'ready' ? <RecommendationSection report={report} /> : null}
           {stage1.data && !stage1Missing ? (

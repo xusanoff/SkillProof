@@ -55,10 +55,7 @@ function ApplyBlock({ vacancy: initial, autoOpen }: { vacancy: VacancyDetail; au
 
   return (
     <>
-      <section
-        aria-label={t('applyLabel')}
-        className="hidden rounded-xl border border-border bg-surface p-5 lg:block"
-      >
+      <section aria-label={t('applyLabel')} className="sp-card hidden p-5 lg:block">
         <div className="flex items-center gap-2">
           <ApplyAction
             vacancy={v}

@@ -11,7 +11,7 @@ function Results({ title, items }: { title: string; items: Result[] }) {
   const passed = items.filter((r) => r.passed).length;
   return (
     <div>
-      <h4 className="text-sm font-semibold tabular-nums">
+      <h4 className="tabular-nums text-sm font-semibold">
         {title}: {passed} / {items.length}
       </h4>
       <ul className="mt-1 grid gap-1 text-sm">
@@ -24,7 +24,7 @@ function Results({ title, items }: { title: string; items: Result[] }) {
             )}
             <span>{r.name}</span>
             <span className="text-muted">{t(`status.${r.status as 'passed'}`)}</span>
-            <span className="ml-auto text-xs text-muted tabular-nums">{r.time_ms} ms</span>
+            <span className="ml-auto tabular-nums text-xs text-muted">{r.time_ms} ms</span>
           </li>
         ))}
       </ul>
@@ -54,7 +54,7 @@ export function CodeSection({ task }: { task: TaskReport }) {
           >
             <span
               aria-hidden="true"
-              className="pr-3 text-right text-muted tabular-nums select-none"
+              className="pr-3 text-right tabular-nums text-muted select-none"
             >
               {i + 1}
             </span>

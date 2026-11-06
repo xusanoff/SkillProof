@@ -24,10 +24,7 @@ export function Stage1Detail({
   // Every task was covered by verified skills: nothing was solved here, so no review, replay or code.
   if (!current) {
     return (
-      <section
-        aria-labelledby="sw-h"
-        className="grid gap-2 rounded-xl border border-border p-4 sm:p-5"
-      >
+      <section aria-labelledby="sw-h" className="sp-card grid gap-2 p-4 sm:p-5">
         <h2 id="sw-h" className="text-lg font-semibold">
           {t('reviewTitle')}
         </h2>
@@ -38,10 +35,7 @@ export function Stage1Detail({
 
   return (
     <>
-      <section
-        aria-labelledby="sw-h"
-        className="grid gap-4 rounded-xl border border-border p-4 sm:p-5"
-      >
+      <section aria-labelledby="sw-h" className="sp-card grid gap-4 p-4 sm:p-5">
         <h2 id="sw-h" className="text-lg font-semibold">
           {t('reviewTitle')}
         </h2>
@@ -53,10 +47,7 @@ export function Stage1Detail({
         ))}
       </section>
 
-      <section
-        aria-labelledby="replay-h"
-        className="grid gap-3 rounded-xl border border-border p-4 sm:p-5"
-      >
+      <section aria-labelledby="replay-h" className="sp-card grid gap-3 p-4 sm:p-5">
         <h2 id="replay-h" className="text-lg font-semibold">
           {t('replayTitle')}
         </h2>
@@ -80,10 +71,7 @@ export function Stage1Detail({
         ) : null}
       </section>
 
-      <section
-        aria-labelledby="code-h"
-        className="grid gap-4 rounded-xl border border-border p-4 sm:p-5"
-      >
+      <section aria-labelledby="code-h" className="sp-card grid gap-4 p-4 sm:p-5">
         <h2 id="code-h" className="text-lg font-semibold">
           {t('codeTitle')}
         </h2>

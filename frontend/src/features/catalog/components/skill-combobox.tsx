@@ -103,7 +103,7 @@ export function SkillCombobox({
         role="listbox"
         aria-label={t('skillSuggestions')}
         hidden={!visible}
-        className="absolute inset-x-0 top-full z-50 mt-1 max-h-64 overflow-auto rounded-xl border border-border bg-surface p-1.5 shadow-lg"
+        className="sp-card absolute inset-x-0 top-full z-50 mt-1 max-h-64 overflow-auto p-1.5 shadow-[var(--shadow-pop)]"
       >
         {items.map((skill, i) => (
           <li

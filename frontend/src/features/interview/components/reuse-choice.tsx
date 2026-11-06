@@ -27,7 +27,7 @@ export function ReuseChoice({
   const levelText = useLevelText();
   const id = useId();
   return (
-    <section aria-labelledby={`${id}-h`} className="grid gap-3 rounded-xl border border-border p-4">
+    <section aria-labelledby={`${id}-h`} className="sp-card grid gap-3 p-4">
       <h2 id={`${id}-h`} className="flex items-center gap-2 text-lg font-semibold">
         <BadgeCheck aria-hidden="true" className="size-5 text-success" />
         {t('title')}
@@ -35,7 +35,7 @@ export function ReuseChoice({
       <p className="max-w-prose text-sm">{t('lead')}</p>
       <ul className="grid gap-1.5">
         {offer.skills.map((s) => (
-          <li key={s.skill_id} className="text-sm tabular-nums">
+          <li key={s.skill_id} className="tabular-nums text-sm">
             <span className="font-medium">{s.name}</span>
             {': '}
             {[levelText(s.level), t('score', { score: Math.round(s.score) })]
@@ -46,7 +46,7 @@ export function ReuseChoice({
           </li>
         ))}
       </ul>
-      <p className="text-sm font-medium tabular-nums">
+      <p className="tabular-nums text-sm font-medium">
         {t('covers', {
           tasksSkipped: offer.tasks_skipped,
           tasksTotal: offer.tasks_total,

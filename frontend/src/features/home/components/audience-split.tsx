@@ -6,9 +6,9 @@ export function AudienceSplit() {
   const t = useTranslations('home.audience');
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
-      <div className="grid gap-12 md:grid-cols-2 md:gap-0 md:divide-x md:divide-border">
-        <div className="flex flex-col md:pr-12">
+    <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
+      <div className="grid gap-5 md:grid-cols-2">
+        <div className="sp-card flex flex-col p-6 sm:p-9">
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
             {t('candidates.title')}
           </h2>
@@ -17,18 +17,21 @@ export function AudienceSplit() {
             <Link href="/vacancies">{t('candidates.cta')}</Link>
           </Button>
         </div>
-        <div className="flex flex-col md:pl-12">
+        <div
+          id="employers"
+          className="flex flex-col rounded-xl bg-dark-panel p-6 text-dark-text sm:p-9"
+        >
           <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
             {t('employers.title')}
           </h2>
-          <p className="mt-4 max-w-prose text-muted">{t('employers.body')}</p>
+          <p className="mt-4 max-w-prose text-dark-muted">{t('employers.body')}</p>
           <Button
             asChild
-            variant="outline"
+            variant="signal"
             size="lg"
             className="mt-8 h-12 self-start px-6 text-base"
           >
-            <Link href="/employers">{t('employers.cta')}</Link>
+            <Link href="/register?role=hr&next=%2Fhr">{t('employers.cta')}</Link>
           </Button>
         </div>
       </div>

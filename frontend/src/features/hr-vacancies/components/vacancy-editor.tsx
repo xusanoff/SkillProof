@@ -24,7 +24,7 @@ function Header({ title }: { title: string }) {
         <ArrowLeft aria-hidden="true" className="size-4" />
         {t('back')}
       </Link>
-      <h1 className="mt-1 text-2xl font-semibold">{title}</h1>
+      <h1 className="sp-page-title mt-1">{title}</h1>
     </div>
   );
 }

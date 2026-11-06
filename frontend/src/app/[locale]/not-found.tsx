@@ -8,14 +8,12 @@ export default function NotFound() {
   return (
     <section className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-20 sm:px-6">
       <p
-        className="font-display text-7xl font-semibold text-accent tabular-nums"
+        className="tabular-nums font-display text-7xl font-semibold text-accent"
         aria-hidden="true"
       >
         404
       </p>
-      <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-        {t('notFound.title')}
-      </h1>
+      <h1 className="sp-page-title mt-4 sm:text-4xl">{t('notFound.title')}</h1>
       <p className="mt-3 max-w-prose text-muted">{t('notFound.body')}</p>
       <Button asChild size="lg" className="mt-8 min-h-11 self-start px-5">
         <Link href="/">{t('common.backHome')}</Link>

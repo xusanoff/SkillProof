@@ -3,7 +3,8 @@
 import { Download, MapPin, TriangleAlert, UsersRound } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useId, useState, type KeyboardEvent } from 'react';
+import { Fragment, useId, useState, type KeyboardEvent } from 'react';
+import { Avatar, StatCard } from '@/components/common/design';
 import { ApplicationStatusBadge } from '@/components/common/application-status-badge';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
@@ -45,6 +46,7 @@ export function HrCandidates() {
 
 function Candidates({ companyId }: { companyId: string }) {
   const t = useTranslations('hrCandidates');
+  const design = useTranslations('design');
   const tc = useTranslations('common');
   const ts = useTranslations('applicationStatus');
   const errorText = useErrorText();
@@ -67,7 +69,7 @@ function Candidates({ companyId }: { companyId: string }) {
   return (
     <div className="grid gap-5">
       <div>
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <p className="mt-1 text-sm text-muted">{t('lead')}</p>
       </div>
 
@@ -159,17 +161,124 @@ function Candidates({ companyId }: { companyId: string }) {
       ) : (
         <>
           <p className="text-sm text-muted">{t('total', { count: list.data.total })}</p>
-          <ul className={cn('grid gap-3', list.isPlaceholderData && 'opacity-60')}>
-            {list.data.items.map((a) => (
-              <li key={a.id}>
-                <CandidateRow
-                  application={a}
-                  companyId={companyId}
-                  showVacancy={!query.vacancyId}
-                />
-              </li>
-            ))}
-          </ul>
+          <dl className="grid gap-3 sm:grid-cols-2">
+            <StatCard label={t(('tabs.' + tab) as 'tabs.ranked')} value={list.data.total} />
+            <StatCard label={design('loadedResults')} value={list.data.items.length} />
+          </dl>
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label={design('rank')}
+            className={cn('sp-card overflow-x-auto', list.isPlaceholderData && 'opacity-60')}
+          >
+            <table className="w-full min-w-[880px] text-left text-sm">
+              <thead className="bg-surface-2 text-xs text-muted">
+                <tr>
+                  <th scope="col" className="p-4">
+                    #
+                  </th>
+                  <th scope="col" className="p-4">
+                    {t('title')}
+                  </th>
+                  <th scope="col" className="p-4">
+                    {t('scores.stage1')}
+                  </th>
+                  <th scope="col" className="p-4">
+                    {t('scores.stage2')}
+                  </th>
+                  <th scope="col" className="p-4">
+                    {t('scores.overall')}
+                  </th>
+                  <th scope="col" className="p-4">
+                    {t('scores.recommendationLabel')}
+                  </th>
+                  <th scope="col" className="p-4">
+                    {t('scores.open')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.data.items.map((a, index) => {
+                  const rank = (page - 1) * list.data!.page_size + index + 1;
+                  const recommendation = recommendationKey(a.recommendation);
+                  const level = suspicionLevel(a.suspicion_label);
+                  return (
+                    <Fragment key={a.id}>
+                      <tr className="border-t border-border">
+                        <td className="p-4">
+                          <span
+                            className={cn(
+                              'grid size-9 place-items-center rounded-lg font-mono font-semibold',
+                              tab === 'ranked' && rank === 1
+                                ? 'bg-signal text-signal-ink'
+                                : 'bg-surface-2',
+                            )}
+                          >
+                            {rank}
+                          </span>
+                        </td>
+                        <th scope="row" className="p-4 font-normal">
+                          <div className="flex items-center gap-3">
+                            <Avatar name={a.candidate.full_name} />
+                            <div className="min-w-0">
+                              <p className="font-semibold">{a.candidate.full_name}</p>
+                              <p className="mt-1 text-xs text-muted">{a.vacancy.title}</p>
+                              <div className="mt-2">
+                                <ApplicationStatusBadge status={a.status} />
+                              </div>
+                            </div>
+                          </div>
+                        </th>
+                        <td className="p-4 font-mono">{percentText(a.stage1_score)}</td>
+                        <td className="p-4 font-mono">{percentText(a.stage2_score)}</td>
+                        <td className="p-4 font-mono text-xl font-semibold">
+                          {percentText(a.final_score)}
+                        </td>
+                        <td className="p-4">
+                          {level ? (
+                            <SuspicionBadge level={level} label={t(`scores.level.${level}`)} />
+                          ) : (
+                            '—'
+                          )}
+                          {recommendation ? (
+                            <p className="mt-2 text-xs">
+                              {t(`scores.recommendation.${recommendation}`)}
+                            </p>
+                          ) : null}
+                        </td>
+                        <td className="p-4">
+                          {interviewStarted(a) ? (
+                            <Link
+                              href={`/hr/candidates/${a.id}`}
+                              className="inline-flex min-h-11 items-center font-semibold text-accent hover:underline"
+                            >
+                              {t('scores.open')}
+                            </Link>
+                          ) : (
+                            <span className="text-muted">{t('scores.notStarted')}</span>
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={7} className="px-4 pb-3">
+                          <details>
+                            <summary className="min-h-11 cursor-pointer py-3 text-xs font-medium text-muted">
+                              {t('expand')} · {a.candidate.full_name}
+                            </summary>
+                            <CandidateRow
+                              application={a}
+                              companyId={companyId}
+                              showVacancy={!query.vacancyId}
+                            />
+                          </details>
+                        </td>
+                      </tr>
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
           <Pagination
             page={page}
             totalPages={pageCount(list.data.total, list.data.page_size)}
@@ -209,7 +318,7 @@ function CandidateRow({
   return (
     <article
       aria-labelledby={`cand-${a.id}`}
-      className="grid gap-4 rounded-xl border border-border bg-surface p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_15rem]"
+      className="sp-card grid gap-4 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_15rem]"
     >
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
@@ -362,21 +471,21 @@ function ScoreCell({ application: a, started }: { application: HrApplication; st
       <dl className="grid grid-cols-3 gap-2">
         <div className="col-span-3">
           <dt className="text-muted">{t('overall')}</dt>
-          <dd className="text-2xl font-semibold tabular-nums">{percentText(a.final_score)}</dd>
+          <dd className="tabular-nums text-2xl font-semibold">{percentText(a.final_score)}</dd>
         </div>
         <div>
           <dt className="text-muted">{t('stage1')}</dt>
-          <dd className="font-medium tabular-nums">{percentText(a.stage1_score)}</dd>
+          <dd className="tabular-nums font-medium">{percentText(a.stage1_score)}</dd>
         </div>
         <div className="col-span-2">
           <dt className="text-muted">{t('stage2')}</dt>
-          <dd className="font-medium tabular-nums">{percentText(a.stage2_score)}</dd>
+          <dd className="tabular-nums font-medium">{percentText(a.stage2_score)}</dd>
         </div>
       </dl>
       {a.suspicion_percent != null && level ? (
         <p className="flex flex-wrap items-center gap-2">
           <SuspicionBadge level={level} label={t(`level.${level}`)} />
-          <span className="text-muted tabular-nums">{Math.round(a.suspicion_percent)}%</span>
+          <span className="tabular-nums text-muted">{Math.round(a.suspicion_percent)}%</span>
         </p>
       ) : (
         <p className="text-muted">{started ? t('evaluating') : t('notStarted')}</p>

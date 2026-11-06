@@ -25,7 +25,7 @@ export function WarmupStep({ state, onDone }: { state: InterviewState; onDone: (
   return (
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title">{t('title')}</h1>
         <TimerChip seconds={left} label={t('timer')} />
         <Button variant="ghost" className="ml-auto min-h-11" onClick={onDone}>
           {t('skip')}

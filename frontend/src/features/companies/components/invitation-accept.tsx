@@ -53,9 +53,7 @@ export function InvitationAccept({ token }: { token: string }) {
       <div className="flex items-center gap-4">
         <CompanyLogo logoUrl={inv.company.logo_url} name={inv.company.name} size={56} />
         <div className="min-w-0">
-          <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
-            {t('title', { company: inv.company.name })}
-          </h1>
+          <h1 className="sp-page-title">{t('title', { company: inv.company.name })}</h1>
           <p className="mt-1 text-muted">{t('invitedEmail', { email: inv.email })}</p>
         </div>
       </div>

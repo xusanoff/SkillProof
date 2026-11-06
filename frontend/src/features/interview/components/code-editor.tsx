@@ -1,10 +1,9 @@
 'use client';
 
-import { defineEditorThemes, editorTheme } from '@/components/editor/theme';
+import { applyEditorFont, defineEditorThemes, editorTheme } from '@/components/editor/theme';
 import type { OnMount } from '@monaco-editor/react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
-import { useTheme } from 'next-themes';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   classifyChange,
@@ -56,10 +55,10 @@ export function CodeEditor({
   /** Tell the server the editor starts with this content (replay needs it unless it is the plain starter). */
   announceReset?: boolean;
 }) {
-  const { resolvedTheme } = useTheme();
   const t = useTranslations('interview.editor');
 
   const onMount: OnMount = (editor, monaco) => {
+    applyEditorFont(editor, monaco);
     const dom = editor.getDomNode();
     const model = editor.getModel();
     if (!dom || !model) return;
@@ -186,7 +185,7 @@ export function CodeEditor({
           language={MONACO_LANG[language] ?? 'plaintext'}
           defaultValue={defaultValue}
           beforeMount={defineEditorThemes}
-          theme={editorTheme(resolvedTheme)}
+          theme={editorTheme('dark')}
           onMount={onMount}
           options={{
             ariaLabel: label,

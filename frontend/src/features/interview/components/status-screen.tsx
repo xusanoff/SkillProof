@@ -55,7 +55,7 @@ export function StatusScreen({
         <ResultPanel session={session} />
       ) : null}
       {onStartStage2 ? (
-        <div className="grid gap-2 rounded-xl border border-border p-4">
+        <div className="sp-card grid gap-2 p-4">
           <h2 className="text-lg font-semibold">{t('stage2Title')}</h2>
           <p className="max-w-prose text-sm text-muted">{t('stage2Body')}</p>
           <div>

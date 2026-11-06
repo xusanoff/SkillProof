@@ -122,7 +122,7 @@ export function InterviewFlow({ applicationId }: { applicationId: string }) {
 function MobileNotice() {
   const t = useTranslations('interview');
   return (
-    <span className="block rounded-xl border border-border p-4">
+    <span className="sp-card block p-4">
       <span className="block text-lg font-semibold">{t('desktopOnlyTitle')}</span>
       <span className="mt-1 block">{t('desktopOnlyBody')}</span>
       <Button asChild variant="outline" className="mt-3 min-h-11">
@@ -140,7 +140,7 @@ function Blocked({ reason }: { reason: string }) {
   const known = reason === 'application_closed' || reason === 'assessment_not_ready';
   return (
     <section className="mx-auto grid max-w-prose gap-3" role="alert">
-      <h1 className="text-2xl font-semibold">{t('title')}</h1>
+      <h1 className="sp-page-title">{t('title')}</h1>
       <p>{known ? t(reason) : t('unknown')}</p>
       <div>
         <Button asChild variant="outline" className="min-h-11">

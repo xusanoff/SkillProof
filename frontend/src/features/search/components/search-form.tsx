@@ -71,7 +71,9 @@ function SearchFormInner({
       method="get"
       className={cn(
         'grid gap-2',
-        lg ? 'sm:grid-cols-[minmax(0,1fr)_13rem_auto]' : 'grid-cols-[minmax(0,1fr)_11rem_auto]',
+        lg
+          ? 'sm:grid-cols-[minmax(0,1fr)_minmax(0,0.7fr)] [&>button]:sm:col-span-2'
+          : 'grid-cols-[minmax(0,1fr)_11rem_auto]',
         className,
       )}
     >

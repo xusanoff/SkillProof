@@ -48,10 +48,7 @@ export function ResumeCard({ resume }: { resume: Resume | null | undefined }) {
   const busy = upload.isPending || remove.isPending;
 
   return (
-    <section
-      aria-labelledby="resume-title"
-      className="rounded-xl border border-border bg-surface p-5"
-    >
+    <section aria-labelledby="resume-title" className="sp-card p-5">
       <h2 id="resume-title" className="text-lg font-semibold">
         {t('title')}
       </h2>
@@ -64,7 +61,7 @@ export function ResumeCard({ resume }: { resume: Resume | null | undefined }) {
             <p className="truncate font-medium" title={resume.filename}>
               {resume.filename}
             </p>
-            <p className="text-sm text-muted tabular-nums">
+            <p className="tabular-nums text-sm text-muted">
               {t('meta', {
                 size: tc(`units.${format.fileSize(resume.size_bytes).unit}`, {
                   value: format.fileSize(resume.size_bytes).value,

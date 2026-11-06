@@ -76,7 +76,7 @@ export function BankShell<T extends { id: string }>({
   return (
     <div className="grid gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold">{title}</h1>
+        <h1 className="sp-page-title">{title}</h1>
         <Button
           size="lg"
           className="min-h-11 gap-2 px-4"
@@ -102,7 +102,12 @@ export function BankShell<T extends { id: string }>({
         {editor}
       </div>
 
-      <BankFiltersBar showGlobalToggle={showGlobalToggle} key={filters.q} filters={filters} onChange={setFilters} />
+      <BankFiltersBar
+        showGlobalToggle={showGlobalToggle}
+        key={filters.q}
+        filters={filters}
+        onChange={setFilters}
+      />
 
       {list.isError && !list.data ? (
         <ErrorState

@@ -40,7 +40,7 @@ function Editor({ companyId, vacancyId }: { companyId: string; vacancyId: string
           <ArrowLeft aria-hidden="true" className="size-4" />
           {t('back')}
         </Link>
-        <h1 className="mt-1 text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="sp-page-title mt-1">{t('title')}</h1>
         {vacancy.data ? <p className="text-muted">{vacancy.data.title}</p> : null}
       </div>
 
