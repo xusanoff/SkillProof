@@ -4,20 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * SkillProof design tokens — "Lapis & paper".
- *
- * Layer 1 (semantic, raw values below in :root / .dark):
- *   bg, surface, surface-2, fg, muted (= secondary text), border,
- *   accent, accent-fg, danger, warning, success, info (+ *-soft backgrounds).
- * Layer 2 (shadcn): --background, --primary, ... are ALIASES of layer 1 —
- *   there is no second palette. NOTE: the utility names `muted` and `accent`
- *   follow our semantics (muted = secondary text colour, accent = brand lapis),
- *   not shadcn's. After `shadcn add`, replace `bg-muted`/`bg-accent` (hover
- *   surfaces) with `bg-surface-2` and `text-*-foreground` with `text-muted`/`text-fg`.
- * Layer 3 (domain state): score-high|mid|low, suspicion-low|medium|high.
- *   Always paired with a text label — never colour alone.
- */
+/* User-supplied palette with aliases for existing components. */
 @theme inline {
   /* semantic */
   --color-bg: var(--bg);
@@ -37,6 +24,13 @@
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-info: var(--info);
+
+  --color-signal: var(--signal);
+  --color-signal-ink: var(--signal-ink);
+  --color-dark-panel: var(--dark-1);
+  --color-dark-text: var(--dark-text);
+  --color-dark-muted: var(--dark-muted);
+  --container-7xl: var(--container);
 
   /* domain state */
   --color-score-high: var(--score-high);
@@ -61,16 +55,16 @@
   --color-input: var(--border-strong);
   --color-ring: var(--accent);
 
-  /* typography: Onest for UI/body, Literata for display headings */
-  --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-literata), ui-serif, Georgia, serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  /* Geist UI and Geist Mono numeric typography. */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  /* radius scale — restrained, slightly squared */
+  /* Component radius aliases. */
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-xl: var(--radius-card);
   --radius-2xl: calc(var(--radius) * 2);
 }
 
@@ -82,70 +76,105 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  /* Shriftlar */
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, monospace; /* barcha raqamlar, ballar, maosh, taymer, kod */
 
-  /* paper: cool off-white, ink: deep blue-black */
-  --bg: oklch(0.982 0.005 250);
-  --surface: oklch(1 0 0);
-  --surface-2: oklch(0.955 0.009 252);
-  --fg: oklch(0.23 0.035 262);
-  --muted-fg: oklch(0.47 0.025 260);
-  --border: oklch(0.9 0.012 255);
-  --border-strong: oklch(0.8 0.018 258);
+  /* Asosiy ranglar */
+  --ink: #0b1430; /* asosiy matn, to'q bloklar, HR yon menyu foni */
+  --ink-2: #3a4363; /* ikkilamchi matn */
+  --muted: #5a6380; /* izohlar, label'lar (oq fonda kontrast 4.5:1 dan yuqori) */
+  --bg: #f5f6fa; /* sahifa foni */
+  --surface: #ffffff; /* kartochkalar */
+  --surface-2: #f5f6fa; /* kartochka ichidagi bloklar */
+  --line: #e3e6ef; /* chegaralar */
+  --line-strong: #d5d9e5; /* input / ghost tugma chegarasi */
+  --track: #ebedf3; /* progress bar orqa foni */
 
-  /* lapis lazuli */
-  --accent: oklch(0.44 0.17 264);
-  --accent-fg: oklch(0.99 0.004 250);
-  --accent-soft: oklch(0.94 0.035 262);
+  --primary: #2747e8; /* asosiy tugma, havolalar, progress */
+  --primary-hover: #1a32b0;
+  --primary-soft: #e8ecff; /* avatar / tanlangan filtr foni */
 
-  --danger: oklch(0.52 0.19 27);
-  --danger-soft: oklch(0.95 0.03 27);
-  --warning: oklch(0.55 0.13 65);
-  --warning-soft: oklch(0.95 0.045 80);
-  --success: oklch(0.5 0.11 170);
-  --success-soft: oklch(0.95 0.035 170);
-  --info: oklch(0.5 0.12 240);
+  --signal: #d4f53c; /* LAYM — faqat "tasdiqlangan", 1-o'rin, faol menyu chizig'i, asosiy CTA (to'q fonda) */
+  --signal-ink: #162000; /* laym ustidagi matn */
+  --signal-soft: #f1f5e0;
+  --signal-soft-ink: #3d5200;
 
+  /* Holat ranglari */
+  --success: #0b6b49;
+  --success-soft: #ddf3e9;
+  --warning: #8a4b00;
+  --warning-soft: #fff4e5;
+  --danger: #9a2318;
+  --danger-soft: #fbe4e1;
+
+  /* To'q panel (HR yon menyu, intervyu xonasi) */
+  --dark-1: #0b1430;
+  --dark-2: #121d42;
+  --dark-3: #1a2445;
+  --dark-line: #22305a;
+  --dark-text: #e6e9f5;
+  --dark-muted: #9aa3c0;
+  --editor-bg: #0e1838;
+
+  /* O'lchamlar */
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-card: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+  --control-h: 44px; /* minimal bosiladigan maydon */
+  --container: 1240px;
+  --shadow-pop: 0 24px 48px -28px rgba(11, 20, 48, 0.4);
+}
+
+/* Qorong'i rejim (loyihada dark mode bor edi) — dizayn sahifalarida chizilmagan, shu tokenlar bilan moslang */
+.dark,
+[data-theme='dark'] {
+  --ink: #e6e9f5;
+  --ink-2: #c9cee0;
+  --muted: #9aa3c0;
+  --bg: #070d22;
+  --surface: #0e1838;
+  --surface-2: #121d42;
+  --line: #22305a;
+  --line-strong: #2b3760;
+  --track: #22305a;
+  --primary: #5c78f0;
+  --primary-hover: #7b92f4;
+  --primary-soft: #1a2445;
+  --signal-soft: #26300a;
+  --signal-soft-ink: #d4f53c;
+  --success-soft: #0f2e24;
+  --success: #6fd3a6;
+  --warning-soft: #33240a;
+  --warning: #f3c27a;
+  --danger-soft: #3a1612;
+  --danger: #f59a8e;
+}
+
+:root {
+  --fg: var(--ink);
+  --muted-fg: var(--muted);
+  --border: var(--line);
+  --border-strong: var(--line-strong);
+  --accent: var(--primary);
+  --accent-soft: var(--primary-soft);
+  --info: var(--primary);
   --score-high: var(--success);
   --score-mid: var(--warning);
   --score-low: var(--danger);
   --suspicion-low: var(--success);
-  /* Darker than --warning: the label sits on --warning-soft and must reach 4.5:1. */
-  --suspicion-medium: oklch(0.5 0.12 65);
+  --suspicion-medium: var(--warning);
   --suspicion-high: var(--danger);
-
-  /* raw shadcn variable names for any registry code reading them directly */
   --background: var(--bg);
-  --foreground: var(--fg);
-  --primary: var(--accent);
+  --foreground: var(--ink);
   --primary-foreground: var(--accent-fg);
   --secondary: var(--surface-2);
   --destructive: var(--danger);
-  --ring: var(--accent);
-}
-
-.dark {
-  /* lapis night — blue-tinted, not neutral black */
-  --bg: oklch(0.175 0.028 264);
-  --surface: oklch(0.215 0.032 264);
-  --surface-2: oklch(0.26 0.034 264);
-  --fg: oklch(0.95 0.01 250);
-  --muted-fg: oklch(0.74 0.025 255);
-  --border: oklch(0.31 0.034 264);
-  --border-strong: oklch(0.42 0.04 262);
-
-  --accent: oklch(0.74 0.12 258);
-  --accent-fg: oklch(0.18 0.03 264);
-  --accent-soft: oklch(0.3 0.06 262);
-
-  --danger: oklch(0.72 0.15 25);
-  --danger-soft: oklch(0.3 0.07 25);
-  --warning: oklch(0.8 0.13 75);
-  --warning-soft: oklch(0.31 0.06 70);
-  --suspicion-medium: var(--warning);
-  --success: oklch(0.76 0.11 170);
-  --success-soft: oklch(0.29 0.05 170);
-  --info: oklch(0.75 0.1 240);
+  --ring: var(--primary);
+  --accent-fg: #ffffff;
 }
 
 @layer base {
@@ -194,4 +223,15 @@ body[data-interview-room] [data-site-chrome] {
 }
 body[data-interview-room] {
   padding-bottom: 0;
+}
+
+@utility tabular-nums {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.dark,
+[data-theme='dark'] {
+  --accent-fg: var(--dark-1);
+  --accent: var(--primary-hover);
 }

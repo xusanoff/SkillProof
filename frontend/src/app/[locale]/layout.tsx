@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
-import { Literata, Onest } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { SiteFooter } from '@/components/layout/site-footer';
@@ -13,17 +13,16 @@ import { routing } from '@/i18n/routing';
 import '../globals.css';
 
 // Both families cover Latin + Cyrillic (uz / ru / en).
-const onest = Onest({
+const geist = Geist({
   subsets: ['latin', 'cyrillic'],
-  variable: '--font-onest',
+  variable: '--font-geist',
   display: 'swap',
 });
 
-const literata = Literata({
+const geistMono = Geist_Mono({
   subsets: ['latin', 'cyrillic'],
-  variable: '--font-literata',
+  variable: '--font-geist-mono',
   display: 'swap',
-  weight: ['500', '600'],
 });
 
 /** Server-only namespaces (long marketing copy); everything else is needed by Client Components. */
@@ -48,8 +47,8 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'oklch(0.982 0.005 250)' },
-    { media: '(prefers-color-scheme: dark)', color: 'oklch(0.175 0.028 264)' },
+    { media: '(prefers-color-scheme: light)', color: '#F5F6FA' },
+    { media: '(prefers-color-scheme: dark)', color: '#070D22' },
   ],
 };
 
@@ -67,7 +66,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${onest.variable} ${literata.variable}`}
+      className={`${geist.variable} ${geistMono.variable}`}
     >
       {/* Phone: room for the fixed bottom bar. */}
       <body className="flex min-h-dvh flex-col pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0">
