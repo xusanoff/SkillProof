@@ -1,3 +1,4 @@
+import { captureInterview } from './redesign-capture';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 import {
@@ -197,6 +198,7 @@ test('text mode: intro, whole interview, reload mid-question, end screen', async
   await noSeriousA11y(page);
   await page.getByRole('button', { name: /matn bilan davom etish/ }).click();
   await expect(page.getByRole('textbox', { name: 'Javobingiz' })).toBeVisible({ timeout: 60_000 });
+  await captureInterview(page, 'stage2-text');
   // Compact room: the site chrome is gone while the interview runs.
   await expect(page.locator('[data-site-chrome]').first()).toBeHidden();
   await expect(page.getByText(/nusxa qo.yish o.chirilgan/)).toBeVisible();
@@ -252,6 +254,7 @@ test.describe('voice mode', () => {
       timeout: 60_000,
     });
 
+    await captureInterview(page, 'stage2-voice');
     // The proxy: question audio comes back byte for byte, big uploads reach the API.
     const s2 = await stage2State(page, aid);
     const turn = s2.current_turn;

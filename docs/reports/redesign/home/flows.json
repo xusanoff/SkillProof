@@ -1,0 +1,4 @@
+{
+  "searchUrl": "http://localhost:3000/en/vacancies?q=Python&region=",
+  "localeUrl": "http://localhost:3000/ru/vacancies?q=Python&region="
+}

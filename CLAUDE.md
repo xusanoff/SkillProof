@@ -1,5 +1,8 @@
 # SkillProof — AI skill-verified hiring platform
 
+## Current handoff (2026-11-06)
+Read `docs/NEXT_SESSION.md` before continuing the frontend redesign. The reviewed implementation plan is `docs/REDESIGN_PLAN.md`; user-provided originals are in `skillproof-redesign/` and `SkillProof — yangi dizayn.html`. All existing UI screens have been adapted to the supplied redesign. See `docs/reports/redesign/REPORT.md` for validation and screenshots; Git author is now configured locally; scoped redesign commits and remaining earlier uncommitted work are documented in the handoff.
+
 Spec: `PROJECT_SPEC.md` (big — read only the section you need, use `grep -n "^##\|^###"` to find it).
 Work phase by phase (spec §10). Done: Phases 0–10 (real LLM/speech providers, real SMTP/Telegram checks and Phase 9 audio heuristics still open; production refuses to start until the providers are real). Reports: `docs/reports/phase-N/REPORT.md` (+ `img/`), written in Uzbek.
 

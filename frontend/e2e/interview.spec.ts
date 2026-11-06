@@ -1,3 +1,4 @@
+import { captureInterview } from './redesign-capture';
 import AxeBuilder from '@axe-core/playwright';
 import { API, makeInterviewVacancy, login, ok } from './interview-setup';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
@@ -98,6 +99,7 @@ test('candidate completes Stage 1: Monaco, real Run, internal paste, Submit', as
   );
 
   await passRulesAndWarmup(page, aid);
+  await captureInterview(page, 'stage1', false);
   await page.locator('.monaco-editor textarea').first().focus();
   await page.keyboard.press('Control+A');
   await page.keyboard.type('a, b = map(int, input().split())');
@@ -225,6 +227,7 @@ test('HR replays the session to the end: Monaco text equals final_code exactly',
   // Timeline marks: the run and the internal paste are there.
   await expect(hrPage.locator('[data-marker="run"]').first()).toBeVisible();
   await expect(hrPage.locator('[data-marker="paste"]').first()).toBeVisible();
+  await captureInterview(hrPage, 'hr-replay', false);
 
   const text = () =>
     hrPage.evaluate(() => {

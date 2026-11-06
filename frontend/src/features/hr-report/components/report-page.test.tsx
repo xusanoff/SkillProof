@@ -166,7 +166,7 @@ function render() {
 describe('HrReportPage', () => {
   beforeEach(() => resetNav('/hr/candidates/a-1'));
 
-  it('shows sections in the order of spec §8 and the evidence', async () => {
+  it('shows scores before integrity signals in the redesigned report and preserves evidence', async () => {
     serve(report());
     render();
     expect(
@@ -175,8 +175,8 @@ describe('HrReportPage', () => {
 
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     const order = [
-      'AI yordami shubhasi',
       'Ballar',
+      'AI yordami shubhasi',
       "Kuchli tomonlar va bo'shliqlar",
       'Tavsiya',
       "2-bosqich: og'zaki suhbat",

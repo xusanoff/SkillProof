@@ -1,0 +1,170 @@
+[
+  {
+    "name": "uz-light-1440",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(245, 246, 250)",
+    "theme": "Dasx6W_variable KO9H0a_variable light",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "uz-light-390",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(245, 246, 250)",
+    "theme": "Dasx6W_variable KO9H0a_variable light",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "uz-dark-1440",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(7, 13, 34)",
+    "theme": "Dasx6W_variable KO9H0a_variable dark",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "uz-dark-390",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(7, 13, 34)",
+    "theme": "Dasx6W_variable KO9H0a_variable dark",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "ru-light-1440",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(245, 246, 250)",
+    "theme": "Dasx6W_variable KO9H0a_variable light",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "ru-light-390",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(245, 246, 250)",
+    "theme": "Dasx6W_variable KO9H0a_variable light",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "ru-dark-1440",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(7, 13, 34)",
+    "theme": "Dasx6W_variable KO9H0a_variable dark",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "ru-dark-390",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(7, 13, 34)",
+    "theme": "Dasx6W_variable KO9H0a_variable dark",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "en-light-1440",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(245, 246, 250)",
+    "theme": "Dasx6W_variable KO9H0a_variable light",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "en-light-390",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(245, 246, 250)",
+    "theme": "Dasx6W_variable KO9H0a_variable light",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "en-dark-1440",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(7, 13, 34)",
+    "theme": "Dasx6W_variable KO9H0a_variable dark",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  },
+  {
+    "name": "en-dark-390",
+    "overflow": false,
+    "font": "Geist, \"Geist Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "background": "rgb(7, 13, 34)",
+    "theme": "Dasx6W_variable KO9H0a_variable dark",
+    "searchVisible": true,
+    "errors": [],
+    "expectedAuthResponses": [
+      "http://localhost:3000/api/api/v1/auth/me",
+      "http://localhost:3000/api/api/v1/auth/refresh"
+    ],
+    "violations": []
+  }
+]

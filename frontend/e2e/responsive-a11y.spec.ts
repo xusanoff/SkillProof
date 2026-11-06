@@ -10,6 +10,8 @@ import {
   type BrowserContextOptions,
   type Page,
 } from '@playwright/test';
+import path from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { API, login } from './interview-setup';
 import { settle } from './utils';
 
@@ -38,11 +40,47 @@ const MODES: { name: string; locale: string; options: BrowserContextOptions }[] 
   { name: 'desktop-en', locale: 'en', options: { viewport: { width: 1440, height: 900 } } },
 ];
 
-async function checkPage(page: Page, url: string, problems: string[]) {
+if (process.env.REDESIGN_REVIEW) {
+  MODES.splice(
+    0,
+    MODES.length,
+    ...['uz', 'ru', 'en'].flatMap((locale) =>
+      ['light', 'dark'].flatMap((theme) =>
+        [390, 1440].map((width) => ({
+          name: `${locale}-${theme}-${width}`,
+          locale,
+          options: {
+            viewport: { width, height: 900 },
+            colorScheme: theme as 'light' | 'dark',
+            reducedMotion: 'reduce' as const,
+          },
+        })),
+      ),
+    ),
+  );
+}
+
+if (process.env.REDESIGN_TABLET) {
+  MODES.splice(0, MODES.length, {
+    name: 'tablet-ru-dark',
+    locale: 'ru',
+    options: {
+      viewport: { width: 768, height: 1024 },
+      colorScheme: 'dark',
+      reducedMotion: 'reduce',
+    },
+  });
+}
+
+async function checkPage(page: Page, url: string, problems: string[], mode: string) {
   const res = await page.goto(url);
   // Reveal-on-scroll needs hydration first, or settle() scrolls past cards that never wake up.
   await page.waitForLoadState('networkidle');
   await settle(page);
+  const font = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
+  if (!font.toLowerCase().includes('geist')) {
+    problems.push(`${url} STYLES body font is ${font}`);
+  }
   if (!res || res.status() >= 400) problems.push(`${url} HTTP ${res?.status()}`);
 
   const overflow = await page.evaluate(() => {
@@ -63,6 +101,18 @@ async function checkPage(page: Page, url: string, problems: string[]) {
     return `${by}px <${culprit?.tagName.toLowerCase()} class="${String(culprit?.getAttribute('class') ?? '').slice(0, 70)}">`;
   });
   if (overflow) problems.push(`${url} OVERFLOW ${overflow}`);
+
+  if (process.env.REDESIGN_REVIEW) {
+    await page.screenshot({
+      path: path.resolve(
+        __dirname,
+        '../../docs/reports/redesign/screens',
+        mode,
+        `${url.replace(/[^a-zA-Z0-9-]+/g, '_')}.png`,
+      ),
+      fullPage: true,
+    });
+  }
 
   const { default: AxeBuilder } = await import('@axe-core/playwright');
   const { violations } = await new AxeBuilder({ page }).analyze();
@@ -86,8 +136,18 @@ async function sweep(
   if (who) await login(context.request, { email: who, password: PASSWORD });
   const page = await context.newPage();
   const problems: string[] = [];
-  for (const path of pages) await checkPage(page, `/${mode.locale}${path}`, problems);
+  for (const path of pages) await checkPage(page, `/${mode.locale}${path}`, problems, mode.name);
   await context.close();
+  if (process.env.REDESIGN_REVIEW) {
+    const out = path.resolve(__dirname, '../../docs/reports/redesign/checks');
+    mkdirSync(out, { recursive: true });
+    const role =
+      who === HR ? 'hr' : who === ADMIN ? 'admin' : who === CANDIDATE ? 'candidate' : 'public';
+    writeFileSync(
+      path.join(out, `${mode.name}-${role}.json`),
+      JSON.stringify({ mode: mode.name, role, pages, problems }, null, 2),
+    );
+  }
   expect(problems, `${mode.name}:\n${problems.join('\n')}`).toEqual([]);
 }
 

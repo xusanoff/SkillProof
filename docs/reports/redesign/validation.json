@@ -1,0 +1,75 @@
+{
+  "unit": {
+    "files": 49,
+    "passed": 294
+  },
+  "lint": "passed",
+  "typecheck": "passed",
+  "docker_production_build": "passed",
+  "mock_e2e": {
+    "passed": 38
+  },
+  "live_e2e_final": {
+    "passed": 20
+  },
+  "editor_font_and_replay_final": {
+    "passed": 3,
+    "font": "Geist Mono verified in Monaco DOM"
+  },
+  "visual_matrix": {
+    "locales": [
+      "uz",
+      "ru",
+      "en"
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "widths": [
+      390,
+      1440
+    ],
+    "roles": [
+      "public",
+      "candidate",
+      "hr",
+      "admin"
+    ],
+    "sweeps": 48,
+    "passed_after_targeted_reruns": 48,
+    "initial_run": {
+      "all_tests": 56,
+      "passed": 50,
+      "failed": 4,
+      "not_run": 2
+    },
+    "resolved_initial_failures": [
+      "Fullscreen resize in screenshot helper: avoid resizing an unchanged viewport.",
+      "Concurrent Playwright artifact directories: later runs use separate output directories.",
+      "Local web recreation interrupted a navigation: HR sweeps repeated after startup.",
+      "Old Onest assertion replaced with the required Geist assertion; final live suite passed."
+    ]
+  },
+  "tablet": {
+    "width": 768,
+    "locale": "ru",
+    "theme": "dark",
+    "sweeps_passed": 4
+  },
+  "provider_modes": {
+    "llm": "mock",
+    "stt": "mock",
+    "tts": "mock"
+  },
+  "screenshots": {
+    "pages": 491,
+    "rooms": 24
+  },
+  "commit": "scoped redesign commits; author configured locally",
+  "push": "not performed",
+  "implementation_commits": [
+    "247cde9",
+    "5fda6ac"
+  ]
+}

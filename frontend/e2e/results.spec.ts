@@ -263,6 +263,8 @@ test('HR: ranking → report → override → note', async ({ page }) => {
 
   await page.goto('/uz/hr/candidates?tab=ranked&min=50');
   await expect(page.getByRole('heading', { level: 1, name: 'Nomzodlar' })).toBeVisible();
+  await page.locator('summary').filter({ hasText: 'Aziza Karimova' }).click();
+  await page.locator('summary').filter({ hasText: 'Bobur Aliyev' }).click();
   const row = page.getByRole('article', { name: 'Aziza Karimova' });
   await expect(row).toContainText('72%');
   await expect(row).toContainText('80%');
