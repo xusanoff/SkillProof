@@ -5,6 +5,7 @@ from typing import Annotated, Any, Literal, Self
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from app.core.config import get_settings
+from app.core.thresholds import BudgetThresholds
 from app.models.enums import (
     ItemSource,
     JobStatus,
@@ -171,6 +172,13 @@ class Page[T](BaseModel):
 
 
 class Stage1Config(_Strict):
+    budget: dict[str, int] = {}
+
+    @model_validator(mode="after")
+    def _budget(self) -> Self:
+        BudgetThresholds.model_validate(self.budget)
+        return self
+
     task_ids: Annotated[list[uuid.UUID], Field(max_length=5)] = []
     duration_minutes: Annotated[int, Field(ge=5, le=240)] | None = None
     pass_threshold: Annotated[float, Field(ge=0, le=100)] | None = None

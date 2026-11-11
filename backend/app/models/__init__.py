@@ -11,6 +11,7 @@ from app.models.assessment import (
 from app.models.audit import AuditLog
 from app.models.candidate import CandidateProfile
 from app.models.catalog import ProfessionArea, Region, Skill
+from app.models.chat import ChatMessage, ChatRead
 from app.models.company import Company, CompanyInvitation, CompanyMember
 from app.models.interview import (
     CodeSubmission,
@@ -38,6 +39,8 @@ __all__ = [
     "AuthToken",
     "Base",
     "CandidateProfile",
+    "ChatMessage",
+    "ChatRead",
     "CodeSubmission",
     "Company",
     "CompanyInvitation",

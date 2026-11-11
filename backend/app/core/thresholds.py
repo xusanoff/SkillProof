@@ -149,7 +149,14 @@ class VerifiedSkillThresholds(_Group):
         return self
 
 
+class BudgetThresholds(_Group):
+    token_limit: int = Field(1_000_000, ge=1)
+    stt_seconds_limit: int = Field(1800, ge=1)
+    tts_characters_limit: int = Field(30_000, ge=1)
+
+
 class Thresholds(_Group):
+    budget: BudgetThresholds = Field(default_factory=BudgetThresholds)
     stage1: Stage1Thresholds = Field(default_factory=Stage1Thresholds)
     report: ReportThresholds = Field(default_factory=ReportThresholds)
     verified: VerifiedSkillThresholds = Field(default_factory=VerifiedSkillThresholds)

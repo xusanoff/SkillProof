@@ -5,6 +5,7 @@ from app.api.v1 import (
     assessments,
     auth,
     candidate,
+    chat,
     companies,
     interview,
     telegram,
@@ -12,6 +13,7 @@ from app.api.v1 import (
 )
 
 api_router = APIRouter(prefix="/api/v1")
+api_router.include_router(chat.router)
 api_router.include_router(auth.router)
 api_router.include_router(candidate.router)
 api_router.include_router(companies.router)

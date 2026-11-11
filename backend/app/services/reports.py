@@ -9,7 +9,7 @@ from typing import Any
 from sqlalchemy import exists, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.ai import interviewer
+from app.ai import budget, interviewer
 from app.ai.guardrails import score_mcq, scrub_answer
 from app.ai.integrity.stage1 import suspicion
 from app.ai.llm_client import LLMClient
@@ -595,59 +595,60 @@ async def _finalize(session: AsyncSession, application_id: uuid.UUID, llm: LLMCl
     sessions = await _sessions(session, application_id)
     stage1, stage2 = sessions.get(InterviewStage.stage1), sessions.get(InterviewStage.stage2)
     t = await _thresholds(session, app, sessions)
-    assessment = await session.scalar(
-        select(Assessment).where(Assessment.vacancy_id == app.vacancy_id)
-    )
-    language = assessment.language if assessment else "en"
-    if (
-        stage2 is not None
-        and stage2.status in _ENDED
-        and stage2.evaluation_state is EvaluationState.pending
-    ):
-        await _evaluate_stage2(session, stage2, language, t, llm)
-    if (
-        app.status is ApplicationStatus.stage2_in_progress
-        and stage2 is not None
-        and stage2.evaluation_state is EvaluationState.done
-    ):
-        app.status = ApplicationStatus.evaluated
-
-    # Suspicion covers both stages (§7.4), and is never part of the skill score.
-    signals = await _all_signals(session, sessions)
-    if signals or app.suspicion_percent is None:
-        app.suspicion_percent, app.suspicion_label = suspicion(
-            [(x.type, x.severity) for x in signals], t.integrity
+    with budget.scope(app.id, t.budget):
+        assessment = await session.scalar(
+            select(Assessment).where(Assessment.vacancy_id == app.vacancy_id)
         )
+        language = assessment.language if assessment else "en"
+        if (
+            stage2 is not None
+            and stage2.status in _ENDED
+            and stage2.evaluation_state is EvaluationState.pending
+        ):
+            await _evaluate_stage2(session, stage2, language, t, llm)
+        if (
+            app.status is ApplicationStatus.stage2_in_progress
+            and stage2 is not None
+            and stage2.evaluation_state is EvaluationState.done
+        ):
+            app.status = ApplicationStatus.evaluated
 
-    tasks = await _tasks(session, stage1, t)
-    turns = await _turns(session, stage2) if stage2 is not None else []
-    percents = await _turn_percents(session, stage2, turns) if stage2 is not None else {}
-    report = await _report_row(session, application_id)
-    report.stage1_score = stage1.score_percent if stage1 is not None else None
-    report.stage2_score = stage2.score_percent if stage2 is not None else None
-    report.stage2_passed = stage2.passed if stage2 is not None else None
-    latest = await _latest_overrides(session, application_id)
-    report.recommendation = None
-    _apply_score_overrides(report, app, latest, t)
-    fresh_skills = await _per_skill(session, app, tasks, turns, percents, t)
-    report.per_skill_scores = _with_reused(
-        fresh_skills, verified_skills.reused_entries([stage1, stage2]), t
-    )
-    report.suspicion_explanation = _reasons(signals)
-    await _write(session, app, report, tasks, turns, percents, stage2, signals, language, t, llm)
-    report.needs_review = report.needs_review or any(s.needs_review for s in sessions.values())
-    if "recommendation" in latest:
-        report.recommendation = latest["recommendation"].new_value
-    report.state = EvaluationState.done
-    await verified_skills.record(
-        session,
-        app,
-        stage1,
-        stage2,
-        fresh_skills,
-        disqualifying_signal=any(x.severity is SignalSeverity.disqualifying for x in signals),
-        lifted_disqualification="disqualification" in latest,
-    )
+        # Suspicion covers both stages (§7.4), and is never part of the skill score.
+        signals = await _all_signals(session, sessions)
+        if signals or app.suspicion_percent is None:
+            app.suspicion_percent, app.suspicion_label = suspicion(
+                [(x.type, x.severity) for x in signals], t.integrity
+            )
+
+        tasks = await _tasks(session, stage1, t)
+        turns = await _turns(session, stage2) if stage2 is not None else []
+        percents = await _turn_percents(session, stage2, turns) if stage2 is not None else {}
+        report = await _report_row(session, application_id)
+        report.stage1_score = stage1.score_percent if stage1 is not None else None
+        report.stage2_score = stage2.score_percent if stage2 is not None else None
+        report.stage2_passed = stage2.passed if stage2 is not None else None
+        latest = await _latest_overrides(session, application_id)
+        report.recommendation = None
+        _apply_score_overrides(report, app, latest, t)
+        fresh_skills = await _per_skill(session, app, tasks, turns, percents, t)
+        report.per_skill_scores = _with_reused(
+            fresh_skills, verified_skills.reused_entries([stage1, stage2]), t
+        )
+        report.suspicion_explanation = _reasons(signals)
+        await _write(session, app, report, tasks, turns, percents, stage2, signals, language, t, llm)
+        report.needs_review = report.needs_review or any(s.needs_review for s in sessions.values())
+        if "recommendation" in latest:
+            report.recommendation = latest["recommendation"].new_value
+        report.state = EvaluationState.done
+        await verified_skills.record(
+            session,
+            app,
+            stage1,
+            stage2,
+            fresh_skills,
+            disqualifying_signal=any(x.severity is SignalSeverity.disqualifying for x in signals),
+            lifted_disqualification="disqualification" in latest,
+        )
 
 
 async def _write(

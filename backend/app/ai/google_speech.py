@@ -15,6 +15,7 @@ from typing import Any
 
 import httpx
 
+from app.ai import budget
 from app.ai.azure_speech import SAMPLE_RATE, SpeechProviderError, split_pcm, to_pcm, wav
 from app.ai.speech import SpeechAudio, Transcript
 from app.core.config import Settings
@@ -140,6 +141,9 @@ class GoogleSTT:
         waited = 0.0
         while True:
             try:
+                await budget.reserve(
+                    "stt_ms", 2 * ((len(pcm) * 1000 + SAMPLE_RATE * 2 - 1) // (SAMPLE_RATE * 2))
+                )
                 content = await self._client.post(body)
                 break
             except _RateLimited as exc:
@@ -195,6 +199,7 @@ class GoogleTTS:
         self._voice = settings.google_tts_voice
 
     async def _ask(self, model: str, text: str) -> bytes:
+        await budget.reserve("tts_characters", len(text))
         content = await self._client.post(
             {
                 "model": model,

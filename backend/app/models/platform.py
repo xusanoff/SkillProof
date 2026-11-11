@@ -45,6 +45,19 @@ class AiUsage(UUIDPk, CreatedAt, Base):
     cost_usd: Mapped[float | None] = mapped_column(Float)
 
 
+class AiBudget(Base):
+    """Durable reservations shared by both interview stages and the final report."""
+
+    __tablename__ = "ai_budgets"
+
+    application_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("applications.id", ondelete="CASCADE"), primary_key=True
+    )
+    tokens: Mapped[int] = mapped_column(Integer, server_default="0")
+    stt_ms: Mapped[int] = mapped_column(Integer, server_default="0")
+    tts_characters: Mapped[int] = mapped_column(Integer, server_default="0")
+
+
 class QuestionCache(CreatedAt, Base):
     """Interview question wording (`text`) or spoken bank questions (`audio`), by input hash.
 

@@ -48,6 +48,7 @@ def effective_thresholds(a: Assessment | AssessmentIn) -> Thresholds:
     s1 = a.stage1_config if isinstance(a, Assessment) else a.stage1_config.model_dump()
     s2 = a.stage2_config if isinstance(a, Assessment) else a.stage2_config.model_dump()
     overrides: dict[str, Any] = {"stage1": {}, "stage2": {}, "integrity": dict(a.integrity_config)}
+    overrides["budget"] = s1.get("budget") or {}
     if s1.get("pass_threshold") is not None:
         overrides["stage1"]["pass_threshold"] = s1["pass_threshold"]
     if s1.get("duration_minutes") is not None:

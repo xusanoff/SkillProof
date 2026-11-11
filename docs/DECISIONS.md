@@ -187,3 +187,25 @@ The owner asked for hh.uz's information architecture: same structure, layouts an
 | D-177 | 2026-11-05 | Google TTS tries `GOOGLE_TTS_MODELS` in order and moves on when a model is out of quota, down or refuses; a spent model rests 60 s. A bad key or spent credit stops the chain. STT has no chain: `gemini-3.5-transcribe` is the only dedicated model, and in a real test `gemini-3.5-flash-lite` invented sentences from silence and misheard clear speech, which would score a candidate on words they never said. |
 | D-178 | 2026-11-05 | On a 429, Google STT waits as long as Google asks, up to 65 s in total, then fails; a daily limit therefore fails at once. An answer's timing is taken when it arrives, not after transcription, so the wait cannot cost the candidate an answer that came in on time. |
 
+
+
+## AI sarf limitlari — 2026-11-06
+
+- D-179: Har bir arizaning Stage 1, Stage 2 va yakuniy hisoboti bitta AI byudjetini ishlatadi. Standart: 1 000 000 token rezervi, 1800 soniya STT rezervi, 30 000 belgi TTS rezervi. `budget` threshold guruhi orqali global, `stage1_config.budget` orqali assessment kesimida sozlanadi. Yangi sessiya konfiguratsiyasiga snapshot tushadi.
+- D-180: `ai_budgets` jadvali so'rovdan oldingi rezervlarni PostgreSQL atomik upsert orqali saqlaydi; parallel so'rov, reconnect va worker qayta ishga tushishi hisobni nolga tushirmaydi. Ariza o'chirilsa rezervlar ham o'chadi. Rezervlar qaytarilmaydi: timeout va noto'g'ri javob ham sarf qilgan bo'lishi mumkin. LLM uchun UTF-8 bayt hajmi, schema, maksimal javob va framing zaxirasi ishlatiladi; ikki transport urinishi oldindan rezervlanadi. STT uzunligi brauzerdan emas, dekodlangan PCM'dan olinadi. Speech qayta urinishlari va TTS model almashtirishlari ham hisoblanadi. Bu billing hisoboti emas; haqiqiy sarf `ai_usage`da qoladi.
+- D-181: Limit tugashi provayder ishlamasligi kabi qayta ishlanadi: LLM natijasi `needs_review`, Stage 1 deterministik testlar bilan baholanadi; Stage 2 tayyor savollardan foydalanadi, ovoz chiqmasa matn ko'rinadi, STT javobi HR tekshiruviga belgilanadi. Byudjet bazasi ishlamasa tashqi chaqiruv qilinmaydi. HR savol/topshiriq yaratish chaqiruvlari ariza byudjetiga kirmaydi.
+- D-182: Foydalanuvchi topshirig'iga ko'ra, tekin provayderlarda LLM/STT/TTS sifat va tezlik bahosi hamda audio heuristikalar keyinga qoldirildi. Hozirgi testlar lokal mock javoblar bilan xarajatni cheklash va intervyu oqimini tekshiradi.
+
+### D-183 — Vacancy creation wizard and application conversations (2026-11-09)
+- The latest user request adds functional changes beyond the completed visual redesign.
+- Reuse vacancy drafts, assessment configuration and the company/global question bank.
+  New vacancy creation saves information, then configuration, then selected questions/tasks;
+  the final UI publishes only after the server reports the assessment ready.
+- Inline creation uses the same bank API and form as the bank page. Selection is preserved
+  through validation failures and pagination. Company-owned questions can be approved inline.
+- One conversation per application; authorized parties are its candidate and company members.
+  Rejection/withdrawal leave the conversation writable. All ORM status changes append a
+  structured status event in the same transaction. Existing applications get only current status.
+- UUID retry keys, per-thread ordered message cursors and per-user read cursors prevent
+  duplicate sends, unstable history and read-cursor rollback. Chat text is included in export.
+- Initial delivery uses visible-client polling, not WebSockets, external push or file messages.

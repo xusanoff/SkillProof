@@ -16,6 +16,7 @@ from app.models import (
     Application,
     AuthToken,
     CandidateProfile,
+    ChatMessage,
     CodeSubmission,
     CompanyMember,
     EditorEvent,
@@ -158,11 +159,26 @@ async def export_account(session: AsyncSession, user: User) -> dict[str, Any]:
         report = await session.scalar(
             select(SessionReport).where(SessionReport.application_id == app.id)
         )
+        chat_rows = await session.scalars(
+            select(ChatMessage)
+            .where(ChatMessage.application_id == app.id)
+            .order_by(ChatMessage.sequence)
+        )
+        chat_export = [
+            {
+                "text": m.text,
+                "status": m.application_status,
+                "sent_by_me": m.sender_id == user.id,
+                "created_at": m.created_at.isoformat(),
+            }
+            for m in chat_rows
+        ]
         out_apps.append(
             {
                 "vacancy": title,
                 "status": app.status.value,
                 "cover_note": app.cover_note,
+                "chat_messages": chat_export,
                 "applied_at": app.created_at.isoformat(),
                 "stages": [
                     {

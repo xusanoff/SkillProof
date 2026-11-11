@@ -11,7 +11,7 @@ import wave
 from dataclasses import dataclass
 from typing import Protocol
 
-from app.ai import usage
+from app.ai import budget, usage
 from app.core.config import Settings, get_settings
 
 
@@ -53,6 +53,7 @@ class MockTTSProvider:
     sample_rate = 16_000
 
     async def synthesize(self, text: str, language: str) -> SpeechAudio:
+        await budget.reserve("tts_characters", len(text))
         return SpeechAudio(_silence_wav(0.5, self.sample_rate), "audio/wav", text, language, "mock")
 
 

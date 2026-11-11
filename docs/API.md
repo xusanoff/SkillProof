@@ -305,3 +305,35 @@ Others:
 | POST | `/api/v1/auth/me/delete` | user | `{password}` → 204. `403 invalid_password`, `409 sole_company_owner`, `409 last_admin` |
 
 New on existing responses: `MeCompany.blocked`, `block_reason`; `HrVacancy.is_hidden`, `hidden_reason`. Publishing: `403 company_blocked`, `403 vacancy_hidden`. Replay after retention: `410 replay_expired`. API docs are closed outside `local` and `test`.
+
+
+## AI spending limits
+
+`stage1_config.budget` accepts optional overrides: `token_limit`, `stt_seconds_limit`, `tts_characters_limit` (positive integers; unknown keys rejected). Although nested under Stage 1 configuration, this allowance is shared by the application's two stages and final report. Example: `{"stage1_config":{"task_ids":["..."],"budget":{"token_limit":1000000}}}` as part of the normal assessment payload. Global defaults are exposed in admin thresholds under `budget`; session snapshots retain their configured limits.
+
+Reservations are conservative, include retry capacity, and survive reconnects/restarts. They are not actual billed usage. Exhaustion uses the existing provider-unavailable behavior, with `needs_review` for unavailable AI evaluations; it never causes an integrity disqualification.
+
+## Application conversations (2026-11-09)
+
+Each application is one persistent conversation between its candidate and the vacancy's
+company members. Rejection and withdrawal preserve chat and permit further text messages.
+Other candidates/company members get 404; anonymous requests get 401. Admin accounts do
+not receive implicit access. Status messages are created transactionally for every ORM
+application status change. Existing applications get a current-status entry during migration,
+not an invented historical timeline. HR private notes are never included.
+
+| Method | Path | Body / response |
+|---|---|---|
+| GET | `/api/v1/chat/threads?company_id=&page=&page_size=` | `ThreadPage`; company filter is HR-only, page size 1–50 |
+| GET | `/api/v1/chat/threads/{application_id}/messages?before=&after=&limit=` | `MessagePage`; ascending messages, newest 50 by default, limit 1–100; choose either before or after sequence |
+| POST | `/api/v1/chat/threads/{application_id}/messages` | `{text: string (trimmed, 1–4000), client_id: UUID}` → 201 message. Retry the same UUID to receive the same message |
+| POST | `/api/v1/chat/threads/{application_id}/read` | `{through_sequence: integer}` → 204; validates message ownership and only advances the caller's cursor |
+
+`Thread = {application_id, vacancy_title, company_id, company_name, candidate_id,
+candidate_name, application_status, cover_note, unread_count, last_message}`.
+`Message = {id, sequence, sender_id|null, kind: message|status, text|null,
+application_status|null, created_at}`. `ThreadPage = {items,total,page,page_size}`.
+`MessagePage = {thread,items,has_more}`. Status entries carry an enum, translated by clients;
+clients cannot write status entries. `RATE_LIMIT_CHAT` defaults to `60/60` per sender.
+Chat contents are included in the candidate's account export and cascade with applications.
+Clients poll while open; this version does not expose a chat WebSocket or file attachments.

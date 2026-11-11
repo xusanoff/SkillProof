@@ -15,7 +15,7 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.ai import interviewer, question_cache
+from app.ai import budget, interviewer, question_cache
 from app.ai.guardrails import has_thinking_phrase, is_help_request, is_injection
 from app.ai.integrity.stage1 import Event, suspicion
 from app.ai.integrity.stage2 import TurnInput, detect
@@ -564,14 +564,15 @@ async def _prepare(
     s.preparing_since = now
     await session.commit()
     try:
-        fields, difficulty = await _plan_next(session, s, llm)
-        audio = (
-            await _synthesize(
-                tts, storage, s, fields["question_text"], shared=fields["kind"] == "bank"
+        with budget.scope(s.application_id, _thresholds(s).budget):
+            fields, difficulty = await _plan_next(session, s, llm)
+            audio = (
+                await _synthesize(
+                    tts, storage, s, fields["question_text"], shared=fields["kind"] == "bank"
+                )
+                if fields
+                else None
             )
-            if fields
-            else None
-        )
         await session.commit()  # the grade stands whatever happens to the rest
         now = _now()
         s = await _own(session, session_id, user, lock=True)
@@ -875,7 +876,8 @@ async def _store_answer(
     if mode == "voice" and data.audio is not None and extension is not None:
         key = await storage.save(f"interviews/{s.id}/answers", extension, data.audio)
         try:
-            result = await stt.transcribe(data.audio, language, data.transcript_hint)
+            with budget.scope(s.application_id, _thresholds(s).budget):
+                result = await stt.transcribe(data.audio, language, data.transcript_hint)
             transcript = result.text
         except Exception:
             logger.exception("stt_failed", extra={"session_id": str(s.id)})

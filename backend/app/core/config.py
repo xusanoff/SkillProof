@@ -29,6 +29,7 @@ class Settings(BaseSettings):
         env_ignore_empty=True,
         env_nested_delimiter="__",
         extra="ignore",
+        hide_input_in_errors=True,  # a startup error goes to the logs, and the input holds secrets
         case_sensitive=False,
     )
 
@@ -125,6 +126,7 @@ class Settings(BaseSettings):
     # Rate limits: "<count>/<seconds>"
     # Only behind a proxy that overwrites X-Forwarded-For, or anyone could pick their own limit.
     trust_forwarded_for: bool = False
+    rate_limit_chat: str = "60/60"
     rate_limit_login: str = "10/60"
     rate_limit_register: str = "5/60"
     rate_limit_password: str = "5/900"
@@ -152,6 +154,22 @@ class Settings(BaseSettings):
             ]
             if not_real:
                 raise ValueError(f"Production needs real services: {', '.join(not_real)}")
+            if self.llm_provider != "openai_compatible":
+                raise ValueError("Production supports LLM_PROVIDER=openai_compatible only")
+            if not (
+                self.llm_base_url
+                and self.llm_api_key
+                and self.llm_api_key.get_secret_value().strip()
+                and self.llm_model.strip()
+                and self.llm_model != "mock-1"
+            ):
+                raise ValueError(
+                    "Production LLM needs LLM_BASE_URL, LLM_API_KEY and a real LLM_MODEL"
+                )
+            if self.storage_backend != "local":
+                raise ValueError("S3 storage is not implemented; use STORAGE_BACKEND=local")
+            if not self.judge0_authn_token.strip():
+                raise ValueError("Production Judge0 needs JUDGE0_AUTHN_TOKEN")
         if "azure" in (self.stt_provider, self.tts_provider) and not (
             self.azure_speech_key and self.azure_speech_region
         ):

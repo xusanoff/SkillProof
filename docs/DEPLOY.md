@@ -1,5 +1,26 @@
 # Deployment
 
+## Vercel frontend and backend on a separate server
+
+The frontend can build on Vercel with Root Directory `frontend`, Node.js 22,
+and Build Command `pnpm build`. A frontend-only deployment is suitable for
+reviewing public UI; login, jobs, chat and interviews still require a reachable API.
+Set `API_INTERNAL_URL` to the backend's HTTPS origin, without `/api/v1`.
+Browser requests keep the default `/api` proxy prefix.
+
+Do not treat setting `NEXT_PUBLIC_WS_URL` as a complete split-host deployment.
+Interview sockets authenticate with the `sp_access` host-only cookie. A cookie
+set through the frontend proxy is not sent to a different backend hostname,
+even when the two hosts are subdomains of the same domain. The existing
+production Compose/Caddy setup below keeps pages and sockets on one hostname
+and supports that authentication flow. Split hosting needs a reviewed socket
+authentication/routing change and an HTTPS login → interview → reconnect check
+before candidates can use it. Changing CORS alone does not fix this.
+
+Production startup rejects unimplemented LLM providers, missing LLM connection
+settings/model, unimplemented S3 storage, and a missing Judge0 authentication
+token. These checks validate configuration, not live provider connectivity.
+
 One Linux server with Docker Compose 2.24 or newer. Caddy gets HTTPS certificates by itself; nothing else is reachable from outside.
 
 ## Before you start
@@ -7,6 +28,8 @@ One Linux server with Docker Compose 2.24 or newer. Caddy gets HTTPS certificate
 - A domain whose A record points at the server, and ports 80 and 443 open.
 - SMTP credentials.
 - 4 GB of RAM or more: Judge0 runs candidates' code.
+- Before real candidates: LLM and speech providers on terms that allow their data. Free and trial tiers may not, and Gemini's free tier says content is used to improve Google's products. Its limit was also 3 transcriptions a minute when tested.
+- A live interview gives the LLM 4 s (`stage2.live_llm_timeout_s`). A slower provider still works, but candidates then get ready-made questions and no follow-ups.
 
 Judge0 runs privileged containers, as its isolation needs. Use a server that holds nothing else.
 

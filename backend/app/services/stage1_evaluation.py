@@ -7,6 +7,7 @@ import uuid
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.ai import budget
 from app.ai.code_reviewer import ReviewOutcome, review_code
 from app.ai.integrity.stage1 import Event, TaskInput, detect, suspicion
 from app.ai.llm_client import LLMClient
@@ -165,46 +166,49 @@ async def _score(
     llm: LLMClient,
     sandbox: Sandbox,
 ) -> None:
-    hidden_scores: list[float] = []
-    reviews: list[float | None] = []
-    # Tasks the candidate never reached count as zero: the score is out of all of them.
-    total = len(s.config["tasks"])
-    for sub, task in await _load_tasks(session, s):
-        hidden, percent, review = await _score_task(
-            session, s, sub, task, language, t, llm, sandbox
-        )
-        hidden_scores.append(hidden)
-        reviews.append(percent)
-        if review is None:
-            continue
-        s.needs_review = s.needs_review or review.needs_review
-        if review.injection_lines or review.injection_flagged:
-            session.add(
-                IntegritySignal(
-                    session_id=s.id,
-                    stage=s.stage,
-                    type="evaluator_injection_attempt",
-                    severity=SignalSeverity.high,
-                    evidence={"task_id": str(task.id), "lines": review.injection_lines},
-                )
+    with budget.scope(app.id, t.budget):
+        hidden_scores: list[float] = []
+        reviews: list[float | None] = []
+        # Tasks the candidate never reached count as zero: the score is out of all of them.
+        total = len(s.config["tasks"])
+        for sub, task in await _load_tasks(session, s):
+            hidden, percent, review = await _score_task(
+                session, s, sub, task, language, t, llm, sandbox
             )
-    s.hidden_tests_percent = round(sum(hidden_scores) / total, 1) if total else 0.0
-    weight_h = t.stage1.hidden_tests_weight
-    weight_r = t.stage1.code_review_weight
-    if any(r is None for r in reviews):
-        # The LLM gave no usable score. That must not fail anyone (the only automatic fails are
-        # §7.1 and §7.1b), so the hidden tests decide for now and HR is told (D-087).
-        s.code_review_percent = None
-        s.score_percent = s.hidden_tests_percent
-        s.needs_review = True
-    else:
-        s.code_review_percent = round(sum(r or 0 for r in reviews) / total, 1) if total else 0.0
-        s.score_percent = round(
-            (weight_h * s.hidden_tests_percent + weight_r * s.code_review_percent) / 100, 1
+            hidden_scores.append(hidden)
+            reviews.append(percent)
+            if review is None:
+                continue
+            s.needs_review = s.needs_review or review.needs_review
+            if review.injection_lines or review.injection_flagged:
+                session.add(
+                    IntegritySignal(
+                        session_id=s.id,
+                        stage=s.stage,
+                        type="evaluator_injection_attempt",
+                        severity=SignalSeverity.high,
+                        evidence={"task_id": str(task.id), "lines": review.injection_lines},
+                    )
+                )
+        s.hidden_tests_percent = round(sum(hidden_scores) / total, 1) if total else 0.0
+        weight_h = t.stage1.hidden_tests_weight
+        weight_r = t.stage1.code_review_weight
+        if any(r is None for r in reviews):
+            # The LLM gave no usable score. That must not fail anyone (the only automatic fails are
+            # §7.1 and §7.1b), so the hidden tests decide for now and HR is told (D-087).
+            s.code_review_percent = None
+            s.score_percent = s.hidden_tests_percent
+            s.needs_review = True
+        else:
+            s.code_review_percent = round(sum(r or 0 for r in reviews) / total, 1) if total else 0.0
+            s.score_percent = round(
+                (weight_h * s.hidden_tests_percent + weight_r * s.code_review_percent) / 100, 1
+            )
+        s.score_percent = blended(s.score_percent, total, s.config.get("reused")) or 0.0
+        s.passed = s.score_percent >= t.stage1.pass_threshold
+        app.status = (
+            ApplicationStatus.stage2_pending if s.passed else ApplicationStatus.stage1_failed
         )
-    s.score_percent = blended(s.score_percent, total, s.config.get("reused")) or 0.0
-    s.passed = s.score_percent >= t.stage1.pass_threshold
-    app.status = ApplicationStatus.stage2_pending if s.passed else ApplicationStatus.stage1_failed
 
 
 async def _signals(

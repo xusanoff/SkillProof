@@ -14,7 +14,7 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel, ValidationError
 
-from app.ai import usage
+from app.ai import budget, usage
 from app.ai.mock_data import build_sample
 from app.core.config import Settings, get_settings
 
@@ -88,8 +88,19 @@ class LLMClient:
         for attempt in (1, 2):
             started = time.perf_counter()
             try:
+                await budget.reserve(
+                    "tokens",
+                    2
+                    * (
+                        len(current.system.encode())
+                        + len(current.user.encode())
+                        + len(json.dumps(schema.model_json_schema()).encode())
+                        + current.max_tokens
+                        + 1024
+                    ),
+                )
                 raw = await self.provider.complete(current, schema)
-            except LLMProviderError as exc:
+            except (LLMProviderError, budget.BudgetExceeded) as exc:
                 # A human reviews it: an outage must not count against a candidate.
                 errors.append(f"provider: {exc}")
                 settings = get_settings()

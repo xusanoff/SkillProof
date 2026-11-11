@@ -33,6 +33,10 @@ x-api-env: &api-env
   AZURE_SPEECH_KEY: ${AZURE_SPEECH_KEY:-}
   AZURE_SPEECH_REGION: ${AZURE_SPEECH_REGION:-}
   GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+  # Passed on only when set, so the app's defaults stay in one place.
+  GOOGLE_STT_MODEL:
+  GOOGLE_TTS_MODELS:
+  GOOGLE_TTS_VOICE:
 
 x-judge0-env: &judge0-env
   REDIS_PASSWORD: ${JUDGE0_REDIS_PASSWORD:-dev-only-judge0-redis}

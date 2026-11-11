@@ -15,6 +15,7 @@ from xml.sax.saxutils import escape, quoteattr
 
 import httpx
 
+from app.ai import budget
 from app.ai.speech import SpeechAudio, Transcript
 from app.core.config import Settings
 
@@ -161,6 +162,9 @@ class AzureSTT:
         self._client = _Client(settings, transport)
 
     async def _piece(self, pcm: bytes, locale: str) -> str:
+        await budget.reserve(
+            "stt_ms", 2 * ((len(pcm) * 1000 + SAMPLE_RATE * 2 - 1) // (SAMPLE_RATE * 2))
+        )
         response = await self._client.post(
             f"https://{self._client.region}.stt.speech.microsoft.com"
             "/speech/recognition/conversation/cognitiveservices/v1",
@@ -204,6 +208,7 @@ class AzureTTS:
         self._client = _Client(settings, transport)
 
     async def synthesize(self, text: str, language: str) -> SpeechAudio:
+        await budget.reserve("tts_characters", 2 * len(text))
         voice = _VOICES.get(language, _VOICES["uz"])
         locale = _LOCALES.get(language, _LOCALES["uz"])
         # Questions can quote a candidate's code, so the text must stay text inside the XML.
