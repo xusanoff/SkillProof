@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0 (2026-11-11)
+- Hisobotda AI kutishi chegaralandi: yakuniy baholash parallel, HR va nomzod izohlari bir vaqtda tayyorlanadi; timeoutda mavjud baholar saqlanadi.
+- Worker healthcheck/restart va har 3 soniyada hisobot navbati tekshiruvi.
+- Vakansiya wizard, ariza chatlari va AI sarf budjetlari.
+- Flutter ilovasi 1.0.1+2: pending natijalarni avtomatik yangilash.
+- Tekshiruv: backend 383 passed/2 skipped va qo‘shimcha regression 1/1; web results/status 12/12; mobile 15/15.
+- Backend/web manba versiyasi 0.2.0; mobil APK hali qayta yig‘ilmagan.
+
+## AI sarf limitlari (2026-11-06)
+- Ariza bo‘yicha ikki bosqich va hisobotga umumiy token, STT davomiyligi va TTS matn hajmi rezervlari; atomik PostgreSQL hisoblagichi, yangi migratsiya `b91a42c8d013`.
+- Global va assessment sozlamalari; limit tugaganda mavjud provider-failure va HR review yo‘llari ishlaydi.
+- Frontend assessment tahriri API orqali berilgan byudjetni saqlab qoladi; API tiplari yangilandi.
+- Testlar: backend 363 passed, 2 skipped; frontend 294 passed; lint/typecheck, Webpack production build va migratsiya upgrade/downgrade tekshiruvi o‘tdi.
+- Provayder sifati va tezligini baholash foydalanuvchi qarori bilan kechiktirildi.
+
 ## Real LLM provider (in progress, 2026-11-04)
 - `openai_compatible` provider, tested with DeepSeek V4.1 Flash on NVIDIA (D-170, D-171). Golden set: all 28 cases passed, one of them on a rerun after a timeout.
 - Too slow for the live interview so far (calls of 50–90 s against a 3 s target). Not switched on in the stack yet.
@@ -7,6 +22,9 @@
 - Google Gemini STT and TTS as a second speech provider, `STT_PROVIDER` / `TTS_PROVIDER=google` (D-176). Real API round trip passed on generated speech in uz, ru and en; a real human voice is not tested yet.
 - Google TTS moves to the next model when one is out of quota (D-177). STT stays on one model, and on a per-minute limit it waits as long as Google asks, up to 65 s (D-178).
 - Fixed: a voice answer that arrived on time could be dropped when transcription ran past the upload grace.
+- Fixed: the web proxy cut oral interview requests at 30 s, shorter than a rate-limit wait; these now get 180 s.
+- Fixed: a settings error at startup printed part of a setting's value, which can be a secret, to the logs.
+- Real LLM on in development. A whole voice interview passed through the web proxy on real LLM, STT and TTS.
 - Live interview no longer waits for the model (D-172); saved questions and shared bank audio (D-173). Migration `question cache`; threshold `stage2.live_llm_timeout_s`.
 
 ## Phase 10 — Admin, analytics, hardening, deployment (2026-11-04)
@@ -89,3 +107,12 @@
 - Frontend: Next.js App Router + TypeScript + Tailwind v4 + shadcn/ui, next-intl (uz default, ru, en), base layout, home page, `/status` page.
 - Infra: docker-compose (api, worker, web, postgres, redis), Makefile, `.env.example`, GitHub Actions CI.
 - File storage: local disk by default; MinIO dropped (D-004).
+
+## 2026-11-09 — HR creation workflow and application chat
+- Web and Flutter: three-step vacancy creation, assessment configuration, bank selection,
+  inline question creation and approval, draft persistence, final readiness check.
+- Backend migration `c24e85a6f901`: application chat messages and per-user read cursors;
+  transactional status messages, scoped authorization, retry-safe sending and pagination.
+- Web and Flutter: company–candidate chat, unread counts, rejection/status history;
+  rejected and withdrawn applications preserve writable conversations.
+- Verification and limitations: `docs/reports/hiring-workflow/REPORT.md`.

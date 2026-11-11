@@ -73,4 +73,5 @@ vaqtini beradi. Keyingi live hodisani shu loglar bilan aniq ajratish mumkin.
 
 Lokal Docker image’lar yangilandi va servislar ishga tushirildi.
 Mobil source yangilandi; mavjud eski APK qayta yig‘ilmadi (Android SDK yo‘q).
-Commit/push va tashqi server deploy bajarilmadi.
+GitHub relizi: backend/web 0.2.0, mobile 1.0.1+2, tag v0.2.0.
+Tashqi backend server deploy bu reliz tarkibida bajarilmadi.
