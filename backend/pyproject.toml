@@ -1,6 +1,6 @@
 [project]
 name = "skillproof-api"
-version = "0.2.0"
+version = "0.2.1"
 description = "AI skill-verified hiring platform — API"
 requires-python = ">=3.12,<3.13"
 dependencies = [

@@ -7,11 +7,13 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql+asyncpg://skillproof:skillproof@localhost:5432/skillproof_test
     defaults: { run: { working-directory: backend } }
     services:
       postgres:
         image: postgres:16-alpine
-        env: { POSTGRES_USER: skillproof, POSTGRES_PASSWORD: skillproof, POSTGRES_DB: skillproof }
+        env: { POSTGRES_USER: skillproof, POSTGRES_PASSWORD: skillproof, POSTGRES_DB: skillproof_test }
         ports: ["5432:5432"]
         options: --health-cmd pg_isready --health-interval 5s --health-retries 10
       redis:
@@ -34,6 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        with: { package_json_file: frontend/package.json }
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm, cache-dependency-path: frontend/pnpm-lock.yaml }
       - run: pnpm install --frozen-lockfile

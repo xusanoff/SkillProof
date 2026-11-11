@@ -3,7 +3,7 @@
 ## 2026-11-11 — GitHub versiya yangilanishi
 
 User GitHub’ga push qilish va versiyani yangilashni aniq so‘radi.
-Reliz: backend/web **0.2.0**, Flutter **1.0.1+2**, tag **v0.2.0**.
+Reliz: backend/web **0.2.1**, Flutter **1.0.1+2**, tag **v0.2.1**.
 AI-budget/chat backend, web wizard/chat, Flutter poydevori va natija kechikishi
 alohida commitlarga ajratildi. Dizayn original fayllari, xom loglar va aloqasiz
 artifactlar lokalda saqlandi; relizga kiritilmadi. APK qayta yig‘ilmagan.

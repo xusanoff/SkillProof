@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 (2026-11-11)
+- GitHub CI pnpm sozlamasi frontend/package.json’dan olinadi; backend migratsiya va testlar uchun alohida test bazasi ishlatiladi.
+- Oltita mavjud migratsiya Ruff formatiga moslandi; Python AST o‘zgarmaganligi tekshirildi.
+
 ## 0.2.0 (2026-11-11)
 - Hisobotda AI kutishi chegaralandi: yakuniy baholash parallel, HR va nomzod izohlari bir vaqtda tayyorlanadi; timeoutda mavjud baholar saqlanadi.
 - Worker healthcheck/restart va har 3 soniyada hisobot navbati tekshiruvi.

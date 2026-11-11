@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     )
 
     app_name: str = "SkillProof"
-    version: str = "0.2.0"
+    version: str = "0.2.1"
     environment: Environment = "local"
     log_level: str = "INFO"
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
