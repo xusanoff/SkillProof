@@ -691,7 +691,7 @@ test.describe('phase 3', () => {
   test('assessment empty (404) uz desktop', async ({ browser }) => {
     const d = await hr(browser);
     await d.page.goto(`/uz/hr/vacancies/${emptyVacancy}/assessment`);
-    await expect(d.page.getByText('Assessment hali saqlanmagan')).toBeVisible();
+    await expect(d.page.getByText('Baholash hali saqlanmagan')).toBeVisible();
     await settle(d.page);
     await shoot(d.page, '04-assessment-empty-uz-desktop');
     await d.context.close();
@@ -700,7 +700,7 @@ test.describe('phase 3', () => {
   test('assessment with blocking issues uz desktop', async ({ browser }) => {
     const d = await hr(browser);
     await d.page.goto(`/uz/hr/vacancies/${issuesVacancy}/assessment`);
-    await expect(d.page.getByText('Assessment hali tayyor emas')).toBeVisible();
+    await expect(d.page.getByText('Baholash hali tayyor emas')).toBeVisible();
     await settle(d.page);
     await shoot(d.page, '05-assessment-issues-uz-desktop');
     await d.context.close();
@@ -716,7 +716,7 @@ test.describe('phase 3', () => {
 
     const m = await hr(browser, MOBILE);
     await m.page.goto(`/uz/hr/vacancies/${readyVacancy}/assessment`);
-    await expect(m.page.getByText('Assessment tayyor', { exact: true })).toBeVisible();
+    await expect(m.page.getByText('Baholash tayyor', { exact: true })).toBeVisible();
     await settle(m.page);
     await m.page.screenshot({ path: path.join(OUT_DIR, '07-assessment-ready-uz-mobile.png') });
     await m.context.close();
@@ -1039,7 +1039,7 @@ test.describe('phase 5', () => {
     await d.page.waitForTimeout(500);
     await shoot(d.page, '04-hr-stage1-report-uz-desktop');
     await d.page
-      .getByRole('group', { name: 'Kod replay pleyeri' })
+      .getByRole('group', { name: "Kod yozuvini ko'rish" })
       .screenshot({ path: path.join(OUT_DIR, '05-hr-replay-markers-uz-desktop.png') });
     await d.context.close();
 

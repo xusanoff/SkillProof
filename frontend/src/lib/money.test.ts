@@ -29,7 +29,7 @@ describe('salary formatting', () => {
 
   it('uz', () => {
     expect(fmt(15_000_000, 22_000_000, 'UZS', 'uz')).toBe("15 000 000 – 22 000 000 so'm");
-    expect(fmt(10_000_000, null, 'UZS', 'uz')).toBe("dan 10 000 000 so'm");
+    expect(fmt(10_000_000, null, 'UZS', 'uz')).toBe("10 000 000 so'm dan");
     expect(fmt(null, 28_000_000, 'UZS', 'uz')).toBe("28 000 000 so'm gacha");
     expect(fmt(null, null, 'UZS', 'uz')).toBe("Maosh ko'rsatilmagan");
     expect(fmt(1200, 2400, 'USD', 'uz')).toBe('1 200 – 2 400 USD');

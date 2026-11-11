@@ -278,7 +278,7 @@ test('HR publishes a draft and shortlists a candidate', async ({ page: p }) => {
   await expect(p).toHaveURL(/\/uz\/hr\/candidates\?vacancy=v-1$/);
   await p.locator('summary').filter({ hasText: 'Aziza Karimova' }).click();
   const cand = p.getByRole('article', { name: 'Aziza Karimova' });
-  await cand.getByRole('button', { name: 'Taklif qilish' }).click();
-  await expect(cand.getByText('Taklif', { exact: true })).toBeVisible();
+  await cand.getByRole('button', { name: 'Saralash' }).click();
+  await expect(cand.getByText('Saralangan', { exact: true })).toBeVisible();
   expect(patchedApplication).toEqual({ status: 'shortlisted' });
 });

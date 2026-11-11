@@ -76,8 +76,8 @@ function setup(assessment: Record<string, unknown> | 404) {
 describe('AssessmentEditor', () => {
   it('404 means nothing saved yet: empty form and a "not saved" readiness note', async () => {
     setup(404);
-    expect(await screen.findByText('Assessment hali saqlanmagan')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Assessmentni saqlash' })).toBeInTheDocument();
+    expect(await screen.findByText('Baholash hali saqlanmagan')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Baholashni saqlash' })).toBeInTheDocument();
     expect(screen.getByText('Topshiriq tanlanmagan.')).toBeInTheDocument();
   });
 
@@ -112,15 +112,15 @@ describe('AssessmentEditor', () => {
       ],
       updated_at: '2026-11-02T10:00:00Z',
     });
-    const panel = (await screen.findByText('Assessment hali tayyor emas')).closest('section')!;
+    const panel = (await screen.findByText('Baholash hali tayyor emas')).closest('section')!;
     expect(within(panel).getByText('Topshiriq tasdiqlanmagan: Two Sum')).toBeInTheDocument();
     expect(
       within(panel).getByText(
-        'Stage 2 uchun tasdiqlangan savol yetarli emas: kerak 8, tasdiqlangan 0.',
+        '2-bosqich uchun tasdiqlangan savol yetarli emas: kerak 8, tasdiqlangan 0.',
       ),
     ).toBeInTheDocument();
     expect(
-      within(panel).getByText('Savol tili assessment tiliga mos emas: GIL nima?'),
+      within(panel).getByText('Savol tili baholash tiliga mos emas: GIL nima?'),
     ).toBeInTheDocument();
     expect(within(panel).getByRole('heading', { name: /2 ta muammo/ })).toBeInTheDocument();
     expect(screen.getByLabelText(/^Joylashtirish chegarasi/)).toHaveAttribute('placeholder', '2');

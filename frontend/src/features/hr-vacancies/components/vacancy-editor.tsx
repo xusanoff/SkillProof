@@ -10,8 +10,9 @@ import { Link } from '@/i18n/navigation';
 import { ApiError } from '@/lib/api';
 import { useErrorText } from '@/lib/forms';
 import { useHrVacancy } from '../api';
-import { emptyVacancyValues, toVacancyValues } from '../model';
+import { toVacancyValues } from '../model';
 import { VacancyForm } from './vacancy-form';
+import { VacancyWizard } from './vacancy-wizard';
 
 function Header({ title }: { title: string }) {
   const t = useTranslations('vacancyForm');
@@ -36,7 +37,7 @@ export function NewVacancy() {
   return (
     <div className="max-w-3xl">
       <Header title={t('titleNew')} />
-      <VacancyForm companyId={active.id} defaultValues={emptyVacancyValues} />
+      <VacancyWizard key={active.id} companyId={active.id} />
     </div>
   );
 }

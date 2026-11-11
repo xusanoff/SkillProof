@@ -33,16 +33,16 @@ test('HR generates a two-stage assessment with AI and it becomes ready', async (
   await page.goto(`/uz/hr/vacancies/${vacancy.id}/assessment`);
   await expect(page.getByRole('heading', { level: 1, name: 'Baholash' })).toBeVisible();
   // GET 404 = nothing saved yet.
-  await expect(page.getByText('Assessment hali saqlanmagan')).toBeVisible();
+  await expect(page.getByText('Baholash hali saqlanmagan')).toBeVisible();
 
   await page.getByRole('switch', { name: 'AI elementlarini avtomatik tasdiqlash' }).click();
-  await page.getByRole('button', { name: 'Assessmentni saqlash' }).click();
-  await expect(page.getByText('Assessment saqlandi.')).toBeVisible();
-  await expect(page.getByText('Assessment hali tayyor emas')).toBeVisible();
+  await page.getByRole('button', { name: 'Baholashni saqlash' }).click();
+  await expect(page.getByText('Baholash saqlandi.')).toBeVisible();
+  await expect(page.getByText('Baholash hali tayyor emas')).toBeVisible();
 
   await page.getByRole('button', { name: 'AI bilan yaratish' }).click();
   await expect(page.getByText('Yaratish tugadi')).toBeVisible({ timeout: 90_000 });
-  await expect(page.getByText('Assessment tayyor', { exact: true })).toBeVisible();
+  await expect(page.getByText('Baholash tayyor', { exact: true })).toBeVisible();
   await expect(page.getByText('Topshiriq tanlanmagan.')).toBeHidden();
 
   await settle(page);

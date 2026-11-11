@@ -23,12 +23,14 @@ export default defineConfig({
   projects: [
     {
       name: 'e2e',
-      testIgnore: /(screenshots|assessment|interview|stage2|responsive-a11y)\.spec\.ts/,
+      testIgnore:
+        /(screenshots|assessment|interview|stage2|responsive-a11y|ui-review|hiring-workflow)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'e2e-live',
-      testMatch: /(assessment|interview|stage2|responsive-a11y)\.spec\.ts/,
+      testMatch:
+        /(assessment|interview|stage2|responsive-a11y|ui-review|hiring-workflow)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {

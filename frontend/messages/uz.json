@@ -45,7 +45,8 @@
       "profile": "Profil",
       "skills": "Tasdiqlangan ko'nikmalar",
       "talent": "Iste'dod qidiruvi",
-      "adminPanel": "Boshqaruv"
+      "adminPanel": "Boshqaruv",
+      "messages": "Xabarlar"
     }
   },
   "locale": {
@@ -427,7 +428,7 @@
     "langsMin": "Kamida bitta dasturlash tilini tanlang.",
     "testsMin": "Kamida bitta test qo'shing.",
     "testsMax": "Testlar soni chegaradan oshdi.",
-    "tasksMax": "Stage 1 uchun ko'pi bilan 5 ta topshiriq."
+    "tasksMax": "1-bosqich uchun ko'pi bilan 5 ta topshiriq."
   },
   "currency": {
     "UZS": "so'm (UZS)",
@@ -490,7 +491,8 @@
       "talent": "Iste'dod qidiruvi",
       "analytics": "Analitika",
       "blockedTitle": "Kompaniya bloklangan",
-      "blockedBody": "Kompaniya va uning vakansiyalari saytda ko'rinmaydi."
+      "blockedBody": "Kompaniya va uning vakansiyalari saytda ko'rinmaydi.",
+      "messages": "Xabarlar"
     },
     "home": {
       "metaTitle": "Ish beruvchi kabineti",
@@ -633,7 +635,7 @@
   "salary": {
     "range": "{min} – {max} {currency}",
     "exact": "{min} {currency}",
-    "from": "dan {min} {currency}",
+    "from": "{min} {currency} dan",
     "upTo": "{max} {currency} gacha",
     "none": "Maosh ko'rsatilmagan",
     "unit": {
@@ -670,7 +672,7 @@
     "stage2_in_progress": "2-bosqich davom etmoqda",
     "stage2_disqualified": "2-bosqichda chetlatildi",
     "evaluated": "Baholandi",
-    "shortlisted": "Taklif",
+    "shortlisted": "Saralangan",
     "rejected": "Rad etildi",
     "hired": "Ishga qabul qilindi",
     "withdrawn": "Qaytarib olindi",
@@ -731,17 +733,17 @@
     "companyVacancies": "{count} ta ochiq vakansiya",
     "toCompany": "Kompaniya sahifasi",
     "applyLabel": "Ariza berish",
-    "applyHint": "Ariza 2 bosqichli ko'nikma suhbati bilan tasdiqlanadi.",
+    "applyHint": "Vakansiya uchun baholash belgilangan bo'lsa, arizadan keyin ikki bosqichli suhbat o'tasiz.",
     "similarTitle": "O'xshash vakansiyalar",
     "metaTitle": "{title} — {company}",
     "metaFallback": "Vakansiya",
-    "interviewNote": "SkillProof'da har bir ariza 2 bosqichli ko'nikma suhbati bilan tasdiqlanadi: amaliy topshiriq va og'zaki suhbat. Ariza yuborgach, suhbatni «Arizalarim» bo'limidan boshlaysiz."
+    "interviewNote": "Vakansiya uchun baholash belgilangan bo'lsa, amaliy topshiriq va og'zaki suhbatdan o'tasiz. Ariza yuborgach, suhbatni «Arizalarim» bo'limidan boshlashingiz mumkin."
   },
   "apply": {
     "title": "Vakansiyaga ariza",
     "doneTitle": "Ariza yuborildi",
     "vacancyLine": "{title} · {company}",
-    "interviewNote": "SkillProof'da har bir ariza 2 bosqichli ko'nikma suhbati bilan tasdiqlanadi: amaliy topshiriq va og'zaki suhbat. Suhbat keyingi bosqichlarda ishga tushadi — hozircha ariza HR'ga yuboriladi.",
+    "interviewNote": "Arizangiz ish beruvchiga yuboriladi. Vakansiya uchun baholash belgilangan bo'lsa, ikki bosqichli suhbatni «Arizalarim» bo'limidan boshlashingiz mumkin.",
     "coverLabel": "Qo'shimcha xat",
     "coverPlaceholder": "Nima uchun aynan siz mos kelasiz — 2–3 jumla.",
     "coverHint": "HR arizangiz bilan birga o'qiydi.",
@@ -772,7 +774,7 @@
     "tabs": {
       "all": "Barchasi",
       "applied": "Yuborilgan",
-      "shortlisted": "Taklif",
+      "shortlisted": "Saralangan",
       "rejected": "Rad etilgan",
       "withdrawn": "Qaytarib olingan"
     },
@@ -855,7 +857,7 @@
       "deleted": "«{title}» o'chirildi.",
       "assessment": "Baholash"
     },
-    "hasAssessment": "Assessment bor",
+    "hasAssessment": "Baholash bor",
     "hiddenByPlatform": "Platforma yashirgan"
   },
   "vacancyForm": {
@@ -901,7 +903,22 @@
     "publish": "Nashr qilish",
     "publishing": "Nashr qilinmoqda…",
     "save": "O'zgarishlarni saqlash",
-    "assessmentLink": "Assessment sozlamalari"
+    "assessmentLink": "Baholash sozlamalari",
+    "wizard": {
+      "label": "Vakansiya yaratish bosqichlari",
+      "general": "Umumiy ma’lumot",
+      "config": "Baholash sozlamalari",
+      "questions": "Topshiriq va savollar",
+      "next": "Keyingi bosqich",
+      "back": "Oldingi bosqich",
+      "finish": "Saqlash va nashr qilish",
+      "newQuestion": "Yangi savol qo‘shish",
+      "notReady": "Baholash hali tayyor emas. Ko‘rsatilgan kamchiliklarni tuzating.",
+      "leaveDraft": "Qoralama sifatida qoldirish",
+      "retry": "Qayta urinish",
+      "loading": "Yuklanmoqda…",
+      "newQuestionHint": "Savol umumiy bankda ham saqlanadi va shu baholashga tanlanadi."
+    }
   },
   "hrCandidates": {
     "title": "Nomzodlar",
@@ -931,7 +948,7 @@
     "expand": "To'liq o'qish",
     "collapse": "Yig'ish",
     "actions": {
-      "shortlisted": "Taklif qilish",
+      "shortlisted": "Saralash",
       "rejected": "Rad etish",
       "applied": "Yangilarga qaytarish",
       "hired": "Ishga olish"
@@ -990,7 +1007,7 @@
       "not_checked": "Tekshirilmagan",
       "passed": "Tekshiruvdan o'tgan",
       "flagged": "Shubhali deb belgilangan",
-      "sandbox_pending": "Sandbox tekshiruvi kutilmoqda",
+      "sandbox_pending": "Kod tekshiruvi kutilmoqda",
       "flaggedWhy": "Nega belgilangan:",
       "noReason": "Sabab ko'rsatilmagan."
     },
@@ -1037,7 +1054,7 @@
       "titleNew": "Yangi savol",
       "titleEdit": "Savolni tahrirlash",
       "new": "Savol qo'shish",
-      "empty": "Hozircha savol yo'q. Birinchi savolni qo'shing yoki assessment sahifasida AI bilan yarating.",
+      "empty": "Hozircha savol yo'q. Birinchi savolni qo'shing yoki baholash sahifasida AI bilan yarating.",
       "type": "Turi",
       "types": {
         "open": "Ochiq savol",
@@ -1059,7 +1076,7 @@
       "titleNew": "Yangi topshiriq",
       "titleEdit": "Topshiriqni tahrirlash",
       "new": "Topshiriq qo'shish",
-      "empty": "Hozircha topshiriq yo'q. Birinchi topshiriqni qo'shing yoki assessment sahifasida AI bilan yarating.",
+      "empty": "Hozircha topshiriq yo'q. Birinchi topshiriqni qo'shing yoki baholash sahifasida AI bilan yarating.",
       "statement": "Shart",
       "allowedLanguages": "Ruxsat etilgan tillar",
       "codeLanguages": {
@@ -1095,7 +1112,7 @@
       },
       "solution": {
         "legend": "Namunaviy yechim",
-        "hint": "Ixtiyoriy. Sandbox tekshiruvi uchun ishlatiladi.",
+        "hint": "Ixtiyoriy. Namunaviy yechimning testlardan o'tishini tekshirish uchun ishlatiladi.",
         "language": "Yechim tili",
         "code": "Yechim kodi"
       }
@@ -1104,25 +1121,25 @@
   "hrAssessment": {
     "title": "Baholash",
     "back": "Vakansiyalarga qaytish",
-    "formLabel": "Assessment sozlamalari",
-    "saved": "Assessment saqlandi.",
-    "save": "Assessmentni saqlash",
+    "formLabel": "Baholash sozlamalari",
+    "saved": "Baholash saqlandi.",
+    "save": "Baholashni saqlash",
     "readiness": {
-      "notSavedTitle": "Assessment hali saqlanmagan",
+      "notSavedTitle": "Baholash hali saqlanmagan",
       "notSavedBody": "Saqlaganingizdan so'ng tayyorlik tekshiruvi shu yerda ko'rinadi.",
-      "ready": "Assessment tayyor",
-      "notReady": "Assessment hali tayyor emas",
+      "ready": "Baholash tayyor",
+      "notReady": "Baholash hali tayyor emas",
       "blocking": "{count, plural, other {# ta muammo ishga tushirishga to'sqinlik qiladi}}",
       "warnings": "{count, plural, other {# ta ogohlantirish}}",
       "noIssues": "Muammo va ogohlantirishlar yo'q.",
       "issues": {
         "unknown": "Noma'lum muammo: {code}",
-        "stage1_no_tasks": "Stage 1 uchun topshiriq tanlanmagan.",
+        "stage1_no_tasks": "1-bosqich uchun topshiriq tanlanmagan.",
         "task_not_approved": "Topshiriq tasdiqlanmagan: {item}",
-        "task_not_sandbox_validated": "Topshiriq sandbox'da tekshirilmagan: {item}",
+        "task_not_sandbox_validated": "Topshiriq kodi testlarda tekshirilmagan: {item}",
         "question_not_approved": "Savol tasdiqlanmagan: {item}",
-        "question_language_mismatch": "Savol tili assessment tiliga mos emas: {item}",
-        "stage2_not_enough_questions": "Stage 2 uchun tasdiqlangan savol yetarli emas: kerak {needed}, tasdiqlangan {approved}.",
+        "question_language_mismatch": "Savol tili baholash tiliga mos emas: {item}",
+        "stage2_not_enough_questions": "2-bosqich uchun tasdiqlangan savol yetarli emas: kerak {needed}, tasdiqlangan {approved}.",
         "too_many_mandatory_questions": "Majburiy savollar ({mandatory}) savollar sonidan ({count}) ko'p."
       }
     },
@@ -1149,12 +1166,12 @@
       "flaggedTitle": "{count} ta element shubhali deb belgilandi",
       "flaggedBody": "Ularni savollar va topshiriqlar bankida ko'rib chiqing: sabab har bir elementda ko'rsatilgan.",
       "inProgressTitle": "Yaratish allaqachon ishlayapti",
-      "inProgressBody": "Avvalgi so'rov tugagach natija assessmentga qo'shiladi. Birozdan keyin yangilang.",
+      "inProgressBody": "Avvalgi so'rov tugagach, natija baholashga qo'shiladi. Birozdan keyin yangilang.",
       "inProgressRefresh": "Yangilash"
     },
     "general": {
       "title": "Umumiy",
-      "language": "Assessment tili",
+      "language": "Baholash tili",
       "questionMode": "Savollar manbai",
       "questionModeHint": "Qo'lda — faqat siz tanlagan savollar; AI — AI yaratganlari; aralash — ikkalasi.",
       "modes": {
@@ -1168,7 +1185,7 @@
       "autoApproveHint": "Yoqilsa, tekshiruvdan o'tgan AI elementlari darhol tasdiqlanadi."
     },
     "stage1": {
-      "title": "Stage 1 — kod topshiriqlari",
+      "title": "1-bosqich — kod topshiriqlari",
       "hint": "Bankdan 5 tagacha topshiriq tanlang. Bo'sh maydonlar standart qiymatni oladi.",
       "remove": "{title} ni olib tashlash",
       "none": "Topshiriq tanlanmagan.",
@@ -1179,7 +1196,7 @@
       "threshold": "O'tish bali (%)"
     },
     "stage2": {
-      "title": "Stage 2 — suhbat",
+      "title": "2-bosqich — suhbat",
       "hint": "Savollar tartibi ro'yxat tartibi bilan bir xil. Majburiy savollar har bir nomzodga beriladi.",
       "duration": "Davomiyligi (daqiqa)",
       "count": "Savollar soni",
@@ -1206,7 +1223,7 @@
       "hint": "Faqat shu vakansiya uchun standart chegaralarni o'zgartirish.",
       "pasteMax": "Joylashtirish chegarasi (qator)",
       "inactivity": "Harakatsizlik chegarasi (soniya)",
-      "emptyDefault": "Bo'sh maydon — standart qiymat (kulrang maslahat sifatida ko'rsatilgan). Qiymatni faqat server hal qiladi."
+      "emptyDefault": "Bo'sh qoldirsangiz, kulrang ko'rsatilgan standart qiymat qo'llanadi."
     }
   },
   "interview": {
@@ -1355,7 +1372,7 @@
     }
   },
   "hrReplay": {
-    "region": "Kod replay pleyeri",
+    "region": "Kod yozuvini ko'rish",
     "editorLabel": "Nomzod kodi (faqat o'qish)",
     "play": "Ijro",
     "pause": "Pauza",
@@ -1366,13 +1383,13 @@
     "speed": "Tezlik",
     "skipIdle": "Uzun bo'shliqlarni o'tkazib yuborish",
     "time": "Vaqt",
-    "markers": "Timeline belgilari",
+    "markers": "Vaqt shkalasidagi belgilar",
     "timeline": "Vaqt shkalasi",
-    "legend": "Belgilar: tashqi/ichki paste {paste}, harakatsizlik {idle}, tabdan chiqish {focus}, Run {run}.",
+    "legend": "Belgilar: tashqi/ichki nusxa qo'yish {paste}, harakatsizlik {idle}, varaqdan chiqish {focus}, testni ishga tushirish {run}.",
     "keys": "Klaviatura: Probel, ijro va pauza. Chap/o'ng o'q, 5 soniya. Shift bilan 30 soniya.",
     "marker": {
-      "pasteBlocked": "Bloklangan tashqi paste, {length} belgi, {lines} qator, {time}",
-      "pasteInternal": "Ichki paste, {time}",
+      "pasteBlocked": "Tashqaridan nusxa qo'yish bloklangan: {length} belgi, {lines} qator, {time}",
+      "pasteInternal": "Muharrir ichida nusxa qo'yish, {time}",
       "idle": "Harakatsizlik {seconds} soniya, {time} dan",
       "focus": "Tabdan yoki to'liq ekrandan chiqish, {time}",
       "run": "Testlarni ishga tushirish, {time}"
@@ -1392,7 +1409,7 @@
       "disqualified": "Chetlatilgan"
     },
     "reviewTitle": "Kuchli va zaif tomonlar",
-    "replayTitle": "Kod replay",
+    "replayTitle": "Kod yozuvi",
     "tasksLabel": "Topshiriqlar",
     "codeTitle": "Yakuniy kod va test natijalari",
     "suspicion": {
@@ -1425,13 +1442,13 @@
       "robotic_typing": "Tugmalar oralig'i bir xil (variatsiya {cv}, {samples} namuna)",
       "linear_writing": "Tahrirsiz yozilgan: {chars} belgi, tahrir ulushi {editPercent}%, orqaga qaytish {backJumps} marta",
       "no_run_cycle": "Hamma testlar o'tgan, lekin kod bir marta ham ishga tushirilmagan",
-      "no_edits_after_first_run": "Birinchi Run'dan keyin kod o'zgartirilmagan ({runs} marta ishga tushirilgan)",
+      "no_edits_after_first_run": "Birinchi ishga tushirishdan keyin kod o'zgartirilmagan ({runs} marta ishga tushirilgan)",
       "focus_loss": "Tabdan yoki oynadan chiqish: {count} marta, jami {totalS} soniya, to'liq ekrandan chiqish {exits}",
       "evaluator_injection_attempt": "Kodda baholovchiga qaratilgan ko'rsatma bor",
-      "paste_external": "Tashqi paste urinishi bloklandi ({lines} qator, {chars} belgi)",
+      "paste_external": "Tashqaridan nusxa qo'yish urinishi bloklandi ({lines} qator, {chars} belgi)",
       "external_insertion": "Tushuntirib bo'lmaydigan matn qo'shildi ({lines} qator, {chars} belgi)",
-      "unverified_internal_paste": "Tasdiqlanmagan ichki paste ({lines} qator, {chars} belgi)",
-      "external_paste": "Katta tashqi paste: 1-bosqich shu yerda tugagan ({lines} qator, {chars} belgi)",
+      "unverified_internal_paste": "Muharrir ichidagi nusxa manbai tasdiqlanmagan ({lines} qator, {chars} belgi)",
+      "external_paste": "Tashqaridan katta matn qo'yilgan: 1-bosqich shu yerda tugagan ({lines} qator, {chars} belgi)",
       "inactivity": "Uzoq harakatsizlik: 1-bosqich avtomatik tugagan"
     },
     "scores": {
@@ -1446,10 +1463,10 @@
       "failedTitle": "Baholash bajarilmadi",
       "failedBody": "Avtomatik baholash tugallanmadi, ball yo'q. Yechimni qo'lda ko'rib chiqing.",
       "needsReviewTitle": "Qo'lda ko'rib chiqish kerak",
-      "needsReviewBody": "Kod tahlili natijasiga ishonch past yoki baholovchilar kelishmadi. Replay va kodni o'zingiz ko'ring.",
+      "needsReviewBody": "Kod tahlili natijasiga ishonch past yoki baholovchilar kelishmadi. Kod yozuvi va yakuniy kodni o'zingiz ko'ring.",
       "disqualifiedTitle": "Nomzod chetlatilgan",
       "disqualified": {
-        "external_paste": "Tashqi paste: nomzod qabul qilgan qoidaga ko'ra chegaradan katta tashqi matn qo'ygan.",
+        "external_paste": "Tashqaridan nusxa qo'yish: nomzod qabul qilgan qoidaga ko'ra chegaradan katta tashqi matn qo'ygan.",
         "inactivity": "Harakatsizlik: nomzod qabul qilingan chegaradan uzoq hech narsa qilmagan.",
         "abandoned": "Aloqa qayta tiklanmagani uchun to'xtatilgan.",
         "other": "Sabab ko'rsatilmagan."
@@ -1468,7 +1485,7 @@
     },
     "code": {
       "finalCode": "Yakuniy kod",
-      "runs": "Run: {count} marta",
+      "runs": "Ishga tushirish: {count} marta",
       "visible": "Ochiq testlar",
       "hidden": "Yashirin testlar",
       "status": {
@@ -1502,7 +1519,7 @@
       "lead": "AI intervyuer sizdan, asosan 1-bosqichda yozgan kodingiz haqida so'raydi. O'z kodingizni tushuntirish qiyin emas.",
       "point1": "Savol ekranda yoziladi va ovoz bilan o'qiladi. Eshitgach, javob bering.",
       "point2": "Har savolga javob berish vaqti cheklangan; taymer ekranda ko'rinadi.",
-      "point3": "Savol tushunarsiz bo'lsa, «O'ylab olay» tugmasi bir marta vaqtni uzaytiradi.",
+      "point3": "Javobni o'ylashga vaqt kerak bo'lsa, «O'ylab olay» tugmasidan har bir savolda bir marta foydalanishingiz mumkin.",
       "point4": "Uzoq jim qolsangiz, ogohlantirish chiqadi; uzoq davom etsa, suhbat tugaydi.",
       "recordedTitle": "Ovozingiz yoziladi va saqlanadi",
       "recordedBody": "Javoblaringiz ovozi yozib olinadi va ish beruvchi ko'rib chiqishi uchun saqlanadi. Davom etsangiz, shunga rozilik bildirasiz.",
@@ -1593,7 +1610,7 @@
     "back": "Nomzodlarga qaytish",
     "evaluating": {
       "title": "Baholanmoqda",
-      "body": "Yakuniy baholash davom etmoqda. Sahifa bir necha soniyada o'zi yangilanadi."
+      "body": "Bu biroz vaqt oladi. Sahifa o'zi yangilanadi."
     },
     "failed": {
       "title": "Baholash bajarilmadi",
@@ -1617,7 +1634,7 @@
       "title": "Ballar",
       "disqualifiedTitle": "Nomzod chetlatilgan",
       "disqualified": {
-        "external_paste": "Tashqi paste: nomzod qabul qilgan qoidaga ko'ra chegaradan katta tashqi matn qo'ygan.",
+        "external_paste": "Tashqaridan nusxa qo'yish: nomzod qabul qilgan qoidaga ko'ra chegaradan katta tashqi matn qo'ygan.",
         "inactivity": "Harakatsizlik: nomzod qabul qilingan chegaradan uzoq hech narsa qilmagan.",
         "abandoned": "Aloqa qayta tiklanmagani uchun to'xtatilgan.",
         "other": "Sabab ko'rsatilmagan."
@@ -1678,7 +1695,7 @@
     },
     "actions": {
       "title": "Amallar",
-      "shortlisted": "Taklif qilish",
+      "shortlisted": "Saralash",
       "rejected": "Rad etish",
       "hired": "Ishga olish",
       "applied": "Yangilarga qaytarish",
@@ -1812,7 +1829,7 @@
     },
     "empty": {
       "title": "Hozircha tasdiqlangan ko'nikma yo'q",
-      "body": "Suhbatning ikkala bosqichidan toza o'tib, ko'nikma bo'yicha kamida 60% to'plasangiz, tasdiqlangan ko'nikma olasiz. U bir yil amal qiladi.",
+      "body": "Suhbatning ikkala bosqichidan qoidabuzarliksiz o'tib, ko'nikma bo'yicha talab etilgan ballni to'plasangiz, ko'nikmangiz tasdiqlanadi. Amal qilish muddati har bir ko'nikmada ko'rsatiladi.",
       "link": "Arizalarimga o'tish"
     },
     "publicPage": {
@@ -1968,5 +1985,26 @@
     "averages": "O‘rtacha ball",
     "rank": "Reyting",
     "loadedResults": "Joriy sahifadagi natijalar"
+  },
+  "chat": {
+    "title": "Xabarlar",
+    "empty": "Hozircha yozishmalar yo‘q. Vakansiyaga ariza yuborgach chat ochiladi.",
+    "open": "Chatni ochish",
+    "send": "Yuborish",
+    "sending": "Yuborilmoqda…",
+    "placeholder": "Xabaringizni yozing",
+    "older": "Oldingi xabarlar",
+    "more": "Yana yuklash",
+    "retry": "Qayta urinish",
+    "status": "Ariza holati: {status}",
+    "unread": "{count} ta o‘qilmagan xabar",
+    "coverNote": "Ariza bilan yuborilgan xabar",
+    "failed": "Xabar yuborilmadi. Matn saqlandi; qayta urinib ko‘ring.",
+    "you": "Siz",
+    "company": "Kompaniya",
+    "candidate": "Nomzod",
+    "bankSearch": "Bankdan qidirish",
+    "prev": "Oldingi",
+    "next": "Keyingi"
   }
 }

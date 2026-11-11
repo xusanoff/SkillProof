@@ -108,7 +108,7 @@ describe('HrCandidates', () => {
     expect(scores).toHaveTextContent('Suhbat boshlanmagan');
     expect(within(scores).queryByRole('link')).not.toBeInTheDocument();
 
-    await userEvent.click(within(row).getByRole('button', { name: 'Taklif qilish' }));
+    await userEvent.click(within(row).getByRole('button', { name: 'Saralash' }));
     expect(patched).toEqual({ status: 'shortlisted' });
     // The "Yangi" tab refetches and is now empty.
     expect(

@@ -1,5 +1,6 @@
 import {
   Bookmark,
+  MessageCircle,
   Building2,
   ClipboardList,
   FileText,
@@ -25,6 +26,7 @@ export interface MenuItem {
 /** Avatar menu per role (D-016, hh.uz structure). Unbuilt sections show "coming soon". */
 export const ACCOUNT_MENU: Record<UserRole, MenuItem[]> = {
   candidate: [
+    { href: '/candidate/messages', key: 'messages', icon: MessageCircle },
     { href: '/candidate/profile', key: 'resumes', icon: FileText },
     { href: '/candidate/applications', key: 'applications', icon: ClipboardList },
     { href: '/candidate/saved', key: 'saved', icon: Bookmark },
@@ -33,6 +35,7 @@ export const ACCOUNT_MENU: Record<UserRole, MenuItem[]> = {
     { href: '/settings', key: 'settings', icon: Settings },
   ],
   hr: [
+    { href: '/hr/messages', key: 'messages', icon: MessageCircle },
     { href: '/hr/vacancies', key: 'myVacancies', icon: BriefcaseBusiness },
     { href: '/hr/candidates', key: 'candidates', icon: UsersRound },
     { href: '/hr/talent', key: 'talent', icon: Search },
@@ -65,7 +68,7 @@ export function bottomNav(role: UserRole | null): MenuItem[] {
   }
   return [
     { href: '/vacancies', key: 'search', icon: Search },
-    { href: '/candidate/saved', key: 'saved', icon: Bookmark },
+    { href: '/candidate/messages', key: 'messages', icon: MessageCircle },
     { href: '/candidate/applications', key: 'applications', icon: ClipboardList },
     {
       href: role === 'candidate' ? '/candidate/profile' : role === 'admin' ? '/settings' : '/login',

@@ -225,6 +225,11 @@ function ApplicationRow({
             {t('appliedOn', { date: format.date(a.created_at) })}
           </p>
         </div>
+        <Button asChild variant="outline" className="min-h-11">
+          <Link href={`/candidate/messages/${a.id}`}>
+            <ChatLabel />
+          </Link>
+        </Button>
         {canViewInterviewResult(a.status) ? (
           <Button asChild variant="outline" size="lg" className="min-h-11 px-4">
             <Link href={`/candidate/interview/${a.id}`}>{t('interviewResult')}</Link>
@@ -282,4 +287,9 @@ function ApplicationRow({
       </div>
     </article>
   );
+}
+
+function ChatLabel() {
+  const t = useTranslations('chat');
+  return <>{t('open')}</>;
 }

@@ -43,12 +43,14 @@ export function QuestionForm({
   editing,
   onDone,
   onCancel,
+  onCreated,
 }: {
   companyId: string;
   defaultValues: QuestionValues;
   editing?: QuestionOut;
   onDone: (message: string) => void;
   onCancel: () => void;
+  onCreated?: (question: QuestionOut) => void;
 }) {
   const t = useTranslations('hrBank');
   const tq = useTranslations('hrBank.question');
@@ -73,7 +75,8 @@ export function QuestionForm({
   const submit = form.handleSubmit(async (values) => {
     setFormError(null);
     try {
-      await save.mutateAsync({ id: editing?.id, body: toQuestionBody(values) });
+      const saved = await save.mutateAsync({ id: editing?.id, body: toQuestionBody(values) });
+      onCreated?.(saved);
       onDone(editing ? t('savedEdit') : t('savedNew'));
     } catch (error) {
       if (!applyServerErrors(error, form.setError, FIELDS)) setFormError(errorText(error));

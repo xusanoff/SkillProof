@@ -136,6 +136,12 @@ async function sweep(
   if (who) await login(context.request, { email: who, password: PASSWORD });
   const page = await context.newPage();
   const problems: string[] = [];
+  page.on('pageerror', (error) => problems.push(`${page.url()} JS ${error.message}`));
+  page.on('console', (message) => {
+    if (/MISSING_MESSAGE|FORMATTING_ERROR|INVALID_MESSAGE/.test(message.text())) {
+      problems.push(`${page.url()} I18N ${message.text()}`);
+    }
+  });
   for (const path of pages) await checkPage(page, `/${mode.locale}${path}`, problems, mode.name);
   await context.close();
   if (process.env.REDESIGN_REVIEW) {

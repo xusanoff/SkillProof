@@ -161,9 +161,13 @@ describe('Stage1ReportPage', () => {
       score_percent: null,
     });
     expect(await screen.findByText('Nomzod chetlatilgan')).toBeInTheDocument();
-    expect(screen.getByText(/Tashqi paste: nomzod qabul qilgan qoidaga ko'ra/)).toBeInTheDocument();
     expect(
-      screen.getByText(/Katta tashqi paste: 1-bosqich shu yerda tugagan \(6 qator, 200 belgi\)/),
+      screen.getByText(/Tashqaridan nusxa qo'yish: nomzod qabul qilgan qoidaga ko'ra/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Tashqaridan katta matn qo'yilgan: 1-bosqich shu yerda tugagan \(6 qator, 200 belgi\)/,
+      ),
     ).toBeInTheDocument();
   });
 });

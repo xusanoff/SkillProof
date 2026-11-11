@@ -437,7 +437,10 @@ export function toAssessmentValues(a: AssessmentOut): AssessmentValues {
 }
 
 /** Empty override fields are omitted so the global default applies. */
-export function toAssessmentBody(v: AssessmentValues): AssessmentIn {
+export function toAssessmentBody(
+  v: AssessmentValues,
+  budget: Record<string, number> = {},
+): AssessmentIn {
   const integrity: Record<string, number> = {};
   const paste = optNum(v.integrity.paste_max_lines);
   const idle = optNum(v.integrity.inactivity_limit_s);
@@ -446,6 +449,7 @@ export function toAssessmentBody(v: AssessmentValues): AssessmentIn {
   return {
     language: v.language,
     stage1_config: {
+      budget,
       task_ids: v.task_ids,
       duration_minutes: optNum(v.s1_duration),
       pass_threshold: optNum(v.s1_threshold),

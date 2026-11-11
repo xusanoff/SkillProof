@@ -40,7 +40,7 @@ describe('ApplyDialog', () => {
     );
     open();
     const user = userEvent.setup();
-    expect(screen.getByText(/2 bosqichli ko'nikma suhbati/)).toBeInTheDocument();
+    expect(screen.getByText(/ikki bosqichli suhbatni/)).toBeInTheDocument();
     await user.type(screen.getByLabelText(/Qo'shimcha xat/), 'Salom');
     await user.dblClick(screen.getByRole('button', { name: 'Ariza yuborish' }));
 

@@ -21,6 +21,58 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/chat/threads': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Threads */
+    get: operations['threads_api_v1_chat_threads_get'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/chat/threads/{application_id}/messages': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Messages */
+    get: operations['messages_api_v1_chat_threads__application_id__messages_get'];
+    put?: never;
+    /** Send */
+    post: operations['send_api_v1_chat_threads__application_id__messages_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/chat/threads/{application_id}/read': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Mark Read */
+    post: operations['mark_read_api_v1_chat_threads__application_id__read_post'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/v1/auth/register': {
     parameters: {
       query?: never;
@@ -1861,6 +1913,7 @@ export interface components {
       language: 'uz' | 'ru' | 'en';
       /**
        * @default {
+       *       "budget": {},
        *       "task_ids": []
        *     }
        */
@@ -3050,6 +3103,50 @@ export interface components {
      * @enum {string}
      */
     MemberRole: 'owner' | 'hr';
+    /** MessageIn */
+    MessageIn: {
+      /** Text */
+      text: string;
+      /**
+       * Client Id
+       * Format: uuid
+       */
+      client_id: string;
+    };
+    /** MessageOut */
+    MessageOut: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Sequence */
+      sequence: number;
+      /** Sender Id */
+      sender_id: string | null;
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: 'message' | 'status';
+      /** Text */
+      text: string | null;
+      /** Application Status */
+      application_status: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
+    /** MessagePage */
+    MessagePage: {
+      thread: components['schemas']['ThreadOut'];
+      /** Items */
+      items: components['schemas']['MessageOut'][];
+      /** Has More */
+      has_more: boolean;
+    };
     /** NoteIn */
     NoteIn: {
       /** Text */
@@ -3248,6 +3345,11 @@ export interface components {
      * @enum {string}
      */
     QuestionType: 'open' | 'mcq' | 'scenario';
+    /** ReadIn */
+    ReadIn: {
+      /** Through Sequence */
+      through_sequence: number;
+    };
     /** ReadinessIssue */
     ReadinessIssue: {
       /** Code */
@@ -3705,6 +3807,13 @@ export interface components {
     /** Stage1Config */
     Stage1Config: {
       /**
+       * Budget
+       * @default {}
+       */
+      budget: {
+        [key: string]: number;
+      };
+      /**
        * Task Ids
        * @default []
        */
@@ -4051,6 +4160,48 @@ export interface components {
        * @default 0
        */
       time_ms: number;
+    };
+    /** ThreadOut */
+    ThreadOut: {
+      /**
+       * Application Id
+       * Format: uuid
+       */
+      application_id: string;
+      /** Vacancy Title */
+      vacancy_title: string;
+      /**
+       * Company Id
+       * Format: uuid
+       */
+      company_id: string;
+      /** Company Name */
+      company_name: string;
+      /**
+       * Candidate Id
+       * Format: uuid
+       */
+      candidate_id: string;
+      /** Candidate Name */
+      candidate_name: string;
+      /** Application Status */
+      application_status: string;
+      /** Cover Note */
+      cover_note: string | null;
+      /** Unread Count */
+      unread_count: number;
+      last_message: components['schemas']['MessageOut'] | null;
+    };
+    /** ThreadPage */
+    ThreadPage: {
+      /** Items */
+      items: components['schemas']['ThreadOut'][];
+      /** Total */
+      total: number;
+      /** Page */
+      page: number;
+      /** Page Size */
+      page_size: number;
     };
     /** ThresholdsIn */
     ThresholdsIn: {
@@ -4520,6 +4671,142 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['HealthResponse'];
+        };
+      };
+    };
+  };
+  threads_api_v1_chat_threads_get: {
+    parameters: {
+      query?: {
+        company_id?: string | null;
+        page?: number;
+        page_size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ThreadPage'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  messages_api_v1_chat_threads__application_id__messages_get: {
+    parameters: {
+      query?: {
+        before?: number | null;
+        after?: number | null;
+        limit?: number;
+      };
+      header?: never;
+      path: {
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['MessagePage'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  send_api_v1_chat_threads__application_id__messages_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MessageIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['MessageOut'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+    };
+  };
+  mark_read_api_v1_chat_threads__application_id__read_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        application_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ReadIn'];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
         };
       };
     };

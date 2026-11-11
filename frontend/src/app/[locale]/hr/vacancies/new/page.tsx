@@ -10,3 +10,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Page() {
   return <NewVacancy />;
 }
+
+// The client auth guard renders its loading shell before this private page.
+export const instant = false;

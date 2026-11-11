@@ -117,6 +117,13 @@ describe('request bodies', () => {
     expect(formatLevels(parseLevels('5: full\n0: wrong\njunk'))).toBe('0: wrong\n5: full');
   });
 
+  it('preserves API-configured budgets when other assessment fields change', () => {
+    const budget = { token_limit: 50000, stt_seconds_limit: 300 };
+    const body = toAssessmentBody({ ...emptyAssessmentValues, s1_duration: '60' }, budget);
+    expect(body.stage1_config.budget).toEqual(budget);
+    expect(body.stage1_config.duration_minutes).toBe(60);
+  });
+
   it('assessment body omits empty overrides', () => {
     const body = toAssessmentBody({
       ...emptyAssessmentValues,

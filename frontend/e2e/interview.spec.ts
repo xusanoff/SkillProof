@@ -248,7 +248,7 @@ test('HR replays the session to the end: Monaco text equals final_code exactly',
   await expect.poll(text).toBe(finalCode);
   // Keyboard: Space starts playback, and it can be paused again.
   await hrPage.getByRole('button', { name: 'Boshiga' }).click();
-  await hrPage.getByRole('group', { name: 'Kod replay pleyeri' }).focus();
+  await hrPage.getByRole('group', { name: "Kod yozuvini ko'rish" }).focus();
   await hrPage.keyboard.press('Space');
   await expect(hrPage.getByRole('button', { name: 'Pauza' })).toBeVisible();
   await hrPage.keyboard.press('Space');
@@ -308,6 +308,6 @@ test('a large external paste disqualifies and is never inserted', async ({ page,
   await hrPage.goto(`/uz/hr/candidates/${aid}/stage1`);
   await expect(hrPage.getByRole('heading', { name: 'AI yordami shubhasi' })).toBeVisible();
   await expect(hrPage.getByText('Nomzod chetlatilgan')).toBeVisible();
-  await expect(hrPage.getByText(/Katta tashqi paste/).first()).toBeVisible();
+  await expect(hrPage.getByText(/Tashqaridan katta matn qo'yilgan/).first()).toBeVisible();
   await expect(hrPage.locator('[data-marker="paste"]').first()).toBeVisible({ timeout: 30_000 });
 });

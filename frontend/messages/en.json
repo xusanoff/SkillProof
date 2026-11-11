@@ -45,7 +45,8 @@
       "profile": "Profile",
       "skills": "Verified skills",
       "talent": "Talent search",
-      "adminPanel": "Admin"
+      "adminPanel": "Admin",
+      "messages": "Messages"
     }
   },
   "locale": {
@@ -490,7 +491,8 @@
       "talent": "Talent search",
       "analytics": "Analytics",
       "blockedTitle": "Company blocked",
-      "blockedBody": "The company and its vacancies are not visible on the site."
+      "blockedBody": "The company and its vacancies are not visible on the site.",
+      "messages": "Messages"
     },
     "home": {
       "metaTitle": "Employer dashboard",
@@ -670,7 +672,7 @@
     "stage2_in_progress": "Stage 2 in progress",
     "stage2_disqualified": "Disqualified in stage 2",
     "evaluated": "Evaluated",
-    "shortlisted": "Invited",
+    "shortlisted": "Shortlisted",
     "rejected": "Rejected",
     "hired": "Hired",
     "withdrawn": "Withdrawn",
@@ -731,17 +733,17 @@
     "companyVacancies": "{count, plural, one {# open vacancy} other {# open vacancies}}",
     "toCompany": "Company page",
     "applyLabel": "Apply",
-    "applyHint": "Applications are verified with a two-stage skill interview.",
+    "applyHint": "If this vacancy has an assessment, you will take a two-stage interview after applying.",
     "similarTitle": "Similar vacancies",
     "metaTitle": "{title} — {company}",
     "metaFallback": "Vacancy",
-    "interviewNote": "On SkillProof every application is verified with a two-stage skill interview: a practical task and an oral interview. You start it from My applications once you have applied."
+    "interviewNote": "If this vacancy has an assessment, you will complete a practical task and an oral interview. After applying, you can start the interview from My applications."
   },
   "apply": {
     "title": "Apply for the vacancy",
     "doneTitle": "Application sent",
     "vacancyLine": "{title} · {company}",
-    "interviewNote": "On SkillProof every application is verified with a two-stage skill interview: a practical task and an oral interview. The interview arrives in a later release — for now your application goes to HR.",
+    "interviewNote": "Your application will be sent to the employer. If this vacancy has an assessment, you can start its two-stage interview from My applications.",
     "coverLabel": "Cover note",
     "coverPlaceholder": "Why you are a good fit — 2–3 sentences.",
     "coverHint": "HR reads it together with your application.",
@@ -772,7 +774,7 @@
     "tabs": {
       "all": "All",
       "applied": "Sent",
-      "shortlisted": "Invited",
+      "shortlisted": "Shortlisted",
       "rejected": "Rejected",
       "withdrawn": "Withdrawn"
     },
@@ -901,7 +903,22 @@
     "publish": "Publish",
     "publishing": "Publishing…",
     "save": "Save changes",
-    "assessmentLink": "Assessment settings"
+    "assessmentLink": "Assessment settings",
+    "wizard": {
+      "label": "Vacancy creation steps",
+      "general": "General information",
+      "config": "Assessment configuration",
+      "questions": "Tasks and questions",
+      "next": "Next step",
+      "back": "Previous step",
+      "finish": "Save and publish",
+      "newQuestion": "Create a question",
+      "notReady": "Assessment is not ready. Resolve the listed issues.",
+      "leaveDraft": "Keep as draft",
+      "retry": "Retry",
+      "loading": "Loading…",
+      "newQuestionHint": "The question is saved to the bank and selected for this assessment."
+    }
   },
   "hrCandidates": {
     "title": "Candidates",
@@ -1593,7 +1610,7 @@
     "back": "Back to candidates",
     "evaluating": {
       "title": "Being evaluated",
-      "body": "The final evaluation is running. This page refreshes itself every few seconds."
+      "body": "This takes a little while. The page refreshes itself."
     },
     "failed": {
       "title": "Evaluation failed",
@@ -1812,7 +1829,7 @@
     },
     "empty": {
       "title": "No verified skills yet",
-      "body": "You earn a verified skill by passing both stages of an interview cleanly, with a score of at least 60% on that skill. It then stays valid for a year.",
+      "body": "You earn a verified skill by passing both interview stages without integrity violations and reaching the required score for that skill. Each skill shows its expiry date.",
       "link": "Go to my applications"
     },
     "publicPage": {
@@ -1968,5 +1985,26 @@
     "averages": "Average scores",
     "rank": "Ranking",
     "loadedResults": "Results on this page"
+  },
+  "chat": {
+    "title": "Messages",
+    "empty": "No conversations yet. Applying for a job creates a chat.",
+    "open": "Open chat",
+    "send": "Send",
+    "sending": "Sending…",
+    "placeholder": "Write a message",
+    "older": "Older messages",
+    "more": "Load more",
+    "retry": "Retry",
+    "status": "Application status: {status}",
+    "unread": "{count} unread messages",
+    "coverNote": "Application cover note",
+    "failed": "Message was not sent. Your text is preserved; try again.",
+    "you": "You",
+    "company": "Company",
+    "candidate": "Candidate",
+    "bankSearch": "Search the bank",
+    "prev": "Previous",
+    "next": "Next"
   }
 }

@@ -88,7 +88,7 @@ describe('VerifiedSkillsPage', () => {
     unmount();
     server.use(http.get(`${API}/api/v1/candidate/verified-skills`, () => HttpResponse.json([])));
     renderWithProviders(<VerifiedSkillsPage />);
-    expect(await screen.findByText(/kamida 60%/)).toBeInTheDocument();
+    expect(await screen.findByText(/talab etilgan ballni/)).toBeInTheDocument();
   });
 });
 

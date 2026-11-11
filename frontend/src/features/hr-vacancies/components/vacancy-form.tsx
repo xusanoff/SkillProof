@@ -36,6 +36,7 @@ interface VacancyFormProps {
   /** Existing vacancy (edit); undefined = new. */
   vacancyId?: string;
   status?: VacancyStatus;
+  onContinue?: (id: string) => void;
 }
 
 type Intent = 'draft' | 'publish' | 'save';
@@ -45,7 +46,13 @@ type Intent = 'draft' | 'publish' | 'save';
  * Published / closed: "O'zgarishlarni saqlash". Limits mirror the API; 422 details map
  * to fields; `description_required` lands on the description.
  */
-export function VacancyForm({ companyId, defaultValues, vacancyId, status }: VacancyFormProps) {
+export function VacancyForm({
+  companyId,
+  defaultValues,
+  vacancyId,
+  status,
+  onContinue,
+}: VacancyFormProps) {
   const t = useTranslations('vacancyForm');
   const tv = useTranslations('vacancy');
   const tc = useTranslations('common');
@@ -107,6 +114,10 @@ export function VacancyForm({ companyId, defaultValues, vacancyId, status }: Vac
             body: which === 'publish' ? { ...(createdId ? body : {}), status: 'published' } : body,
           });
         }
+        if (onContinue) {
+          onContinue(id);
+          return;
+        }
         const tab = which === 'draft' ? 'draft' : (status ?? 'published');
         router.push(`/hr/vacancies?status=${which === 'publish' ? 'published' : tab}`);
       } catch (error) {
@@ -117,7 +128,7 @@ export function VacancyForm({ companyId, defaultValues, vacancyId, status }: Vac
   return (
     <form
       noValidate
-      onSubmit={submit(isDraft ? 'publish' : 'save')}
+      onSubmit={submit(onContinue ? 'draft' : isDraft ? 'publish' : 'save')}
       className="grid gap-8"
       aria-label={t('formLabel')}
     >
@@ -266,7 +277,11 @@ export function VacancyForm({ companyId, defaultValues, vacancyId, status }: Vac
       </Section>
 
       <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom))] -mx-4 flex flex-col-reverse gap-2 border-t border-border bg-bg/95 px-4 py-3 backdrop-blur sm:flex-row sm:justify-end md:bottom-0">
-        {isDraft ? (
+        {onContinue ? (
+          <Button type="submit" size="lg" disabled={pending}>
+            {pending ? tc('saving') : t('wizard.next')}
+          </Button>
+        ) : isDraft ? (
           <>
             <Button
               type="button"

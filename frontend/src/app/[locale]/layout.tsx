@@ -82,7 +82,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
               <SiteHeader />
               <VerifyEmailBanner />
             </div>
-            <main id="main" className="flex flex-1 flex-col">
+            <main id="main" tabIndex={-1} className="flex flex-1 flex-col">
               {children}
             </main>
             <div data-site-chrome className="contents">

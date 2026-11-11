@@ -28,6 +28,11 @@ function upstreamBase(): string {
   return (process.env.API_INTERNAL_URL || 'http://localhost:8000').replace(/\/$/, '');
 }
 
+/** An oral interview request waits for speech providers, which may sit out a rate limit. */
+function timeoutFor(path: string[]): number {
+  return path.includes('stage2') ? 180_000 : 30_000;
+}
+
 async function forward(request: NextRequest, ctx: RouteContext<'/api/[...path]'>) {
   const { path } = await ctx.params;
   const target = new URL(`${upstreamBase()}/${path.map(encodeURIComponent).join('/')}`);
@@ -50,7 +55,7 @@ async function forward(request: NextRequest, ctx: RouteContext<'/api/[...path]'>
       body: hasBody ? request.body : undefined,
       redirect: 'manual',
       cache: 'no-store',
-      signal: AbortSignal.timeout(30_000),
+      signal: AbortSignal.timeout(timeoutFor(path)),
       // Required by Node's fetch when streaming a request body.
       ...(hasBody ? { duplex: 'half' } : {}),
     } as RequestInit);
