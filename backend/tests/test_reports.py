@@ -1,9 +1,11 @@
 """Phase 7: final evaluation, session report, HR ranking and overrides, candidate results."""
 
+import asyncio
 import json
 import uuid
 from typing import Any
 
+import pytest
 from fastapi import FastAPI
 from sqlalchemy import select, update
 
@@ -119,6 +121,7 @@ async def test_running_it_twice_changes_nothing(signup: SignUp, app: FastAPI) ->
     await _finalize(ctx["aid"])
     before = (await ctx["hr"].get(_url(ctx, "report"))).json()
     second = await _finalize(ctx["aid"])
+    assert second.requests == []
     assert not [q for q in second.requests if q.role == "answer_evaluator"]
     after = (await ctx["hr"].get(_url(ctx, "report"))).json()
     assert before["overall_score"] == after["overall_score"]
@@ -757,6 +760,30 @@ async def test_hr_hears_the_stored_answer_and_the_listen_is_audited(
     assert logged is not None
 
 
+async def test_report_timeout_is_counted_and_eventually_stops_polling(
+    signup: SignUp, app: FastAPI, monkeypatch: Any
+) -> None:
+    ctx = await _finished(signup, app)
+    monkeypatch.setattr(reports.get_settings(), "report_timeout_s", 0.05)
+    monkeypatch.setattr(reports.get_settings(), "evaluation_max_attempts", 2)
+
+    async def slow(*args: Any, **kwargs: Any) -> None:
+        await asyncio.sleep(10)
+
+    monkeypatch.setattr(reports, "_write", slow)
+    await _finalize(ctx["aid"])
+    report = await _report_row(ctx["aid"])
+    assert report.state.value == "pending" and report.attempts == 1
+    await _finalize(ctx["aid"])
+    report = await _report_row(ctx["aid"])
+    assert report.state.value == "failed" and report.attempts == 2
+    async with SessionLocal() as db:
+        assert uuid.UUID(ctx["aid"]) not in await reports.due(db)
+    result = await ctx["c"].get(f"/api/v1/applications/{ctx['aid']}/results")
+    assert result.status_code == 200, result.text
+    assert result.json()["state"] == "failed"
+
+
 async def test_a_crash_leaves_it_for_the_sweep_up_to_the_limit(
     signup: SignUp, app: FastAPI, monkeypatch: Any
 ) -> None:
@@ -784,3 +811,133 @@ async def test_a_crash_leaves_it_for_the_sweep_up_to_the_limit(
         assert uuid.UUID(ctx["aid"]) not in await reports.due(db)
         stage2 = await db.get(InterviewSession, uuid.UUID(ctx["sid2"]))
         assert stage2 is not None and stage2.needs_review
+
+
+class SlowReportProvider(Recording):
+    def __init__(self, slow: set[str]) -> None:
+        super().__init__()
+        self.slow = slow
+        self.active = 0
+        self.peak = 0
+        self.cancelled: set[str] = set()
+
+    async def complete(self, request: LLMRequest, schema: Any) -> LLMRawResponse:
+        if request.role not in self.slow:
+            return await super().complete(request, schema)
+        self.active += 1
+        self.peak = max(self.peak, self.active)
+        try:
+            await asyncio.sleep(10)
+        except asyncio.CancelledError:
+            self.cancelled.add(request.role)
+            raise
+        finally:
+            self.active -= 1
+        return await super().complete(request, schema)
+
+
+@pytest.mark.parametrize(
+    "slow",
+    [
+        {"report_writer"},
+        {"feedback_writer"},
+        {"report_writer", "feedback_writer"},
+    ],
+)
+async def test_slow_writers_publish_real_scores_without_waiting_for_job_retries(
+    signup: SignUp, app: FastAPI, monkeypatch: Any, slow: set[str]
+) -> None:
+    ctx = await _finished(signup, app)
+    monkeypatch.setattr(reports.get_settings(), "report_ai_phase_timeout_s", 0.15)
+    provider = SlowReportProvider(slow)
+    async with asyncio.timeout(3):
+        await _finalize(ctx["aid"], provider)
+    report = await _report_row(ctx["aid"])
+    assert report.state.value == "done" and report.attempts == 0
+    assert report.stage2_score == 80.0
+    assert report.needs_review
+    assert provider.cancelled == slow and provider.active == 0
+    if "report_writer" not in slow:
+        assert report.summary_for_hr
+    if "feedback_writer" in slow:
+        assert report.candidate_feedback == {"mistakes": [], "learn_next": []}
+    result = await ctx["c"].get(f"/api/v1/applications/{ctx['aid']}/results")
+    assert result.json()["state"] == "done"
+    assert result.json()["stage2_score"] == 80.0
+
+
+async def test_slow_regrading_keeps_live_scores_and_limits_parallel_calls(
+    signup: SignUp, app: FastAPI, monkeypatch: Any
+) -> None:
+    ctx = await _finished(signup, app)
+    sid = uuid.UUID(ctx["sid2"])
+    async with SessionLocal() as db:
+        await db.execute(
+            update(Evaluation).where(Evaluation.session_id == sid).values(confidence=0.1)
+        )
+        await db.commit()
+        before = {
+            e.id: (e.score, e.max_score, e.rationale, e.criteria_scores)
+            for e in await db.scalars(select(Evaluation).where(Evaluation.session_id == sid))
+        }
+    monkeypatch.setattr(reports.get_settings(), "report_ai_phase_timeout_s", 0.15)
+    monkeypatch.setattr(reports.get_settings(), "report_grading_concurrency", 2)
+    provider = SlowReportProvider({"answer_evaluator"})
+    async with asyncio.timeout(3):
+        await _finalize(ctx["aid"], provider)
+    report = await _report_row(ctx["aid"])
+    assert report.state.value == "done" and report.attempts == 0 and report.needs_review
+    assert provider.peak == 2 and provider.active == 0
+    assert "answer_evaluator" in provider.cancelled
+    async with SessionLocal() as db:
+        after = {
+            e.id: (e.score, e.max_score, e.rationale, e.criteria_scores)
+            for e in await db.scalars(select(Evaluation).where(Evaluation.session_id == sid))
+            if e.id in before
+        }
+    assert before == after
+
+
+async def test_report_and_feedback_start_together(signup: SignUp, app: FastAPI) -> None:
+    ctx = await _finished(signup, app)
+    started: set[str] = set()
+    both = asyncio.Event()
+
+    class ParallelWriters(Recording):
+        async def complete(self, request: LLMRequest, schema: Any) -> LLMRawResponse:
+            if request.role in {"report_writer", "feedback_writer"}:
+                started.add(request.role)
+                if len(started) == 2:
+                    both.set()
+                # A serial implementation fails instead of silently taking twice as long.
+                async with asyncio.timeout(2):
+                    await both.wait()
+            return await super().complete(request, schema)
+
+    await _finalize(ctx["aid"], ParallelWriters())
+    report = await _report_row(ctx["aid"])
+    assert started == {"report_writer", "feedback_writer"}
+    assert report.state.value == "done" and report.summary_for_hr
+    assert not report.needs_review
+
+
+async def test_slow_grader_does_not_invent_a_missing_score(
+    signup: SignUp, app: FastAPI, monkeypatch: Any
+) -> None:
+    ctx = await _finished(signup, app)
+    async with SessionLocal() as db:
+        await db.execute(
+            update(Evaluation)
+            .where(Evaluation.session_id == uuid.UUID(ctx["sid2"]))
+            .values(score=None, status=EvaluationStatus.needs_review)
+        )
+        await db.commit()
+    monkeypatch.setattr(reports.get_settings(), "report_ai_phase_timeout_s", 0.15)
+    async with asyncio.timeout(3):
+        await _finalize(ctx["aid"], SlowReportProvider({"answer_evaluator"}))
+    report = await _report_row(ctx["aid"])
+    assert report.state.value == "done" and report.needs_review
+    assert report.stage2_score is None and report.stage2_passed is None
+    result = await ctx["c"].get(f"/api/v1/applications/{ctx['aid']}/results")
+    assert result.json()["state"] == "done"
+    assert result.json()["stage2_score"] is None

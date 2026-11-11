@@ -123,11 +123,12 @@ class WorkerSettings:
     cron_jobs: ClassVar[list[Any]] = [
         cron(sweep_stage1, second={0, 15, 30, 45}),
         cron(sweep_stage2, second={5, 20, 35, 50}),
-        cron(sweep_reports, second={10, 25, 40, 55}),
+        cron(sweep_reports, second=set(range(0, 60, 3))),
         cron(deliver_notifications, second={12, 42}),
         cron(reload_live_thresholds, second={22, 52}),
         cron(purge_expired_data, hour={3}, minute={17}, second={0}),
     ]
     job_timeout = 600
+    health_check_interval = 5
     on_startup = startup
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)

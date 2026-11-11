@@ -130,7 +130,8 @@
     "dependencies": "Bog'liq xizmatlar",
     "checkNames": {
       "database": "Ma'lumotlar bazasi",
-      "redis": "Redis"
+      "redis": "Redis",
+      "worker": "Baholash xizmati"
     },
     "checkOk": "ishlayapti",
     "checkFailed": "javob bermayapti",
@@ -1610,7 +1611,7 @@
     "back": "Nomzodlarga qaytish",
     "evaluating": {
       "title": "Baholanmoqda",
-      "body": "Bu biroz vaqt oladi. Sahifa o'zi yangilanadi."
+      "body": "Yakuniy baholash davom etmoqda va bir necha daqiqa olishi mumkin. Natija tayyor bo‘lganda avtomatik ko‘rinadi. Bu sahifani yopib, keyin arizalaringiz orqali qaytishingiz mumkin."
     },
     "failed": {
       "title": "Baholash bajarilmadi",
@@ -1758,7 +1759,7 @@
     },
     "pending": {
       "title": "Natijalaringiz tayyorlanmoqda",
-      "body": "Bu biroz vaqt oladi. Sahifa o'zi yangilanadi."
+      "body": "Yakuniy baholash davom etmoqda va bir necha daqiqa olishi mumkin. Natija tayyor bo‘lganda avtomatik ko‘rinadi. Bu sahifani yopib, keyin arizalaringiz orqali qaytishingiz mumkin."
     },
     "failed": {
       "title": "Batafsil fikr-mulohaza kechikmoqda",

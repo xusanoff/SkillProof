@@ -1,6 +1,56 @@
 # Keyingi sessiya uchun handoff — SkillProof
 
+## 2026-11-11 — natija kechikishi tuzatildi
+
+User ikki bosqichdan keyin natija uzoq kutilishini to‘liq tuzatishni so‘radi.
+Hisobot: `docs/reports/result-delay/REPORT.md`. Yakuniy grading parallel (3),
+umumiy phase deadline 30 s; HR/nomzod yozuvchilari parallel, har biriga 30 s.
+Timeoutda mavjud ball/dalil saqlanadi, olinmagan baho null/needs_review;
+AI kutishi sabab barcha ish qayta boshlanmaydi. Umumiy emergency deadline180 s.
+Report sweep3 s; worker heartbeat5 s va /health worker check, Docker health/restart.
+Mobile pending natija3 s polling, done/dispose’da stop, overlapping so‘rov yo‘q.
+Backend383 passed/2 skipped + qo‘shimcha missing-score test; mobile15 passed,
+results web7 passed; backend ruff/mypy, Flutter analyze va web build o‘tdi.
+Lokal :8000 API, :3000 web va worker yangilangan Docker image bilan ishlayapti;
+Judge0 ham ishga tushdi. /api/health db/redis/worker ok, queue ping pong.
+.env’dagi real provider tanlovi o‘zgartirilmadi; real AI chaqiruvi sinovga yuborilmadi.
+Mobile SDK /tmp/skillproof-flutter qayta tiklandi; Android SDK yo‘qligi sabab
+eski APK yangilanmadi. Userning live manzili/ariza ID berilmagan; aniq live hodisa
+va tashqi deploy tekshirilmagan. Commit/push yo‘q, oldingi ishlar saqlangan.
+
+
+## 2026-11-10 — deploy boshlanishi
+
+User avval kamchiliklarni tekshirib, Vercel/frontend va backend deployini boshlashni so'radi.
+Frontend https://skillproof-blue.vercel.app da joylandi, Vercel cloud build o'tdi.
+Bu backend ulanmagan ko'rish versiyasi; `/api/health` 502. To'liq production deb aytma.
+Vercel CLI akkauntga ulandi; project `xusanoffs-projects/skillproof`, Git root `frontend`.
+VPS/SSH/domen ma'lumotlari async savolda so'ralgan, hali kelmagan.
+Hisobot: `docs/reports/deploy-readiness/REPORT.md`. Backend 375 passed/2 skipped,
+web 297 unit passed, lint/typecheck/build o'tdi. Browser suite yakuniy o'tmadi:
+Chromium animation frame bermasligi reproducer bilan aniqlandi; live qayta tekshiriladi.
+Production config'ga erta xato aniqlash va 10 test qo'shildi, `.vercelignore` qo'shildi.
+Muhim: alohida frontend/API hostname'larida host-only cookie WebSocket'ga bormaydi;
+socket auth/routing yechimisiz to'liq deploy qilma. Hisobotdagi keyingi ishlarni o'qi.
+Commit/push yo'q, oldingi uncommitted ishlar saqlangan.
+
 Oxirgi yangilanish: 2026-11-06. Ishchi papka: `/home/xusanoff/projects/hr-platform`.
+
+## 2026-11-09 — yangi HR oqimi va chat
+
+User vakansiya yaratishni 3 qadamga bo‘lish va HH kabi ariza chatini so‘radi.
+Backend, veb va Flutter implementatsiyasi bajarildi. Asosiy hisobot:
+`docs/reports/hiring-workflow/REPORT.md`; reja `docs/HIRING_WORKFLOW_PLAN.md`.
+Migratsiya: `c24e85a6f901`, parent `b91a42c8d013`; lokal bazaga qo‘llangan.
+Yangi vakansiya draft → config → savol/topshiriq; inline savol umumiy bankka tushadi.
+Chat har arizaga bitta, nomzod va kompaniya a’zolari uchun; rad javobi/statuslar
+DB tranzaksiyasida xabar bo‘ladi, keyin ham yozish mumkin. Read cursor/idempotency bor.
+Veb va mobile chat polling ishlatadi; fayl/push/typing bu scope’ga kirmaydi.
+Flutterda alohida Savollar banki ham bor. Natijalar Profil orqali ochiladi.
+Tekshiruvlar: backend 365 passed/2 skipped, web 297, Flutter 12; web live 2/2,
+Android native chat va HR wizard/bank oqimlari o‘tgan. iOS tekshirilmagan.
+Local production veb :3000, yangilangan API :8001; APK `mobile/build/app/outputs/flutter-apk/app-debug.apk`
+emulyator uchun shu API’ga sozlangan. Oldingi uncommitted ishlar saqlangan; commit/push yo‘q.
 
 ## Eng yangi holat — 2026-11-06, barcha UI ekranlari
 

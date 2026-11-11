@@ -153,6 +153,9 @@ class ResultsScreen extends StatelessWidget {
     body: RemotePage(
       api: api,
       path: '/applications/$id/results',
+      pollInterval: (data) => data is Map && data['state'] == 'pending'
+          ? const Duration(seconds: 3)
+          : null,
       builder: (data, reload) {
         final r = data as Json;
         return ListView(

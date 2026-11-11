@@ -10,7 +10,7 @@ const healthy = {
   status: 'ok',
   version: '0.1.0',
   environment: 'local',
-  checks: { database: 'ok', redis: 'ok' },
+  checks: { database: 'ok', redis: 'ok', worker: 'ok' },
 };
 
 describe('StatusPanel', () => {
@@ -34,6 +34,7 @@ describe('StatusPanel', () => {
     expect(screen.getByText('0.1.0')).toBeInTheDocument();
     expect(screen.getByText('local')).toBeInTheDocument();
     expect(screen.getByText("Ma'lumotlar bazasi")).toBeInTheDocument();
+    expect(screen.getByText('Baholash xizmati')).toBeInTheDocument();
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 

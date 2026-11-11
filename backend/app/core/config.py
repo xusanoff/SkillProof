@@ -117,6 +117,10 @@ class Settings(BaseSettings):
     interview_answer_max_chars: int = 20_000
     interview_audio_max_bytes: int = 15 * 1024 * 1024
     evaluation_max_attempts: int = 5
+    # Must leave time for rollback/failure accounting before the worker's 600s limit.
+    report_timeout_s: float = Field(default=180, gt=0, le=540)
+    report_ai_phase_timeout_s: float = Field(default=30, gt=0, le=60)
+    report_grading_concurrency: int = Field(default=3, ge=1, le=8)
     evaluation_sweep_batch: int = 20
 
     # Uploads

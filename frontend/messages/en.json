@@ -130,7 +130,8 @@
     "dependencies": "Dependencies",
     "checkNames": {
       "database": "Database",
-      "redis": "Redis"
+      "redis": "Redis",
+      "worker": "Evaluation service"
     },
     "checkOk": "operational",
     "checkFailed": "not responding",
@@ -1610,7 +1611,7 @@
     "back": "Back to candidates",
     "evaluating": {
       "title": "Being evaluated",
-      "body": "This takes a little while. The page refreshes itself."
+      "body": "The final evaluation is running and may take a few minutes. Your result will appear automatically when ready. You can close this page and return through your applications later."
     },
     "failed": {
       "title": "Evaluation failed",
@@ -1758,7 +1759,7 @@
     },
     "pending": {
       "title": "Preparing your results",
-      "body": "This takes a little while. The page refreshes itself."
+      "body": "The final evaluation is running and may take a few minutes. Your result will appear automatically when ready. You can close this page and return through your applications later."
     },
     "failed": {
       "title": "Detailed feedback is delayed",

@@ -2,8 +2,11 @@
 and what HR and the candidate read of it. One job does all of it, so every way a stage can end
 takes the same path."""
 
+import asyncio
 import logging
+import time
 import uuid
+from collections.abc import Awaitable
 from typing import Any
 
 from sqlalchemy import exists, func, or_, select
@@ -178,6 +181,7 @@ async def _evaluate_stage2(
         select(Evaluation).where(Evaluation.session_id == s.id, Evaluation.turn_id.is_not(None))
     )
     existing = {e.turn_id: e for e in rows}
+    pending: list[tuple[InterviewTurn, Evaluation | None, dict[str, Any]]] = []
     for turn in turns:
         if turn.answered_at is None:
             continue
@@ -218,20 +222,43 @@ async def _evaluate_stage2(
             if ev is not None and ev.score is not None and ev.max_score
             else None
         )
-        outcome = await interviewer.evaluate_answer(
-            llm,
-            language,
-            question=turn.question_text,
-            rubric=rubric or {},
-            reference=question.reference_answer if question is not None else None,
-            answer=turn.answer_transcript or "",
-            first_percent=first,
-            first_confidence=ev.confidence if ev is not None else None,
-            min_confidence=t.evaluation.min_confidence,
-            max_disagreement=t.evaluation.max_disagreement,
+        pending.append(
+            (
+                turn,
+                ev,
+                {
+                    "question": turn.question_text,
+                    "rubric": rubric or {},
+                    "reference": question.reference_answer if question is not None else None,
+                    "answer": turn.answer_transcript or "",
+                    "first_percent": first,
+                    "first_confidence": ev.confidence if ev is not None else None,
+                    "min_confidence": t.evaluation.min_confidence,
+                    "max_disagreement": t.evaluation.max_disagreement,
+                },
+            )
         )
+
+    # Only provider calls run concurrently. AsyncSession access stays on this task.
+    started = time.perf_counter()
+    settings = get_settings()
+    deadline = asyncio.get_running_loop().time() + settings.report_ai_phase_timeout_s
+    semaphore = asyncio.Semaphore(settings.report_grading_concurrency)
+
+    async def grade(fields: dict[str, Any]) -> interviewer.GradeOutcome | None:
+        try:
+            # The deadline includes waiting for a concurrency slot and all provider retries.
+            async with asyncio.timeout_at(deadline), semaphore:
+                return await interviewer.evaluate_answer(llm, language, **fields)
+        except TimeoutError:
+            return None
+
+    async with asyncio.TaskGroup() as group:
+        jobs = [group.create_task(grade(fields)) for _, _, fields in pending]
+    for (turn, ev, _), job in zip(pending, jobs, strict=True):
+        outcome = job.result()
         if outcome is None:
-            # The question has no rubric: nothing to score it by, so a person looks.
+            # Missing rubric or slow provider: keep any live score and its evidence.
             if ev is None:
                 session.add(
                     Evaluation(
@@ -241,8 +268,19 @@ async def _evaluate_stage2(
                         prompt_version="deterministic",
                     )
                 )
+            else:
+                ev.status = EvaluationStatus.needs_review
             continue
         _store_grade(session, s, turn, ev, outcome)
+    logger.info(
+        "report_phase",
+        extra={
+            "application_id": str(s.application_id),
+            "phase": "stage2_grading",
+            "latency_ms": round((time.perf_counter() - started) * 1000),
+            "answers": len(pending),
+        },
+    )
     await session.flush()
     scores = await _turn_percents(session, s, turns)
     s.needs_review = await _has_needs_review(session, s)
@@ -550,14 +588,41 @@ def _apply_score_overrides(
 async def finalize(session: AsyncSession, application_id: uuid.UUID, llm: LLMClient) -> None:
     """Idempotent. An advisory lock rather than a row lock: model calls take a while and readers
     must not wait on them. A failure leaves `pending` for the sweep, up to the limit."""
+    started = time.perf_counter()
     try:
         locked = await session.scalar(
             select(func.pg_try_advisory_xact_lock(func.hashtextextended(str(application_id), 1)))
         )
         if not locked:
             return
-        await _finalize(session, application_id, llm)
+        state = await session.scalar(
+            select(SessionReport.state).where(SessionReport.application_id == application_id)
+        )
+        stage2_due = await session.scalar(
+            select(
+                exists().where(
+                    InterviewSession.application_id == application_id,
+                    InterviewSession.stage == InterviewStage.stage2,
+                    InterviewSession.status.in_(_ENDED),
+                    InterviewSession.evaluation_state == EvaluationState.pending,
+                )
+            )
+        )
+        # HR can reopen the Stage 1 gate after an earlier report was completed.
+        if state is EvaluationState.failed or (state is EvaluationState.done and not stage2_due):
+            return
+        # Finish before arq's hard timeout: cancellation there bypasses the failure
+        # counter and the sweep can otherwise restart the same work forever.
+        async with asyncio.timeout(get_settings().report_timeout_s):
+            await _finalize(session, application_id, llm)
         await session.commit()
+        logger.info(
+            "report_completed",
+            extra={
+                "application_id": str(application_id),
+                "latency_ms": round((time.perf_counter() - started) * 1000),
+            },
+        )
     except Exception:
         logger.exception("report_failed: %s", application_id)
         await session.rollback()
@@ -635,7 +700,9 @@ async def _finalize(session: AsyncSession, application_id: uuid.UUID, llm: LLMCl
             fresh_skills, verified_skills.reused_entries([stage1, stage2]), t
         )
         report.suspicion_explanation = _reasons(signals)
-        await _write(session, app, report, tasks, turns, percents, stage2, signals, language, t, llm)
+        await _write(
+            session, app, report, tasks, turns, percents, stage2, signals, language, t, llm
+        )
         report.needs_review = report.needs_review or any(s.needs_review for s in sessions.values())
         if "recommendation" in latest:
             report.recommendation = latest["recommendation"].new_value
@@ -648,6 +715,27 @@ async def _finalize(session: AsyncSession, application_id: uuid.UUID, llm: LLMCl
             fresh_skills,
             disqualifying_signal=any(x.severity is SignalSeverity.disqualifying for x in signals),
             lifted_disqualification="disqualification" in latest,
+        )
+
+
+async def _bounded_ai[T](call: Awaitable[T], phase: str, application_id: uuid.UUID) -> T | None:
+    started = time.perf_counter()
+    outcome = "ok"
+    try:
+        async with asyncio.timeout(get_settings().report_ai_phase_timeout_s):
+            return await call
+    except TimeoutError:
+        outcome = "timeout"
+        return None
+    finally:
+        logger.info(
+            "report_phase",
+            extra={
+                "application_id": str(application_id),
+                "phase": phase,
+                "outcome": outcome,
+                "latency_ms": round((time.perf_counter() - started) * 1000),
+            },
         )
 
 
@@ -694,21 +782,34 @@ async def _write(
             {"skill": x["name"], "percent": x["percent"]} for x in report.per_skill_scores
         ],
     }
-    written = await write_report(
-        llm,
-        language,
-        scores=scores,
-        evaluations=blocks,
-        signals=[
-            {"type": x.type, "severity": x.severity.value, "at_ms": x.evidence.get("at_ms")}
-            for x in signals
-            if x.severity is not SignalSeverity.info
-        ],
-        answers=answers,
-        code=code,
-    )
+    async with asyncio.TaskGroup() as group:
+        summary = group.create_task(
+            _bounded_ai(
+                write_report(
+                    llm,
+                    language,
+                    scores=scores,
+                    evaluations=blocks,
+                    signals=[
+                        {
+                            "type": x.type,
+                            "severity": x.severity.value,
+                            "at_ms": x.evidence.get("at_ms"),
+                        }
+                        for x in signals
+                        if x.severity is not SignalSeverity.info
+                    ],
+                    answers=answers,
+                    code=code,
+                ),
+                "summary",
+                app.id,
+            )
+        )
+        group.create_task(_write_feedback(session, report, tasks, turns, blocks, language, llm))
+    written = summary.result()
     band = band_for(report.overall_score, t.report)
-    if written.draft is None:
+    if written is None or written.draft is None:
         report.summary_for_hr, report.strengths, report.gaps = "", [], []
         report.recommendation = band
         report.needs_review = True
@@ -719,10 +820,9 @@ async def _write(
         report.gaps = [_point(p.model_dump(), code) for p in draft.gaps]
         # No overall score (stopped before the end): HR sees the status, not a recommendation.
         report.recommendation = clamp_recommendation(draft.recommendation, band) if band else None
-        report.needs_review = draft.insufficient_evidence
-    report.model = written.model
-    report.prompt_version = written.prompt_version
-    await _write_feedback(session, report, tasks, turns, blocks, language, llm)
+        report.needs_review = report.needs_review or draft.insufficient_evidence
+    report.model = written.model if written else "unknown"
+    report.prompt_version = written.prompt_version if written else "report_writer.v1"
 
 
 def _point(point: dict[str, Any], code: dict[str, str]) -> dict[str, Any]:
@@ -756,16 +856,20 @@ async def _write_feedback(
         question = await _turn_question(session, turn, by_id)
         if question is not None and question.reference_answer:
             secrets.append(question.reference_answer)
-    written = await write_feedback(
-        llm,
-        language,
-        evaluations=blocks,
-        skills=[x["name"] for x in report.per_skill_scores],
-        refs=set(about),
-        secrets=secrets,
-        hidden_values=hidden,
+    written = await _bounded_ai(
+        write_feedback(
+            llm,
+            language,
+            evaluations=blocks,
+            skills=[x["name"] for x in report.per_skill_scores],
+            refs=set(about),
+            secrets=secrets,
+            hidden_values=hidden,
+        ),
+        "feedback",
+        report.application_id,
     )
-    if written.draft is None:
+    if written is None or written.draft is None:
         report.candidate_feedback = {"mistakes": [], "learn_next": []}
         report.needs_review = True
         return

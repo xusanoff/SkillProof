@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from app.core.config import Settings, get_settings
 from app.core.db import check_database
-from app.core.redis import check_redis
+from app.core.redis import check_redis, check_worker
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=["health"])
@@ -25,7 +25,7 @@ class HealthResponse(BaseModel):
 
 
 def get_health_checks() -> dict[str, HealthCheck]:
-    return {"database": check_database, "redis": check_redis}
+    return {"database": check_database, "redis": check_redis, "worker": check_worker}
 
 
 async def _run(name: str, check: HealthCheck) -> CheckStatus:

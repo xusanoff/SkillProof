@@ -1,3 +1,4 @@
+import 'dart:async';
 import '../l10n/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -75,16 +76,20 @@ class RemotePage extends StatefulWidget {
     required this.api,
     required this.path,
     required this.builder,
+    this.pollInterval,
   });
   final Api api;
   final String path;
   final Widget Function(dynamic, VoidCallback) builder;
+  final Duration? Function(dynamic)? pollInterval;
   @override
   State<RemotePage> createState() => _RemotePageState();
 }
 
 class _RemotePageState extends State<RemotePage> {
   late Future<dynamic> future;
+  Timer? pollTimer;
+  int generation = 0;
   @override
   void initState() {
     super.initState();
@@ -94,11 +99,31 @@ class _RemotePageState extends State<RemotePage> {
   @override
   void didUpdateWidget(RemotePage old) {
     super.didUpdateWidget(old);
-    if (old.path != widget.path) reload();
+    if (old.path != widget.path || old.api != widget.api) reload();
   }
 
   void reload() {
-    future = widget.api.request('GET', widget.path);
+    pollTimer?.cancel();
+    final current = ++generation;
+    future = widget.api.request('GET', widget.path).then((data) {
+      if (mounted && current == generation) {
+        final delay = widget.pollInterval?.call(data);
+        if (delay != null) {
+          // Schedule after the response so requests never overlap.
+          pollTimer = Timer(delay, () {
+            if (mounted && current == generation) setState(reload);
+          });
+        }
+      }
+      return data;
+    });
+  }
+
+  @override
+  void dispose() {
+    generation++;
+    pollTimer?.cancel();
+    super.dispose();
   }
 
   @override

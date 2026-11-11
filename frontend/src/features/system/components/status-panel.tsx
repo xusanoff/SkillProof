@@ -11,7 +11,7 @@ import { useHealth } from '../api';
 import { apiState, type ApiState } from '../model';
 
 const KNOWN_ERRORS = ['upstream_unavailable', 'not_found', 'internal_error'] as const;
-const KNOWN_CHECKS = ['database', 'redis'] as const;
+const KNOWN_CHECKS = ['database', 'redis', 'worker'] as const;
 
 const stateStyle: Record<ApiState, { icon: typeof CircleCheck; className: string }> = {
   ok: { icon: CircleCheck, className: 'bg-success-soft text-success' },
